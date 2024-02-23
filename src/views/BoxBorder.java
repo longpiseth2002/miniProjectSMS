@@ -1,4 +1,4 @@
-package utils;
+package views;
 
 public interface BoxBorder {
     static final String TOP_LEFT_CORNER =   "┌";

@@ -1,11 +1,10 @@
-package utils;
+package views;
 
 
 import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
-import utils.BoxBorder;
 
 public class InterfaceViews implements BoxBorder {
     public static void interfaceCSTAD() {
@@ -39,19 +38,34 @@ public class InterfaceViews implements BoxBorder {
         table.setColumnWidth(5,20,25);
         table.setColumnWidth(6,20,25);
 
-        table.addCell("  (D)Display");
-        table.addCell("  (RD)Random");
-        table.addCell("  (W)Write");
-        table.addCell("  (R)ead");
-        table.addCell("  (E)Edit");
-        table.addCell("  (DL)Delete");
-        table.addCell("  (S)Search");
-        table.addCell("  (SR)Set row");
-        table.addCell("  (C)Commit");
-        table.addCell("  (BU)Back Up");
-        table.addCell("  (RS)Restore");
-        table.addCell("  (H)Help");
-        table.addCell("  (X)Exit");
+        table.addCell(" ");
+        table.addCell(" ");
+        table.addCell(" ");
+        table.addCell(blue + "APPLICATION MENU"  ,cellStyle);
+        table.addCell(" ");
+        table.addCell(" ");
+        table.addCell(" ");
+        table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
+        table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
+        table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
+        table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
+        table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
+        table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
+        table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
+
+        table.addCell(cyan + "  (D)Display");
+        table.addCell(cyan +"  (RD)Random");
+        table.addCell(cyan +"  (W)Write");
+        table.addCell(cyan +"  (R)ead");
+        table.addCell(cyan +"  (E)Edit");
+        table.addCell(cyan +"  (DL)Delete");
+        table.addCell(cyan +"  (S)Search");
+        table.addCell(cyan +"  (SR)Set row");
+        table.addCell(cyan +"  (C)Commit");
+        table.addCell(cyan +"  (BU)Back Up");
+        table.addCell(cyan +"  (RS)Restore");
+        table.addCell(cyan +"  (H)Help");
+        table.addCell(cyan +"  (X)Exit" + reset);
 
 
 
@@ -98,5 +112,27 @@ public class InterfaceViews implements BoxBorder {
 
         System.out.println(table.render());
     }
+    public static void displayHelp() {
+        System.out.println("# Help Instruction");
+        Table table = new Table(1, BorderStyle.CLASSIC_COMPATIBLE_WIDE, ShownBorders.SURROUND);
+        table.addCell("1.      Press       D : Display product as table");
+        table.addCell("2.      Press       w : Create a new product");
+        table.addCell("3.      Press       R : View product details by code");
+        table.addCell("4       Press       E : Edit an existing product by code");
+        table.addCell("5.      Press       DL : Delete an existing product by code");
+        table.addCell("6.      Press       S : Search an existing product by name");
+        table.addCell("7.      Press       C : Commit transaction data");
+        table.addCell("8.      Press       BU : Backup data");
+        table.addCell("9.      Press       RS : Restore data");
+        table.addCell("10.     Press       L : Navigate pagination to the last page");
+        table.addCell("11.     Press       P : Navigate pagination to the previous page");
+        table.addCell("12.     Press       N : Navigate pagination to the next page");
+        table.addCell("13.     Press       F : Navigate pagination to the first page");
+        table.addCell("14.     Press       H : Help");
+        table.addCell("15.     Press       B : Step Back of the Application");
+
+        System.out.println(table.render());
+    }
+
 
 }

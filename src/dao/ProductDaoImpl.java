@@ -1,23 +1,20 @@
-package utils;
+package dao;
 
+import model.Product;
 import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
+import views.BoxBorder;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class Util {
-    private static Scanner input = new Scanner(System.in);
-    private static int numberOfRow = 5;
+public class ProductDaoImpl implements ProductDao , BoxBorder {
+    @Override
+    public void display(List<Integer> list, int numberOfRow, Scanner input) {
 
-    public static void exit() {
-        System.exit(0);
-    }
-
-    public static void display(List<Integer> list) {
-        Scanner input = new Scanner(System.in);
         int numberOfAllData = list.size();
         int remain = numberOfAllData % numberOfRow;
         int numberOfPage = remain == 0 ? numberOfAllData / numberOfRow : numberOfAllData / numberOfRow + 1;
@@ -25,45 +22,46 @@ public class Util {
         int numberOfRowStart = 0;
         int numberOfRowEnd = Math.min(numberOfRow, numberOfAllData);
         boolean stepCheck = true;
+        System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(53) + "  DISPLAY INFORMATION OF PRODUCTS  " + HORIZONTAL_CONNECTOR_BORDER.repeat(53));
+        System.out.println();
         do {
             if (stepCheck) {
-                System.out.println("\n-------------------------------------------------------------------");
 
                 Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.ALL);
                 CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
-                table.setColumnWidth(0, 20, 30);
-                table.setColumnWidth(1, 20, 30);
-                table.setColumnWidth(2, 20, 30);
-                table.setColumnWidth(3, 20, 30);
-                table.setColumnWidth(4, 20, 30);
+                table.setColumnWidth(0, 25, 30);
+                table.setColumnWidth(1, 25, 30);
+                table.setColumnWidth(2, 25, 30);
+                table.setColumnWidth(3, 25, 30);
+                table.setColumnWidth(4, 25, 30);
 
 
-
-                table.addCell("  CODE " ,cellStyle);
-                table.addCell("  NAME " ,cellStyle);
-                table.addCell("  UNIT PRICE " ,cellStyle);
-                table.addCell("  QTY " ,cellStyle);
-                table.addCell("  IMPORTED AT " ,cellStyle);
+                table.addCell("  CODE ", cellStyle);
+                table.addCell("  NAME ", cellStyle);
+                table.addCell("  UNIT PRICE ", cellStyle);
+                table.addCell("  QTY ", cellStyle);
+                table.addCell("  IMPORTED AT ", cellStyle);
                 for (int i = numberOfRowStart; i < numberOfRowEnd; i++) {
-                    table.addCell("CODE[" + i + "]=" + list.get(i) ,cellStyle);
-                    table.addCell(" PRODUCT ::" + i ,cellStyle);
-                    table.addCell(" $500 " ,cellStyle);
-                    table.addCell(" " + i ,cellStyle);
-                    table.addCell(" 2024-12-09 " ,cellStyle);
+                    table.addCell("CODE[" + i + "]=" + list.get(i), cellStyle);
+                    table.addCell(" PRODUCT ::" + i, cellStyle);
+                    table.addCell(" $500 ", cellStyle);
+                    table.addCell(" " + i, cellStyle);
+                    table.addCell(" 2024-12-09 ", cellStyle);
 
                 }
                 System.out.println(table.render());
-                System.out.println("-------------------------------------------------------------------");
+                System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
                 String textBlock = """
-                        *********************************************************************************************
-                        Page %d of %d                                                            Total record:%d
-                        Page Navigation                 (N):next || (P):Previous || (G):Goto || (L):last || (F):First
-                        *********************************************************************************************
+                        Page %d of %d                                                                                                 Total record:%d
+                        Page Navigation                              (N):next || (P):Previous || (G):Goto || (L):last || (F):First || (B):BACK TO APPLICATION MENU
                         """;
+
                 System.out.print(String.format(textBlock, numberOfCurrentPage, numberOfPage, numberOfAllData));
+                System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
             }
-            System.out.print("⏩ (B)ack or Navigation page:");
+            System.out.print("⏩ Navigation page : ");
             String op = input.nextLine().toUpperCase();
+            System.out.println("\n\n");
             switch (op) {
                 case "N" -> {
                     if (numberOfRowEnd < numberOfAllData) {
@@ -150,43 +148,45 @@ public class Util {
         } while (true);
     }
 
-
-    // help method
-    public static void displayHelp() {
-        System.out.println("# Help Instruction");
-        Table table = new Table(1, BorderStyle.CLASSIC_COMPATIBLE_WIDE, ShownBorders.SURROUND);
-        table.addCell("1.      Press       l : Display product as table");
-        table.addCell("2.      Press       w : Create a new product");
-        table.addCell("3.      Press       r : View product details by code");
-        table.addCell("4       Press       e : Edit an existing product by code");
-        table.addCell("5.      Press       d : Delete an existing product by code");
-        table.addCell("6.      Press       s : Search an existing product by name");
-        table.addCell("7.      Press       c : Commit transaction data");
-        table.addCell("8.      Press       k : Backup data");
-        table.addCell("9.      Press       t : Restore data");
-        table.addCell("10.     Press       f : Navigate pagination to the last page");
-        table.addCell("11.     Press       p : Navigate pagination to the previous page");
-        table.addCell("12.     Press       n : Navigate pagination to the next page");
-        table.addCell("13.     Press       1 : Navigate pagination to the first page");
-        table.addCell("14.     Press       h : Help");
-        table.addCell("15.     Press       b : Step Back of the Application");
-
-        System.out.println(table.render());
+    @Override
+    public Product insert(Product product) {
+        return null;
     }
 
-    public static void setUpRow() {
-        do {
-            try {
-                System.out.print("⏩.Enter number of row:");
-                int inputRow = input.nextInt();
-                if (inputRow > 1) {
-                    numberOfRow = inputRow;
-                    break;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println(e.getMessage());
-            }
-        } while (true);
+    @Override
+    public List<Product> select() {
+        return null;
     }
 
+    @Override
+    public Optional<Product> selectById(Integer id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Product updateById(Product product) {
+        return null;
+    }
+
+    @Override
+    public Product deleteById(Integer id) {
+        return null;
+    }
+
+    @Override
+    public List<Product> selectByName(String name) {
+        return null;
+    }
+
+
+    public void setUpRow(int inputRow, int setRow) {
+
+        if (inputRow >= 1) {
+            setRow = inputRow;
+            System.out.println(green + "   \uD83E\uDD16 SETTING ROW SUCCESSFULLY ✅ " + reset);
+            System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(150));
+            System.out.println();
+            return;
+        }
+    }
 }
