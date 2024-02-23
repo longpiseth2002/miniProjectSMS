@@ -1,22 +1,17 @@
-import utils.InterfaceViews;
-import utils.Util;
+import controller.ProductController;
+import views.InterfaceViews;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Scanner;
 
-public class Main {
-    static List<Integer> list = new ArrayList<>();
 
-    static void add(int n) {
-        for (int i = 0; i < n; i++) {
-            list.add(i);
-        }
-    }
+public class Main {
+
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        add(23);
+        ProductController productController = new ProductController();
+
         System.out.println(
                 " ".repeat(25) + "██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗    ████████╗ ██████╗ \n" +
                         " ".repeat(25) + "██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝    ╚══██╔══╝██╔═══██╗   \n" +
@@ -37,9 +32,10 @@ public class Main {
             InterfaceViews.applicationMenu();
             System.out.print("➡ SELECT OPTION MENU : ");
             op = scanner.nextLine().toLowerCase();
+            System.out.println();
             switch (op) {
                 case "d" -> {
-                    Util.display(list);
+                    productController.display();
                 }
                 case "rd" -> {
                     System.out.println("Random");
@@ -60,7 +56,7 @@ public class Main {
                     System.out.println("Search");
                 }
                 case "sr" -> {
-                    Util.setUpRow();
+                    productController.setNumberRow();
                 }
                 case "c" -> {
                     System.out.println("Commit");
@@ -72,24 +68,14 @@ public class Main {
                     System.out.println("Restore");
                 }
                 case "h" -> {
-                    Util.displayHelp();
+                    InterfaceViews.displayHelp();
                 }
                 case "x" -> {
-                    Util.exit();
+                    System.exit(0);
                 }
             }
 
         } while (op != "x");
-
-
-        Util.displayHelp();
-        InterfaceViews interfaceViews = new InterfaceViews();
-
-        InterfaceViews.applicationMenu();
-        interfaceViews.readDetail();
-        InterfaceViews.informUpdate();
-        InterfaceViews.applicationMenu();
-        Util.display(list);
 
 
     }
