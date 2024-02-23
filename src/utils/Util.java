@@ -134,9 +134,9 @@ public class Util {
                                 stepCheck = false;
                             }
                             break;
-                        } catch (NumberFormatException e) {
-                            System.out.println(e.getMessage());
-                            System.out.print(">>>> Enter page number(1 to " + numberOfPage + "): ");
+                        } catch (Exception e) {
+                            System.out.println("Incorrect input");
+                            System.out.print("⏩⏩ Enter page number(1 to " + numberOfPage + "): ");
                         }
                         input.nextLine();
                     } while (true);
@@ -177,7 +177,7 @@ public class Util {
     public static void setUpRow() {
         do {
             try {
-                System.out.print(">>Enter number of row:");
+                System.out.print("⏩.Enter number of row:");
                 int inputRow = input.nextInt();
                 if (inputRow > 1) {
                     numberOfRow = inputRow;
