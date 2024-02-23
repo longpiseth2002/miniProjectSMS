@@ -1,12 +1,13 @@
-package interfaceView;
+package utils;
 
 
 import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
+import utils.BoxBorder;
 
-public class InterfaceViews implements BoxBorder{
+public class InterfaceViews implements BoxBorder {
     public static void interfaceCSTAD() {
         System.out.println("\n".repeat(5));
         System.out.print(cyan);
@@ -43,9 +44,9 @@ public class InterfaceViews implements BoxBorder{
         table.addCell("  (W)Write");
         table.addCell("  (R)ead");
         table.addCell("  (E)Edit");
-        table.addCell("  (D)Delete");
+        table.addCell("  (DL)Delete");
         table.addCell("  (S)Search");
-        table.addCell("  (SO)Set row");
+        table.addCell("  (SR)Set row");
         table.addCell("  (C)Commit");
         table.addCell("  (BU)Back Up");
         table.addCell("  (RS)Restore");
