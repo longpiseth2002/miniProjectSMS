@@ -1,6 +1,7 @@
 package dao;
 
 import java.io.*;
+import java.nio.charset.CoderResult;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,9 +108,4 @@ public class BackGroundProcess implements IBackGroundProccess{
         return numberToRead;
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        Thread.sleep(10);
-        BackGroundProcess obj=new BackGroundProcess();
-        obj.writeToFile(new Product(),new ArrayList<>(),"");
-    }
 }
