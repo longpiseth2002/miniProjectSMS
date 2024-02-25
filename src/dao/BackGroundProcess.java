@@ -1,11 +1,15 @@
 package dao;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import model.Product;
 public class BackGroundProcess implements IBackGroundProccess{
+    private static AtomicInteger currenSize=new AtomicInteger(0);
     @Override
     public void readFromFile() {
 
@@ -13,12 +17,17 @@ public class BackGroundProcess implements IBackGroundProccess{
 
     @Override
     public void writeToFile(Product product,List<Product> list, String transectionFile) {
+        long start=System.nanoTime();
+        for(int i=0;i<1000000;i++){
+            list.add(new Product(10,"h",10.2,5.5, LocalDate.now()));
+        }
         Thread thread1=new Thread(()->{
             try (BufferedWriter writer = new BufferedWriter(new FileWriter("data3.txt"))) {
                 StringBuilder batch = new StringBuilder();
                 int count = 0;
                 int batchSize=10000;
                 for (Product obj : list) {
+                    currenSize.incrementAndGet();
                     batch.append(obj.getId()).append(",").append(obj.getName()).append(System.lineSeparator());
                     count++;
                     if (count == batchSize || obj.equals(list.get(list.size() - 1))) {
@@ -27,14 +36,24 @@ public class BackGroundProcess implements IBackGroundProccess{
                         count = 0; // Reset the counter
                     }
                 }
-                System.out.println("Data written to file successfully.");
+                System.out.println("\nData written to file successfully.");
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         });
         Thread thread2=new Thread(()->{
-
+            loadingProgress(1);
         });
+        thread1.start();
+        thread2.start();
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        long end=System.nanoTime();
+        System.out.println("\ntime = "+(end-start)/1000000+"ms\n");
     }
 
     @Override
@@ -54,28 +73,43 @@ public class BackGroundProcess implements IBackGroundProccess{
     }
 
     @Override
-    public void loadingProgress(List<Product> list) {
-        int numberToRead=0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(""))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                numberToRead=Integer.parseInt(reader.readLine());
-            }
-        } catch (IOException ignored) {
-        }
-        int l=list.size();
+    public void loadingProgress(int totaSize) {
         System.out.println("Loading");
+        int numberToRead=1000000;
+        //numberToRead=readTotalSize("totalSize.txt");
         String stDigit= Integer.toString(numberToRead);
         int digit=stDigit.length();
         int divi=(digit>3)?(int)Math.pow(10,digit-3):1;
         int remain =numberToRead%divi;
-        int i = 0;
-        while (l != numberToRead) {
-            if ((l) % divi == remain) {
-                System.out.printf("\r[ %.2f%% ] %s", l / (numberToRead / 100f), "#".repeat((int) (l / (numberToRead / 100f))));
+        while (currenSize.get() != numberToRead) {
+            if (currenSize.get()  % divi == remain) {
+                System.out.printf("\r[ %.2f%% ] %s", currenSize.get()  / (numberToRead / 100f), "#".repeat((int) (currenSize.get() / (numberToRead / 100f))));
                 System.out.flush();
             }
         }
         System.out.printf("\r[ %.2f%% ] %s", 100f, "#".repeat(100));
+    }
+    private int readTotalSize(String fileName){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(1000000);
+        }catch (Exception e){
+
+        }
+        int numberToRead=0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line=reader.readLine())!=null){
+                System.out.println(line);
+                numberToRead=Integer.parseInt(line);
+            }
+        } catch (IOException |OutOfMemoryError ignored) {
+        }
+        return numberToRead;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread.sleep(10);
+        BackGroundProcess obj=new BackGroundProcess();
+        obj.writeToFile(new Product(),new ArrayList<>(),"");
     }
 }

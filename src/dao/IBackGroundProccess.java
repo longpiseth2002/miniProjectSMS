@@ -10,5 +10,5 @@ public interface IBackGroundProccess {
     public void writeToFile(Product product,List<Product> list,String transectionFile);
 
     public boolean commitCheck(String fileTransection, String fileData, Scanner input);
-    public void loadingProgress(List<Product> list);
+    public void loadingProgress(int totalLine);
 }
