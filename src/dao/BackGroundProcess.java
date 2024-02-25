@@ -12,7 +12,42 @@ import model.Product;
 public class BackGroundProcess implements IBackGroundProccess{
     private static AtomicInteger currenSize=new AtomicInteger(0);
     @Override
-    public void readFromFile() {
+    public void loadingProgress(int totaSize) {
+        System.out.println("Loading");
+        int numberToRead=1000000;
+        numberToRead=readTotalSize("totalSize.txt");
+        String stDigit= Integer.toString(numberToRead);
+        int digit=stDigit.length();
+        int divi=(digit>3)?(int)Math.pow(10,digit-3):1;
+        int remain =numberToRead%divi;
+        while (currenSize.get() != numberToRead) {
+            if (currenSize.get()  % divi == remain) {
+                System.out.printf("\r[ %.2f%% ] %s", currenSize.get()  / (numberToRead / 100f), "#".repeat((int) (currenSize.get() / (numberToRead / 100f))));
+                System.out.flush();
+            }
+        }
+        System.out.printf("\r[ %.2f%% ] %s", 100f, "#".repeat(100));
+    }
+    private int readTotalSize(String fileName){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write("1000000");
+            writer.flush();
+        }catch (Exception e){
+
+        }
+        int numberToRead=0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line=reader.readLine())!=null){
+                numberToRead=Integer.parseInt(line);
+            }
+        } catch (IOException |OutOfMemoryError ignored) {
+
+        }
+        return numberToRead;
+    }
+    @Override
+    public void readFromFile(List<Product> list, String datFile) {
 
     }
 
@@ -75,37 +110,8 @@ public class BackGroundProcess implements IBackGroundProccess{
     }
 
     @Override
-    public void loadingProgress(int totaSize) {
-        System.out.println("Loading");
-        int numberToRead=1000000;
-        numberToRead=readTotalSize("totalSize.txt");
-        String stDigit= Integer.toString(numberToRead);
-        int digit=stDigit.length();
-        int divi=(digit>3)?(int)Math.pow(10,digit-3):1;
-        int remain =numberToRead%divi;
-        while (currenSize.get() != numberToRead) {
-            if (currenSize.get()  % divi == remain) {
-                System.out.printf("\r[ %.2f%% ] %s", currenSize.get()  / (numberToRead / 100f), "#".repeat((int) (currenSize.get() / (numberToRead / 100f))));
-                System.out.flush();
-            }
-        }
-        System.out.printf("\r[ %.2f%% ] %s", 100f, "#".repeat(100));
-    }
-    private int readTotalSize(String fileName){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("1000000");
-        }catch (Exception e){
+    public void commit(List<Product> list, String tranSectionFile, String datFile) {
 
-        }
-        int numberToRead=0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line=reader.readLine())!=null){
-                numberToRead=Integer.parseInt(line);
-            }
-        } catch (IOException |OutOfMemoryError ignored) {
-        }
-        return numberToRead;
     }
 
 }
