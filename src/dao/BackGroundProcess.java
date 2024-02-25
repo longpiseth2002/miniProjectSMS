@@ -54,6 +54,7 @@ public class BackGroundProcess implements IBackGroundProccess{
         }
         long end=System.nanoTime();
         System.out.println("\ntime = "+(end-start)/1000000+"ms\n");
+        currenSize.set(0);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class BackGroundProcess implements IBackGroundProccess{
     public void loadingProgress(int totaSize) {
         System.out.println("Loading");
         int numberToRead=1000000;
-        //numberToRead=readTotalSize("totalSize.txt");
+        numberToRead=readTotalSize("totalSize.txt");
         String stDigit= Integer.toString(numberToRead);
         int digit=stDigit.length();
         int divi=(digit>3)?(int)Math.pow(10,digit-3):1;
@@ -91,7 +92,7 @@ public class BackGroundProcess implements IBackGroundProccess{
     }
     private int readTotalSize(String fileName){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(1000000);
+            writer.write("1000000");
         }catch (Exception e){
 
         }
@@ -99,7 +100,6 @@ public class BackGroundProcess implements IBackGroundProccess{
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line=reader.readLine())!=null){
-                System.out.println(line);
                 numberToRead=Integer.parseInt(line);
             }
         } catch (IOException |OutOfMemoryError ignored) {
