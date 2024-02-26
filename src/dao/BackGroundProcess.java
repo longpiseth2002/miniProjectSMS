@@ -197,4 +197,10 @@ public class BackGroundProcess implements IBackGroundProccess{
         }
         return instance;
     }
+
+    public static void main(String[] args) {
+        BackGroundProcess obj=BackGroundProcess.CreateObject();
+        ArrayList<Product> list =new ArrayList<>();
+
+    }
 }
