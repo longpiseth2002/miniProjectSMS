@@ -7,6 +7,7 @@ import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -149,9 +150,21 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public Product insert(Product product) {
-        return null;
+    public Product write(Scanner scanner) {
+
+        System.out.print("Enter product name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter unit price: ");
+        double unitPrice = scanner.nextDouble();
+
+        System.out.print("Enter quantity: ");
+        double qty = scanner.nextDouble();
+
+
+        return new Product(name, unitPrice, qty);
     }
+
 
     @Override
     public List<Product> select() {

@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public interface
-IBackGroundProccess {
+public interface BackgroundProcess {
+
+
     public void readFromFile(List<Product> list,String datFile);
-    public void writeToFile(List<Product> list,String transectionFile,String status);
+    public void writeToFile(List<Product> list,String status);
 
     public boolean commitCheck(String fileTransection, String fileData, Scanner input);
     public void loadingProgress(int totalSize,String status);

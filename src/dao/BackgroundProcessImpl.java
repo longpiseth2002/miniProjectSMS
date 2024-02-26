@@ -1,18 +1,17 @@
 package dao;
 
 import java.io.*;
-import java.nio.charset.CoderResult;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import model.Product;
-public class BackGroundProcess implements IBackGroundProccess{
+import views.Colors;
+
+public class BackgroundProcessImpl implements BackgroundProcess{
     private static AtomicInteger currenSize=new AtomicInteger(0);
     private static AtomicInteger AtotalSize=new AtomicInteger(0);
-    private  static BackGroundProcess instance;
+    private  static BackgroundProcessImpl instance;
     @Override
     public void loadingProgress(int totalSize,String status) {
         System.out.println("Loading...");
@@ -60,10 +59,10 @@ public class BackGroundProcess implements IBackGroundProccess{
     }
 
     @Override
-    public void writeToFile(List<Product> list, String transectionFile,String status) {
+    public void writeToFile(List<Product> list,String status) {
         long start=System.nanoTime();
         Thread thread1=new Thread(()->{
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(transectionFile))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("Transection.txt"))) {
                 StringBuilder batch = new StringBuilder();
                 int count = 0;
                 int batchSize=10000;
@@ -82,7 +81,7 @@ public class BackGroundProcess implements IBackGroundProccess{
                             .append(status)
                             .append(System.lineSeparator());
                     count++;
-                    if (count == batchSize || obj.equals(list.getLast())) {
+                    if (count == batchSize || obj.equals(list.size()-1)) {
                         writer.write(batch.toString());
                         batch.setLength(0); // Clear the batch
                         count = 0; // Reset the counter
@@ -107,7 +106,6 @@ public class BackGroundProcess implements IBackGroundProccess{
         System.out.println(Colors.reset()+"\ntime = "+(end-start)/1000000+"ms\n");
         currenSize.set(0);
     }
-
     @Override
     public boolean commitCheck(String fileTransection, String fileData, Scanner input) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileTransection))) {
@@ -140,7 +138,7 @@ public class BackGroundProcess implements IBackGroundProccess{
         int n=input.nextInt();
         writeTotalSize(n,"totalSize.txt");
         long start=System.nanoTime();
-        BackGroundProcess obj=BackGroundProcess.CreateObject();
+        BackgroundProcessImpl obj =  BackgroundProcessImpl.CreateObject();
         Thread thread1=new Thread(()->{
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
                 StringBuilder batch = new StringBuilder();
@@ -190,10 +188,10 @@ public class BackGroundProcess implements IBackGroundProccess{
         AtotalSize.set(listSize);
     }
 
-    private BackGroundProcess(){};
-    public static BackGroundProcess CreateObject(){
+    private  BackgroundProcessImpl(){};
+    public static BackgroundProcessImpl CreateObject(){
         if(instance==null){
-            return new BackGroundProcess();
+            return new BackgroundProcessImpl();
         }
         return instance;
     }

@@ -1,4 +1,4 @@
-package dao;
+package views;
 
 public class Colors {
     // ANSI escape codes for basic colors
