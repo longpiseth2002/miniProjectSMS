@@ -41,7 +41,7 @@ public class Main {
                     System.out.println("Random");
                 }
                 case "w" -> {
-                    System.out.println("Write");
+                    productController.write();
                 }
                 case "r" -> {
                     System.out.println("Read");

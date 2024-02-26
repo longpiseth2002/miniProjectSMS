@@ -12,10 +12,10 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class ProductDaoImpl implements ProductDao , BoxBorder {
-    @Override
-    public void display(List<Integer> list, int numberOfRow, Scanner input) {
 
-        int numberOfAllData = list.size();
+    @Override
+    public void display(List<Product> productList, int numberOfRow, Scanner input) {
+        int numberOfAllData = productList.size();
         int remain = numberOfAllData % numberOfRow;
         int numberOfPage = remain == 0 ? numberOfAllData / numberOfRow : numberOfAllData / numberOfRow + 1;
         int numberOfCurrentPage = 1;
@@ -42,12 +42,11 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 table.addCell("  QTY ", cellStyle);
                 table.addCell("  IMPORTED AT ", cellStyle);
                 for (int i = numberOfRowStart; i < numberOfRowEnd; i++) {
-                    table.addCell("CODE[" + i + "]=" + list.get(i), cellStyle);
-                    table.addCell(" PRODUCT ::" + i, cellStyle);
-                    table.addCell(" $500 ", cellStyle);
-                    table.addCell(" " + i, cellStyle);
-                    table.addCell(" 2024-12-09 ", cellStyle);
-
+                        table.addCell("CODE[" + productList.get(i).getId() + "]", cellStyle);
+                        table.addCell(" PRODUCT :: " + productList.get(i).getName(), cellStyle);
+                        table.addCell(productList.get(i).getUnitPrice() + " ", cellStyle);
+                        table.addCell(productList.get(i).getQty()  + " ", cellStyle);
+                        table.addCell(productList.get(i).getImportAt() + " ", cellStyle);
                 }
                 System.out.println(table.render());
                 System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
@@ -149,9 +148,20 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public Product insert(Product product) {
-        return null;
+    public void write(Product product,List<Product> productList) {
+        productList.add(product);
     }
+
+    @Override
+    public Product read(Integer proId, List<Product> productList) {
+        Optional<Product> product = selectById(proId,productList);
+        Product foundProduct = null;
+        if(product!=null){
+            foundProduct = product.get();
+        }
+        return foundProduct;
+    }
+
 
     @Override
     public List<Product> select() {
@@ -159,7 +169,10 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public Optional<Product> selectById(Integer id) {
+    public Optional<Product> selectById(Integer id,List<Product> productList) {
+        for(Product product : productList){
+            if(product.getId().equals(id)) return Optional.of(product);
+        }
         return Optional.empty();
     }
 

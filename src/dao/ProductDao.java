@@ -9,10 +9,14 @@ import java.util.Scanner;
 
 
 public interface ProductDao {
-    void display(List<Integer> list , int numberOfRow , Scanner input);
-    Product insert(Product product);
+    void display(List<Product> productList , int numberOfRow , Scanner input);
+    void write(Product product,List<Product> productList);
+
+
+    Product read(Integer proId, List<Product> productList);
+
     List<Product> select();
-    Optional<Product> selectById(Integer id);
+    Optional<Product> selectById(Integer id,List<Product> productList);
     Product updateById(Product product);
     Product deleteById(Integer id);
     List<Product> selectByName(String name);
