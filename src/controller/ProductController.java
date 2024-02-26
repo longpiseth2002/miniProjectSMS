@@ -1,6 +1,7 @@
 package controller;
 
 import dao.ProductDaoImpl;
+import model.Product;
 import views.BoxBorder;
 
 import java.util.ArrayList;
@@ -64,6 +65,13 @@ public class ProductController implements BoxBorder {
                 scanner.nextLine();
             }
         } while (true);
+    }
+
+    public void write(){
+        productDaoImpl.write(scanner);
+        List<Product> products = new ArrayList<>();
+        products.add(products);
+
     }
 
 }

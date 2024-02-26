@@ -1,7 +1,6 @@
 package dao;
 
 import java.io.*;
-import java.nio.charset.CoderResult;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +8,8 @@ import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import model.Product;
+import views.Colors;
+
 public class BackGroundProcess implements IBackGroundProccess{
     private static AtomicInteger currenSize=new AtomicInteger(0);
     @Override

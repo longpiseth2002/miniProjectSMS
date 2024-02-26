@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public interface ProductDao {
     void display(List<Integer> list , int numberOfRow , Scanner input);
-    Product insert(Product product);
+    Product write(Scanner scanner);
     List<Product> select();
     Optional<Product> selectById(Integer id);
     Product updateById(Product product);
