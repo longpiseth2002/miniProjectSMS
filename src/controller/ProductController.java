@@ -4,7 +4,11 @@ import dao.BackgroundProcessImpl;
 import dao.ProductDaoImpl;
 import model.Product;
 import views.BoxBorder;
+import views.InterfaceViews;
 
+import java.time.LocalDate;
+import java.util.*;
+import java.util.InputMismatchException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -15,6 +19,17 @@ public class ProductController implements BoxBorder {
     private ProductDaoImpl productDaoImpl;
     private List<Product> products;
 
+    boolean isContinue = true;
+//    static List<Integer> list = new ArrayList<>();
+    static List<Product> productList = new ArrayList<>(Arrays.asList(
+        new Product("Coca",0.5,20.0),
+        new Product("Sting",2.0,20.0),
+        new Product("Carabao",1.0,20.0)
+
+));
+    Product product;
+
+
     public ProductController() {
         scanner = new Scanner(System.in);
         productDaoImpl = new ProductDaoImpl();
@@ -23,6 +38,80 @@ public class ProductController implements BoxBorder {
 
     // Default number of rows
     int setRow = 5;
+
+
+
+
+
+//    private static void add(int n) {
+//        for (int i = 0; i < n; i++) {
+//            list.add(i);
+//        }
+//    }
+
+
+//    static {
+//        add(2353646);
+//    }
+
+    public void display() {
+        productDaoImpl.display(productList, setRow, scanner);
+    }
+
+    public void write(){
+        Integer proId = productList.size() + 1;
+        LocalDate importAt = LocalDate.now();
+
+        try{
+            System.out.print("Enter product name: " );
+            String proName = scanner.nextLine().trim();
+            for (char i : proName.toCharArray()){
+                if(Character.isDigit(i)){
+                    throw new Exception();
+                }
+            }
+            System.out.print("Enter product Unit Price: " );
+            Double unitPrice = scanner.nextDouble();
+            System.out.print("Enter product Qty: " );
+            Double qty = scanner.nextDouble();
+            scanner.nextLine();
+            isContinue = true;
+            while(isContinue){
+                System.out.print("ℹ️ Are you sure to create a new product? [Y/N] : ");
+                String ans = scanner.nextLine();
+                if(ans.equalsIgnoreCase("y")){
+                    productDaoImpl.write(new Product(proName,unitPrice,qty),productList,"write");
+                    System.out.println("✅ Product has been created successfully");
+                    isContinue = false;
+                }else if(ans.equalsIgnoreCase("n")){
+                    System.out.println("🏠 Back to Menu...");
+                    isContinue = false;
+                }else{
+                    System.out.println(" ❌ Invalid Option");
+                }
+            }
+        }catch (Exception e){
+            System.out.println(" ❌ Invalid Input");
+            scanner.nextLine();
+        }
+    }
+
+    public void read(){
+            try {
+                System.out.print("Enter Product Id: ");
+                int proId = Integer.parseInt(scanner.nextLine());
+                Product product = productDaoImpl.read(proId, productList);
+                if (product != null) {
+                    System.out.println("Product Detail of CODE[" + product.getId() + "]");
+                    InterfaceViews.readDetail(product);
+                } else {
+                    System.out.println(" ❌ Invalid ID");
+                }
+            } catch (Exception e) {
+                System.out.println(" ❌ Please enter number only.");
+            }
+
+    }
 
     public void setNumberRow() {
         int inputRow;
@@ -44,44 +133,5 @@ public class ProductController implements BoxBorder {
             }
         } while (true);
     }
-
-    public void write() {
-        System.out.print("Enter the number of products: ");
-        int n = scanner.nextInt();
-        scanner.nextLine();
-
-        for (int i = 0; i < n; i++) {
-            System.out.println("Entering details for product " + (i + 1) + ":");
-            Product product = productDaoImpl.write(scanner);
-            products.add(product);
-        }
-        BackgroundProcessImpl backgroundProcess = BackgroundProcessImpl.createObject();
-        backgroundProcess.writeToFile(products,"");
-    }
-
-    public void writeN() {
-        System.out.print("Enter the number of products: ");
-        int n = scanner.nextInt();
-        scanner.nextLine();
-
-        for (int i = 0; i < n; i++) {
-            System.out.println("Entering details for product " + (i + 1) + ":");
-            Product product = productDaoImpl.write(scanner);
-            products.add(product);
-        }
-            for(Product p : products){
-                System.out.println(p);
-            }
-
-    }
-
-
-    @Override
-    public String toString() {
-        return "ProductController{" +
-                "products=" + products +
-                '}';
-    }
-
 
 }
