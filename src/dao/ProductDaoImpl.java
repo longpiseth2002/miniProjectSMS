@@ -8,10 +8,7 @@ import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class ProductDaoImpl implements ProductDao , BoxBorder {
 
@@ -45,12 +42,12 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 table.addCell("  UNIT PRICE ", cellStyle);
                 table.addCell("  QTY ", cellStyle);
                 table.addCell("  IMPORTED AT ", cellStyle);
-                for (int i = numberOfRowStart; i < numberOfRowEnd; i++) {
-                    table.addCell("CODE[" + i + "]=" + productList.get(i), cellStyle);
-                    table.addCell(" PRODUCT ::" + i, cellStyle);
-                    table.addCell(" $500 ", cellStyle);
-                    table.addCell(" " + i, cellStyle);
-                    table.addCell(" 2024-12-09 ", cellStyle);
+                for (int i = numberOfRowStart; i < productList.size() ; i++) {
+                    table.addCell(String.valueOf(productList.get(i).getId()), cellStyle);
+                    table.addCell(productList.get(i).getName(), cellStyle);
+                    table.addCell(String.valueOf(productList.get(i).getUnitPrice()), cellStyle);
+                    table.addCell(String.valueOf(productList.get(i).getQty()), cellStyle);
+                    table.addCell(String.valueOf(productList.get(i).getImportAt()), cellStyle);
 
                 }
                 System.out.println(table.render());
@@ -65,7 +62,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
             }
             System.out.print("⏩ Navigation page : ");
             String op = input.nextLine().toUpperCase();
-            System.out.println("\n\n");
+            System.out.println("\n");
             switch (op) {
                 case "N" -> {
                     if (numberOfRowEnd < numberOfAllData) {
@@ -146,7 +143,10 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 case "B" -> {
                     return;
                 }
-                default -> stepCheck = false;
+                default -> {
+                    System.out.println("  ⚠️INVALID INPUT !!!! PLEASE ENTER AGAIN .\n      YOU CAN SELECT THESE OPTIONS\n      N -> next\n      P -> Previous\n      G -> Goto\n      L -> last\n      F -> First\n      B -> BACK TO APPLICATION MENU \n");
+                    stepCheck = false;
+                }
             }
             if (op.equalsIgnoreCase("G")) input.nextLine();
         } while (true);
@@ -207,8 +207,14 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public List<Product> selectByName(String name) {
-        return null;
+    public List<Product> selectByName(List<Product> products ,String name) {
+
+        for (Product p : products){
+            if(name.equals(p.getName())){
+                System.out.println(p.getName());
+            }
+        }
+        return products;
     }
 
 

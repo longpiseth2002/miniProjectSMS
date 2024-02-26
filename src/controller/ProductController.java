@@ -20,14 +20,6 @@ public class ProductController implements BoxBorder {
     private List<Product> products;
 
     boolean isContinue = true;
-//    static List<Integer> list = new ArrayList<>();
-    static List<Product> productList = new ArrayList<>(Arrays.asList(
-        new Product("Coca",0.5,20.0),
-        new Product("Sting",2.0,20.0),
-        new Product("Carabao",1.0,20.0)
-
-));
-    Product product;
 
 
     public ProductController() {
@@ -40,76 +32,85 @@ public class ProductController implements BoxBorder {
     int setRow = 5;
 
 
-
-
-
-//    private static void add(int n) {
-//        for (int i = 0; i < n; i++) {
-//            list.add(i);
-//        }
-//    }
-
-
-//    static {
-//        add(2353646);
-//    }
-
     public void display() {
-        productDaoImpl.display(productList, setRow, scanner);
+        productDaoImpl.display(products, setRow, scanner);
     }
 
-    public void write(){
-        Integer proId = productList.size() + 1;
-        LocalDate importAt = LocalDate.now();
+    public void write() {
+        Integer proId = products.size() + 1;
 
-        try{
-            System.out.print("Enter product name: " );
+        try {
+            System.out.print("Enter product name: ");
             String proName = scanner.nextLine().trim();
-            for (char i : proName.toCharArray()){
-                if(Character.isDigit(i)){
+            for (char i : proName.toCharArray()) {
+                if (Character.isDigit(i)) {
                     throw new Exception();
                 }
             }
-            System.out.print("Enter product Unit Price: " );
+            System.out.print("Enter product Unit Price: ");
             Double unitPrice = scanner.nextDouble();
-            System.out.print("Enter product Qty: " );
+            System.out.print("Enter product Qty: ");
             Double qty = scanner.nextDouble();
             scanner.nextLine();
             isContinue = true;
-            while(isContinue){
+            while (isContinue) {
                 System.out.print("ℹ️ Are you sure to create a new product? [Y/N] : ");
                 String ans = scanner.nextLine();
-                if(ans.equalsIgnoreCase("y")){
-                    productDaoImpl.write(new Product(proName,unitPrice,qty),productList,"write");
+                if (ans.equalsIgnoreCase("y")) {
+                    productDaoImpl.write(new Product(proName, unitPrice, qty), products, "write");
                     System.out.println("✅ Product has been created successfully");
                     isContinue = false;
-                }else if(ans.equalsIgnoreCase("n")){
+                } else if (ans.equalsIgnoreCase("n")) {
                     System.out.println("🏠 Back to Menu...");
                     isContinue = false;
-                }else{
+                } else {
                     System.out.println(" ❌ Invalid Option");
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(" ❌ Invalid Input");
             scanner.nextLine();
         }
     }
 
-    public void read(){
-            try {
-                System.out.print("Enter Product Id: ");
-                int proId = Integer.parseInt(scanner.nextLine());
-                Product product = productDaoImpl.read(proId, productList);
-                if (product != null) {
-                    System.out.println("Product Detail of CODE[" + product.getId() + "]");
-                    InterfaceViews.readDetail(product);
-                } else {
-                    System.out.println(" ❌ Invalid ID");
-                }
-            } catch (Exception e) {
-                System.out.println(" ❌ Please enter number only.");
+    public void read() {
+        try {
+            System.out.print("Enter Product Id: ");
+            int proId = Integer.parseInt(scanner.nextLine());
+            Product product = productDaoImpl.read(proId, products);
+            if (product != null) {
+                System.out.println("Product Detail of CODE[" + product.getId() + "]");
+                InterfaceViews.readDetail(product);
+            } else {
+                System.out.println(" ❌ Invalid ID");
             }
+        } catch (Exception e) {
+            System.out.println(" ❌ Please enter number only.");
+        }
+
+    }
+
+    public void deleteById() {
+        System.out.print("Enter Product Id To Delete : ");
+        int proId = Integer.parseInt(scanner.nextLine());
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getId().equals(proId)) {
+                productDaoImpl.read(proId, products);
+                System.out.print("ℹ️ Are you sure to delete a  product? [Y/N] : ");
+                String op = scanner.nextLine();
+                if (op.equals("y")) {
+                    productDaoImpl.deleteById(proId, products);
+                    System.out.println("✅ Product has been deleted successfully");
+
+                } else if (op.equalsIgnoreCase("n")) {
+                    System.out.println("🏠 Back to Menu...");
+                    isContinue = false;
+                } else {
+                    System.out.println(" ❌ Invalid Option");
+                }
+
+            }
+        }
 
     }
 
