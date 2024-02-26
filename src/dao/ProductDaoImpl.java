@@ -178,6 +178,12 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         return null;
     }
 
+    @Override
+    public Product searchById(List<Product> productList, Integer Id) {
+        
+        return null;
+    }
+
 
     public void setUpRow(int inputRow, int setRow) {
 
