@@ -7,7 +7,7 @@ import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 
-import java.time.LocalDate;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -161,12 +161,10 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         System.out.print("Enter quantity: ");
         double qty = scanner.nextDouble();
 
-        System.out.print("Enter import date (YYYY-MM-DD): ");
-        String importDateStr = scanner.next();
-        LocalDate importDate = LocalDate.parse(importDateStr);
 
-        return new Product(name, unitPrice, qty, importDate);
+        return new Product(name, unitPrice, qty);
     }
+
 
     @Override
     public List<Product> select() {

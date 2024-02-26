@@ -16,14 +16,25 @@ public class Product {
         this.id = ++lastAssignedId;
     }
 
-    public Product(String name, Double unitPrice, Double qty, LocalDate importAt) {
+    public Product(String name, Double unitPrice, Double qty) {
         this.id = ++lastAssignedId;
         this.name = name;
         this.unitPrice = unitPrice;
         this.qty = qty;
-        this.importAt = importAt;
+        this.importAt = LocalDate.now();
     }
 
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", unitPrice=" + unitPrice +
+                ", qty=" + qty +
+                ", importAt=" + importAt +
+                '}';
+    }
 
     public Integer getId() {
         return id;

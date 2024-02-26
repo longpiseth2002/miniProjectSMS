@@ -1,3 +1,4 @@
+import controller.BackgroundProcessController;
 import controller.ProductController;
 import views.InterfaceViews;
 
@@ -11,6 +12,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ProductController productController = new ProductController();
+        BackgroundProcessController backgroundProcessController = new BackgroundProcessController();
 
         System.out.println(
                 " ".repeat(25) + "██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗    ████████╗ ██████╗ \n" +
@@ -35,13 +37,13 @@ public class Main {
             System.out.println();
             switch (op) {
                 case "d" -> {
-                    productController.display();
+//                    productController.display();
                 }
                 case "rd" -> {
                     System.out.println("Random");
                 }
                 case "w" -> {
-                    System.out.println("Write");
+                    backgroundProcessController.writeToFile();
                 }
                 case "r" -> {
                     System.out.println("Read");

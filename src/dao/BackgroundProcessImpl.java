@@ -10,10 +10,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import model.Product;
 import views.Colors;
 
-public class BackGroundProcess implements IBackGroundProccess{
+public class BackgroundProcessImpl implements BackgroundProcess{
     private static AtomicInteger currenSize=new AtomicInteger(0);
     @Override
-    public void loadingProgress(int totaSize) {
+    public void loadingProgress(int totalSize) {
         System.out.println("Loading...");
         int numberToRead=1000000;
         numberToRead=readTotalSize("totalSize.txt");
@@ -57,13 +57,13 @@ public class BackGroundProcess implements IBackGroundProccess{
     }
 
     @Override
-    public void writeToFile(Product product,List<Product> list, String transectionFile) {
+    public void writeToFile(Product product,List<Product> list) {
         long start=System.nanoTime();
-        for(int i=0;i<10;i++){
-            list.add(new Product(100000,"hhhjh",10.2,5.5, LocalDate.now()));
+        for(int i=0;i<100;i++){
+            list.add(new Product("hhhjh"+(i),10.2,5.5));
         }
         Thread thread1=new Thread(()->{
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("data3.txt"))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/allFile/TransectionFile.txt"))) {
                 StringBuilder batch = new StringBuilder();
                 int count = 0;
                 int batchSize=10000;
@@ -82,12 +82,12 @@ public class BackGroundProcess implements IBackGroundProccess{
                     count++;
                     if (count == batchSize || obj.equals(list.get(list.size() - 1))) {
                         writer.write(batch.toString());
-                        batch.setLength(0); // Clear the batch
-                        count = 0; // Reset the counter
+                        batch.setLength(0);
+                        count = 0;
                     }
                 }
             } catch (IOException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         });
         Thread thread2=new Thread(()->{
@@ -125,10 +125,5 @@ public class BackGroundProcess implements IBackGroundProccess{
     @Override
     public void commit(List<Product> list, String tranSectionFile, String datFile) {
 
-    }
-    public static void main(String[] args) {
-        BackGroundProcess obj=new BackGroundProcess();
-        List<Product> list=new ArrayList<>();
-        obj.writeToFile(new Product(),list,"");
     }
 }
