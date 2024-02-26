@@ -168,5 +168,6 @@ public class Colors {
     public static String reset() {
         return "\u001B[0m"; // Reset
     }
+    private Colors(){};
 
 }
