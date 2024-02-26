@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public interface ProductDao {
     void display(List<Product> productList , int numberOfRow , Scanner input);
-    void write(Product product,List<Product> productList);
+    void write(Product product,List<Product> productList,String Status);
 
 
     Product read(Integer proId, List<Product> productList);

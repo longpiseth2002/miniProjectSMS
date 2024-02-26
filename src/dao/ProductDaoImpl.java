@@ -8,6 +8,7 @@ import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -148,7 +149,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public void write(Product product,List<Product> productList) {
+    public void write(Product product,List<Product> productList,String status) {
         productList.add(product);
     }
 
@@ -170,10 +171,16 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
     @Override
     public Optional<Product> selectById(Integer id,List<Product> productList) {
-        for(Product product : productList){
-            if(product.getId().equals(id)) return Optional.of(product);
+        try{
+            for(Product product : productList){
+                if(product.getId().equals(id)){
+                    return Optional.of(product);
+                }
+            }
+        } catch (NoSuchElementException e) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override

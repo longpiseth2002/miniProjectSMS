@@ -12,6 +12,8 @@ import java.util.InputMismatchException;
 public class ProductController implements BoxBorder {
     private Scanner scanner;
     private ProductDaoImpl productDaoImpl;
+
+    boolean isContinue = true;
 //    static List<Integer> list = new ArrayList<>();
     static List<Product> productList = new ArrayList<>(Arrays.asList(
         new Product(1,"Coca",0.5,20.0,LocalDate.now()),
@@ -54,41 +56,56 @@ public class ProductController implements BoxBorder {
     public void write(){
         Integer proId = productList.size() + 1;
         LocalDate importAt = LocalDate.now();
-        System.out.print("Enter product name: " );
-        String proName = scanner.nextLine();
-        System.out.print("Enter product Unit Price: " );
-        Double unitPrice = scanner.nextDouble();
-        System.out.print("Enter product Qty: " );
-        Double qty = scanner.nextDouble();
-        boolean isContinue = true;
-        while(isContinue){
-            System.out.print(" ℹ️ Are you sure to create a new product? [Y/N] : ");
-            scanner.nextLine();
-            String ans = scanner.nextLine();
-            if(ans.equalsIgnoreCase("y")){
-                productDaoImpl.write(new Product(proId,proName,unitPrice,qty,importAt),productList);
-                System.out.println("   ✅ Product has been created successfully");
-                isContinue = false;
-            }else if(ans.equalsIgnoreCase("n")){
-                System.out.println("   🏠 Back to Menu...");
-                isContinue = false;
-            }else{
-                System.out.println("    ❌ Invalid Option");
+
+        try{
+            System.out.print("Enter product name: " );
+            String proName = scanner.nextLine().trim();
+            for (char i : proName.toCharArray()){
+                if(Character.isDigit(i)){
+                    throw new Exception();
+                }
             }
+            System.out.print("Enter product Unit Price: " );
+            Double unitPrice = scanner.nextDouble();
+            System.out.print("Enter product Qty: " );
+            Double qty = scanner.nextDouble();
+            scanner.nextLine();
+            isContinue = true;
+            while(isContinue){
+                System.out.print("ℹ️ Are you sure to create a new product? [Y/N] : ");
+                String ans = scanner.nextLine();
+                if(ans.equalsIgnoreCase("y")){
+                    productDaoImpl.write(new Product(proId,proName,unitPrice,qty,importAt),productList,"write");
+                    System.out.println("✅ Product has been created successfully");
+                    isContinue = false;
+                }else if(ans.equalsIgnoreCase("n")){
+                    System.out.println("🏠 Back to Menu...");
+                    isContinue = false;
+                }else{
+                    System.out.println(" ❌ Invalid Option");
+                }
+            }
+        }catch (Exception e){
+            System.out.println(" ❌ Invalid Input");
+            scanner.nextLine();
         }
     }
 
     public void read(){
-        System.out.print("Enter Product Id: ");
-        Integer proId = scanner.nextInt();
-        Product product = productDaoImpl.read(proId,productList);
-        if(product!=null){
-            System.out.println("Product Detail of CODE[" + product.getId() + "]");
-            System.out.println("Product Name: " + product.getName());
-            System.out.println("Product Unit Price: " + product.getUnitPrice());
-            System.out.println("Product QTY: " + product.getQty());
-            System.out.println("Product Imported Date : " + product.getImportAt());
-        }
+            try {
+                System.out.print("Enter Product Id: ");
+                int proId = Integer.parseInt(scanner.nextLine());
+                Product product = productDaoImpl.read(proId, productList);
+                if (product != null) {
+                    System.out.println("Product Detail of CODE[" + product.getId() + "]");
+                    InterfaceViews.readDetail(product);
+                } else {
+                    System.out.println(" ❌ Invalid ID");
+                }
+            } catch (Exception e) {
+                System.out.println(" ❌ Please enter number only.");
+            }
+
     }
 
     public void setNumberRow() {
