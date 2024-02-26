@@ -1,8 +1,6 @@
 package dao;
 
 import java.io.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,11 +10,13 @@ import views.Colors;
 
 public class BackgroundProcessImpl implements BackgroundProcess{
     private static AtomicInteger currenSize=new AtomicInteger(0);
+    private static AtomicInteger AtotalSize=new AtomicInteger(0);
+    private  static BackgroundProcessImpl instance;
     @Override
-    public void loadingProgress(int totalSize) {
+    public void loadingProgress(int totalSize,String status) {
         System.out.println("Loading...");
-        int numberToRead=1000000;
-        numberToRead=readTotalSize("totalSize.txt");
+        AtotalSize.set(totalSize);
+        int numberToRead=status.equalsIgnoreCase("start")?readTotalSize("totalSize.txt"):AtotalSize.get();
         String stDigit= Integer.toString(numberToRead);
         int digit=stDigit.length();
         int divi=(digit>3)?(int)Math.pow(10,digit-3):1;
@@ -26,20 +26,14 @@ public class BackgroundProcessImpl implements BackgroundProcess{
             if (currenSize.get()  % divi == remain) {
                 repeatNumber=(int) (currenSize.get() / (numberToRead / 100f));
                 System.out.printf(Colors.red()+"\r[ %d/%d ]", currenSize.get(),numberToRead);
-                System.out.printf(" %s%s","\u001B[35m\u2588".repeat(repeatNumber),"\u001B[37m\u2592".repeat(100-repeatNumber));
-                System.out.printf(Colors.red()+"[ %.2f%% ]", currenSize.get()  / (numberToRead / 100f));
+                System.out.printf(" %s%s","\u001B[31m\u2588".repeat(repeatNumber),"\u001B[37m\u2592".repeat(100-repeatNumber));
+                System.out.printf(Colors.red()+" [ %.2f%% ]", currenSize.get()  / (numberToRead / 100f));
                 System.out.flush();
             }
         }
-        System.out.printf(Colors.blue()+"\r[ %d/%d ] %s[\u001B[34m%.2f%% ]",currenSize.get(),numberToRead,"\u001B[35m\u2588".repeat(100), 100f);
+        System.out.printf(Colors.blue()+"\r[ %d/%d ] %s\u001B[34m [%.2f%% ]",currenSize.get(),numberToRead,"\u001B[35m\u2588".repeat(100), 100f);
     }
     private int readTotalSize(String fileName){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("10");
-            writer.flush();
-        }catch (Exception e){
-
-        }
         int numberToRead=0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -51,19 +45,24 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         }
         return numberToRead;
     }
+    private void writeTotalSize(int totalSize,String fileName){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(totalSize+"");
+            writer.flush();
+        }catch (Exception e){
+
+        }
+    }
     @Override
     public void readFromFile(List<Product> list, String datFile) {
 
     }
 
     @Override
-    public void writeToFile(Product product,List<Product> list) {
+    public void writeToFile(List<Product> list,String status) {
         long start=System.nanoTime();
-        for(int i=0;i<100;i++){
-            list.add(new Product("hhhjh"+(i),10.2,5.5));
-        }
         Thread thread1=new Thread(()->{
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/allFile/TransectionFile.txt"))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("Transection.txt"))) {
                 StringBuilder batch = new StringBuilder();
                 int count = 0;
                 int batchSize=10000;
@@ -78,20 +77,22 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                             .append(obj.getQty())
                             .append(",")
                             .append(obj.getImportAt())
+                            .append(",")
+                            .append(status)
                             .append(System.lineSeparator());
                     count++;
-                    if (count == batchSize || obj.equals(list.get(list.size() - 1))) {
+                    if (count == batchSize || obj.equals(list.size()-1)) {
                         writer.write(batch.toString());
-                        batch.setLength(0);
-                        count = 0;
+                        batch.setLength(0); // Clear the batch
+                        count = 0; // Reset the counter
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         });
         Thread thread2=new Thread(()->{
-            loadingProgress(1);
+            loadingProgress(list.size(),"");
         });
         thread1.start();
         thread2.start();
@@ -105,7 +106,6 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         System.out.println(Colors.reset()+"\ntime = "+(end-start)/1000000+"ms\n");
         currenSize.set(0);
     }
-
     @Override
     public boolean commitCheck(String fileTransection, String fileData, Scanner input) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileTransection))) {
@@ -125,5 +125,74 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     @Override
     public void commit(List<Product> list, String tranSectionFile, String datFile) {
 
+    }
+
+    @Override
+    public void ramdomRead(String fileName,Scanner input) {
+
+    }
+
+    @Override
+    public void randomWrite(String filename,Scanner input) {
+        System.out.print("Enter number of file: ");
+        int n=input.nextInt();
+        writeTotalSize(n,"totalSize.txt");
+        long start=System.nanoTime();
+        BackgroundProcessImpl obj =  BackgroundProcessImpl.CreateObject();
+        Thread thread1=new Thread(()->{
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+                StringBuilder batch = new StringBuilder();
+                int count = 0;
+                int batchSize=1000;
+                for (int i = 0; i < n; i++) {
+                    currenSize.incrementAndGet();
+                    batch.append(i)
+                            .append(",")
+                            .append("name")
+                            .append(",")
+                            .append(10.5)
+                            .append(",")
+                            .append(5.6)
+                            .append(",")
+                            .append("10/02/2002")
+                            .append(System.lineSeparator());
+                    count++;
+                    if (count == batchSize || i==n-1) {
+                        writer.write(batch.toString());
+                        batch.setLength(0); // Clear the batch
+                        count = 0; // Reset the counter
+                    }
+                }
+            } catch (IOException e) {
+                //e.printStackTrace();
+            }
+        });
+        Thread thread2=new Thread(()->{
+            obj.loadingProgress(n,"");
+        });
+        thread1.start();
+        thread2.start();
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+        }
+        long end=System.nanoTime();
+        System.out.println(Colors.blue()+"\nData written to file successfully.");
+        System.out.println(Colors.reset()+"\ntime = "+(end-start)/1000000+"ms\n");
+        currenSize.set(0);
+    }
+
+    @Override
+    public void setListSize(int listSize) {
+        AtotalSize.set(listSize);
+    }
+
+    private  BackgroundProcessImpl(){};
+    public static BackgroundProcessImpl CreateObject(){
+        if(instance==null){
+            return new BackgroundProcessImpl();
+        }
+        return instance;
     }
 }

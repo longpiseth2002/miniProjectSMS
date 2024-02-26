@@ -4,12 +4,18 @@ import model.Product;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public interface BackgroundProcess {
+
+
     public void readFromFile(List<Product> list,String datFile);
-    public void writeToFile(Product product,List<Product> list);
+    public void writeToFile(List<Product> list,String status);
 
     public boolean commitCheck(String fileTransection, String fileData, Scanner input);
-    public void loadingProgress(int totalLine);
+    public void loadingProgress(int totalSize,String status);
     public void commit(List<Product> list,String tranSectionFile,String datFile);
+    public void ramdomRead(String fileName,Scanner input);
+    public void randomWrite(String filename,Scanner input);
+    public void setListSize(int listSize);
 }

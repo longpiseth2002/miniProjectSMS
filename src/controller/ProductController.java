@@ -1,5 +1,6 @@
 package controller;
 
+import dao.BackgroundProcessImpl;
 import dao.ProductDaoImpl;
 import model.Product;
 import views.BoxBorder;
@@ -22,10 +23,6 @@ public class ProductController implements BoxBorder {
 
     // Default number of rows
     int setRow = 5;
-
-//    public void display() {
-//        productDaoImpl.display(products, setRow, scanner);
-//    }
 
     public void setNumberRow() {
         int inputRow;
@@ -58,6 +55,24 @@ public class ProductController implements BoxBorder {
             Product product = productDaoImpl.write(scanner);
             products.add(product);
         }
+        BackgroundProcessImpl backgroundProcess = BackgroundProcessImpl.CreateObject();
+        backgroundProcess.writeToFile(products,"");
+    }
+
+    public void writeN() {
+        System.out.print("Enter the number of products: ");
+        int n = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("Entering details for product " + (i + 1) + ":");
+            Product product = productDaoImpl.write(scanner);
+            products.add(product);
+        }
+            for(Product p : products){
+                System.out.println(p);
+            }
+
     }
 
 
@@ -68,9 +83,5 @@ public class ProductController implements BoxBorder {
                 '}';
     }
 
-    public void display(){
-        for(Product p : products){
-            System.out.println(p);
-        }
-    }
+
 }

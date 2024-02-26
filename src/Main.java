@@ -37,13 +37,13 @@ public class Main {
             System.out.println();
             switch (op) {
                 case "d" -> {
-//                    productController.display();
+                    productController.writeN();
                 }
                 case "rd" -> {
-                    System.out.println("Random");
+                    backgroundProcessController.randomWrite();
                 }
                 case "w" -> {
-                    backgroundProcessController.writeToFile();
+                    productController.write();
                 }
                 case "r" -> {
                     System.out.println("Read");
@@ -76,9 +76,6 @@ public class Main {
                     System.exit(0);
                 }
             }
-
-
-
 
 
         } while (op != "x");
