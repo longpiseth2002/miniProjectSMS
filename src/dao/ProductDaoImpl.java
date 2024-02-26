@@ -169,10 +169,6 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
 
-    @Override
-    public List<Product> select() {
-        return null;
-    }
 
     @Override
     public Optional<Product> selectById(Integer id,List<Product> productList) {
@@ -208,16 +204,25 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
     @Override
     public List<Product> selectByName(List<Product> products ,String name) {
+        List<Product> matchingProducts = new ArrayList<>();
 
-        for (Product p : products){
-            if(name.equals(p.getName())){
-                System.out.println(p.getName());
+        for (Product p : products) {
+            if (p.getName().contains(name)) {
+                matchingProducts.add(p);
             }
         }
-        return products;
+
+        return matchingProducts;
     }
 
+    @Override
+    public Product searchByName(List<Product> products , String searchName) {
+        List<Product> product = selectByName(products,searchName);
+        if(product!=null){
 
+        }
+        return null;
+    }
     public void setUpRow(int inputRow, int setRow) {
 
         if (inputRow >= 1) {

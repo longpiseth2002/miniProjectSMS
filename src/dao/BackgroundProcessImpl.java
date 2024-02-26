@@ -62,7 +62,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     public void writeToFile(List<Product> list,String status) {
         long start=System.nanoTime();
         Thread thread1=new Thread(()->{
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("Transection.txt"))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/allFile/Transection.txt"))) {
                 StringBuilder batch = new StringBuilder();
                 int count = 0;
                 int batchSize=10000;

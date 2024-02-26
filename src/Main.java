@@ -55,7 +55,7 @@ public class Main {
                     productController.deleteById();
                 }
                 case "s" -> {
-                    System.out.println("Search");
+                    productController.searchByName();
                 }
                 case "sr" -> {
                     productController.setNumberRow();
