@@ -9,6 +9,7 @@ import views.BoxBorder;
 
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -170,30 +171,21 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     public List<Product> select() {
         return null;
     }
-
-//    @Override
-//    public Optional<Product> selectById(Integer id, List<Product> products) {
-//
-//        for (Product product : products) {
-//            if (id.equals(product.getId())) {
-//                System.out.println(product);
-//                return Optional.of(product);
-//            }
-//        }
-//
-//        System.out.println("Product with id " + id + " not found.");
-//        return Optional.empty();
-//    }
-
     @Override
-    public boolean searchById( int id , List<Product> products ) {
-        for( int i=0 ; i< products.size() ; i++ ){
-            if(id ==products.get(i).getId()){
-                return true;
+    public Optional<Product> selectById(Integer id,List<Product> productList) {
+        try{
+            for(Product product : productList){
+                if(product.getId().equals(id)){
+                    return Optional.of(product);
+                }
             }
+        } catch (NoSuchElementException e) {
+            return Optional.empty();
         }
-        return false;
+        return null;
     }
+
+
 
     @Override
     public Product updateById(Product product) {
@@ -201,8 +193,14 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public Product deleteById(Integer id) {
-        return null;
+    public Product deleteById(Integer id , List<Product> products ) {
+        Optional<Product> product = selectById(id,products);
+        Product p = null;
+        if(product!=null){
+            p = product.get();
+            products.removeIf(pro -> pro.getId() == id);
+        }
+        return p;
     }
 
     @Override
