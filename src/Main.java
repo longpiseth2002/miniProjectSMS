@@ -3,13 +3,14 @@ import controller.ProductController;
 import views.InterfaceViews;
 
 
+import java.io.IOException;
 import java.util.Scanner;
 
 
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         ProductController productController = new ProductController();
         BackgroundProcessController backgroundProcessController = new BackgroundProcessController();
@@ -30,6 +31,7 @@ public class Main {
                         " ".repeat(30) + "  ╚═════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝     ╚═╝╚══════╝ ");
         String op;
         InterfaceViews.interfaceCSTAD();
+        backgroundProcessController.start();
         do {
             InterfaceViews.applicationMenu();
             System.out.print("➡ SELECT OPTION MENU : ");
@@ -37,7 +39,7 @@ public class Main {
             System.out.println();
             switch (op) {
                 case "d" -> {
-
+                        productController.display();
                 }
                 case "rd" -> {
                     backgroundProcessController.randomWrite();

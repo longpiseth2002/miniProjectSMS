@@ -17,42 +17,20 @@ import java.util.Scanner;
 public class ProductController implements BoxBorder {
     private Scanner scanner;
     private ProductDaoImpl productDaoImpl;
-    private List<Product> products;
-
+    private int setRow = 5;
+    private Product product;
     boolean isContinue = true;
-//    static List<Integer> list = new ArrayList<>();
-    static List<Product> productList = new ArrayList<>(Arrays.asList(
-        new Product("Coca",0.5,20.0),
-        new Product("Sting",2.0,20.0),
-        new Product("Carabao",1.0,20.0)
-
-));
-    Product product;
-
-
+    private static List<Product> productList = new ArrayList<>();
+    public static List<Product> products(){
+        return productList;
+    }
     public ProductController() {
         scanner = new Scanner(System.in);
         productDaoImpl = new ProductDaoImpl();
-        products = new ArrayList<>();
+        product=new Product();
     }
 
     // Default number of rows
-    int setRow = 5;
-
-
-
-
-
-//    private static void add(int n) {
-//        for (int i = 0; i < n; i++) {
-//            list.add(i);
-//        }
-//    }
-
-
-//    static {
-//        add(2353646);
-//    }
 
     public void display() {
         productDaoImpl.display(productList, setRow, scanner);

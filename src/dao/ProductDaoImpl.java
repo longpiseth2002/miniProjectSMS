@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class ProductDaoImpl implements ProductDao , BoxBorder {
 
-
+    private BackgroundProcessImpl process=BackgroundProcessImpl.createObject();
 
     @Override
     public void display(List<Product> productList, int numberOfRow, Scanner input) {
@@ -46,11 +46,11 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 table.addCell("  QTY ", cellStyle);
                 table.addCell("  IMPORTED AT ", cellStyle);
                 for (int i = numberOfRowStart; i < numberOfRowEnd; i++) {
-                    table.addCell("CODE[" + i + "]=" + productList.get(i), cellStyle);
-                    table.addCell(" PRODUCT ::" + i, cellStyle);
-                    table.addCell(" $500 ", cellStyle);
-                    table.addCell(" " + i, cellStyle);
-                    table.addCell(" 2024-12-09 ", cellStyle);
+                    table.addCell("CODE[" + i + "]=" + productList.get(i).getId(), cellStyle);
+                    table.addCell(productList.get(i).getName(), cellStyle);
+                    table.addCell(productList.get(i).getUnitPrice()+"", cellStyle);
+                    table.addCell(productList.get(i).getQty()+"", cellStyle);
+                    table.addCell(productList.get(i).getImportAt().toString(), cellStyle);
 
                 }
                 System.out.println(table.render());
@@ -155,6 +155,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     @Override
     public void write(Product product,List<Product> productList,String status) {
         productList.add(product);
+        process.writeToFile(product,productList,status);
     }
 
 
