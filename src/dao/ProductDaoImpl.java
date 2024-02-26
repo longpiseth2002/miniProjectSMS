@@ -14,10 +14,12 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class ProductDaoImpl implements ProductDao , BoxBorder {
-    @Override
-    public void display(List<Integer> list, int numberOfRow, Scanner input) {
 
-        int numberOfAllData = list.size();
+
+
+    @Override
+    public void display(List<Product> productList, int numberOfRow, Scanner input) {
+        int numberOfAllData = productList.size();
         int remain = numberOfAllData % numberOfRow;
         int numberOfPage = remain == 0 ? numberOfAllData / numberOfRow : numberOfAllData / numberOfRow + 1;
         int numberOfCurrentPage = 1;
@@ -44,7 +46,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 table.addCell("  QTY ", cellStyle);
                 table.addCell("  IMPORTED AT ", cellStyle);
                 for (int i = numberOfRowStart; i < numberOfRowEnd; i++) {
-                    table.addCell("CODE[" + i + "]=" + list.get(i), cellStyle);
+                    table.addCell("CODE[" + i + "]=" + productList.get(i), cellStyle);
                     table.addCell(" PRODUCT ::" + i, cellStyle);
                     table.addCell(" $500 ", cellStyle);
                     table.addCell(" " + i, cellStyle);
@@ -151,19 +153,19 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public Product write(Scanner scanner) {
+    public void write(Product product,List<Product> productList,String status) {
+        productList.add(product);
+    }
 
-        System.out.print("Enter product name: ");
-        String name = scanner.nextLine();
 
-        System.out.print("Enter unit price: ");
-        double unitPrice = scanner.nextDouble();
-
-        System.out.print("Enter quantity: ");
-        double qty = scanner.nextDouble();
-        scanner.nextLine();
-
-        return new Product(name, unitPrice, qty);
+    @Override
+    public Product read(Integer proId, List<Product> productList) {
+        Optional<Product> product = selectById(proId,productList);
+        Product foundProduct = null;
+        if(product!=null){
+            foundProduct = product.get();
+        }
+        return foundProduct;
     }
 
 
@@ -171,6 +173,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     public List<Product> select() {
         return null;
     }
+
     @Override
     public Optional<Product> selectById(Integer id,List<Product> productList) {
         try{

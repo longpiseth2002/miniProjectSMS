@@ -37,7 +37,7 @@ public class Main {
             System.out.println();
             switch (op) {
                 case "d" -> {
-                    productController.writeN();
+
                 }
                 case "rd" -> {
                     backgroundProcessController.randomWrite();
@@ -46,7 +46,7 @@ public class Main {
                     productController.write();
                 }
                 case "r" -> {
-                    System.out.println("Read");
+                    productController.read();
                 }
                 case "e" -> {
                     System.out.println("Edit");

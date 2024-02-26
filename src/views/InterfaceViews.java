@@ -1,6 +1,7 @@
 package views;
 
 
+import model.Product;
 import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
@@ -72,23 +73,23 @@ public class InterfaceViews implements BoxBorder {
         System.out.println(table.render());
     }
 
-    public void readDetail(){
+    public static void readDetail(Product product){
         Table table = new Table(2, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
         CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
         table.setColumnWidth(0,30,40);
         table.setColumnWidth(1,30,40);
 
 
-        table.addCell("  CODE " + " ".repeat(23) + ":");
-        table.addCell("  CSTAD -1220933");
-        table.addCell("  NAME " + " ".repeat(23) + ":");
-        table.addCell("  COCA COLA");
-        table.addCell("  UNIT PRICE " + " ".repeat(17) + ":");
-        table.addCell("  933.0");
-        table.addCell("  QTY " + " ".repeat(24) + ":");
-        table.addCell("  100");
-        table.addCell("  IMPORTED AT " + " ".repeat(16) + ":");
-        table.addCell("  2024-05-22");
+        table.addCell("  CODE " + " ".repeat(23) + ": ");
+        table.addCell(product.getId().toString());
+        table.addCell("  NAME " + " ".repeat(23) + ": ");
+        table.addCell(product.getName());
+        table.addCell("  UNIT PRICE " + " ".repeat(17) + ": ");
+        table.addCell(product.getUnitPrice().toString());
+        table.addCell("  QTY " + " ".repeat(24) + ": ");
+        table.addCell(product.getQty().toString());
+        table.addCell("  IMPORTED AT " + " ".repeat(16) + ": ");
+        table.addCell(product.getImportAt().toString());
 
 
         System.out.println(table.render());
