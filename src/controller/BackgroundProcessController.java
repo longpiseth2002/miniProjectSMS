@@ -14,7 +14,7 @@ public class BackgroundProcessController {
     private Product product ;
 
     public BackgroundProcessController(){
-        backgroundProcess = BackgroundProcessImpl.CreateObject();
+        backgroundProcess = BackgroundProcessImpl.createObject();
         scanner = new Scanner(System.in);
         products = new ArrayList<>();
         product = new Product();

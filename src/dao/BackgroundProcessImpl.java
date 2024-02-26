@@ -1,6 +1,7 @@
 package dao;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -62,7 +63,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     public void writeToFile(List<Product> list,String status) {
         long start=System.nanoTime();
         Thread thread1=new Thread(()->{
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("Transection.txt"))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/allFile/TransectionFile.txt"))) {
                 StringBuilder batch = new StringBuilder();
                 int count = 0;
                 int batchSize=10000;
@@ -81,14 +82,15 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                             .append(status)
                             .append(System.lineSeparator());
                     count++;
-                    if (count == batchSize || obj.equals(list.size()-1)) {
+                    if (count == batchSize || obj.equals(list.get(list.size()-1))) {
                         writer.write(batch.toString());
                         batch.setLength(0); // Clear the batch
                         count = 0; // Reset the counter
                     }
                 }
             } catch (IOException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
+                currenSize.set(-1);
             }
         });
         Thread thread2=new Thread(()->{
@@ -102,7 +104,8 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         } catch (InterruptedException e) {
         }
         long end=System.nanoTime();
-        System.out.println(Colors.blue()+"\nData written to file successfully.");
+        if(currenSize.get()!=-1)
+            System.out.println(Colors.blue()+"\nData written to file successfully.");
         System.out.println(Colors.reset()+"\ntime = "+(end-start)/1000000+"ms\n");
         currenSize.set(0);
     }
@@ -126,7 +129,6 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     public void commit(List<Product> list, String tranSectionFile, String datFile) {
 
     }
-
     @Override
     public void ramdomRead(String fileName,Scanner input) {
 
@@ -136,9 +138,9 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     public void randomWrite(String filename,Scanner input) {
         System.out.print("Enter number of file: ");
         int n=input.nextInt();
-        writeTotalSize(n,"totalSize.txt");
+        writeTotalSize(n,"src/allFile/totalSize.txt");
         long start=System.nanoTime();
-        BackgroundProcessImpl obj =  BackgroundProcessImpl.CreateObject();
+        BackgroundProcessImpl obj =  BackgroundProcessImpl.createObject();
         Thread thread1=new Thread(()->{
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
                 StringBuilder batch = new StringBuilder();
@@ -189,7 +191,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     }
 
     private  BackgroundProcessImpl(){};
-    public static BackgroundProcessImpl CreateObject(){
+    public static BackgroundProcessImpl createObject(){
         if(instance==null){
             return new BackgroundProcessImpl();
         }
@@ -197,8 +199,8 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     }
 
     public static void main(String[] args) {
-        BackGroundProcess obj=BackGroundProcess.CreateObject();
-        ArrayList<Product> list =new ArrayList<>();
-
+        BackgroundProcessImpl ob=BackgroundProcessImpl.createObject();
+        Scanner input =new Scanner(System.in);
+        ob.randomWrite("src/allFile/RandomWriteTest",input);
     }
 }

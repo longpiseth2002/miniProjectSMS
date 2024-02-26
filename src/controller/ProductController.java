@@ -55,7 +55,7 @@ public class ProductController implements BoxBorder {
             Product product = productDaoImpl.write(scanner);
             products.add(product);
         }
-        BackgroundProcessImpl backgroundProcess = BackgroundProcessImpl.CreateObject();
+        BackgroundProcessImpl backgroundProcess = BackgroundProcessImpl.createObject();
         backgroundProcess.writeToFile(products,"");
     }
 
