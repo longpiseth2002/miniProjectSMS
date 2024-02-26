@@ -81,10 +81,10 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                             .append(status)
                             .append(System.lineSeparator());
                     count++;
-                    if (count == batchSize || obj.equals(list.size()-1)) {
+                    if (count == batchSize || obj.equals(list.get(list.size()-1))) {
                         writer.write(batch.toString());
-                        batch.setLength(0); // Clear the batch
-                        count = 0; // Reset the counter
+                        batch.setLength(0);
+                        count = 0;
                     }
                 }
             } catch (IOException e) {

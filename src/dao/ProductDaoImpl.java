@@ -160,7 +160,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
         System.out.print("Enter quantity: ");
         double qty = scanner.nextDouble();
-
+        scanner.nextLine();
 
         return new Product(name, unitPrice, qty);
     }
@@ -171,9 +171,28 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         return null;
     }
 
+//    @Override
+//    public Optional<Product> selectById(Integer id, List<Product> products) {
+//
+//        for (Product product : products) {
+//            if (id.equals(product.getId())) {
+//                System.out.println(product);
+//                return Optional.of(product);
+//            }
+//        }
+//
+//        System.out.println("Product with id " + id + " not found.");
+//        return Optional.empty();
+//    }
+
     @Override
-    public Optional<Product> selectById(Integer id) {
-        return Optional.empty();
+    public boolean searchById( int id , List<Product> products ) {
+        for( int i=0 ; i< products.size() ; i++ ){
+            if(id ==products.get(i).getId()){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
