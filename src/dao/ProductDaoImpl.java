@@ -7,15 +7,16 @@ import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
-import views.Colors;
+
 
 
 import java.util.*;
 
 public class ProductDaoImpl implements ProductDao , BoxBorder {
     private static boolean  ORDER=true;
+    private static BackgroundProcessImpl process = BackgroundProcessImpl.createObject();
 
-    private BackgroundProcessImpl process=BackgroundProcessImpl.createObject();
+
 
     @Override
     public void display(List<Product> productList, int numberOfRow, Scanner input) {
@@ -301,7 +302,6 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
 
-
     @Override
     public Optional<Product> selectById(Integer id,List<Product> productList) {
         try{
@@ -335,16 +335,14 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public List<Product> selectByName(List<Product> products ,String name) {
-        List<Product> matchingProducts = new ArrayList<>();
+    public List<Product> selectByName(List<Product> products, String name) {
 
-        for (Product p : products) {
-            if (p.getName().contains(name)) {
-                matchingProducts.add(p);
+        for (Product p : products){
+            if(name.equals(p.getName())){
+                System.out.println(p.getName());
             }
         }
-
-        return matchingProducts;
+        return products;
     }
 
     @Override
@@ -355,6 +353,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         }
         return null;
     }
+
 
 
     public void setUpRow(int inputRow, int setRow) {

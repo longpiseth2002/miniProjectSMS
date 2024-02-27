@@ -1,6 +1,6 @@
 package controller;
 
-import dao.BackgroundProcessImpl;
+import dao.BackUpFileProcessImpl;
 import dao.ProductDaoImpl;
 import model.Product;
 import org.nocrala.tools.texttablefmt.BorderStyle;
@@ -10,6 +10,8 @@ import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 import views.InterfaceViews;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -22,8 +24,9 @@ import java.util.Scanner;
 public class ProductController implements BoxBorder {
     private Scanner scanner;
     private ProductDaoImpl productDaoImpl;
+    private BackUpFileProcessImpl backUpFileProcessImpl;
+
     private int setRow = 5;
-    private Product product;
     boolean isContinue = true;
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static List<Product> productList = new ArrayList<>();
@@ -33,7 +36,8 @@ public class ProductController implements BoxBorder {
     public ProductController() {
         scanner = new Scanner(System.in);
         productDaoImpl = new ProductDaoImpl();
-        product=new Product();
+        backUpFileProcessImpl = new BackUpFileProcessImpl();
+
     }
 
 
@@ -55,7 +59,7 @@ public class ProductController implements BoxBorder {
             System.out.print("Enter product Unit Price: ");
             Double unitPrice = scanner.nextDouble();
             System.out.print("Enter product Qty: ");
-            Double qty = scanner.nextDouble();
+            Integer qty = scanner.nextInt();
             scanner.nextLine();
             isContinue = true;
             while(isContinue){
@@ -79,6 +83,7 @@ public class ProductController implements BoxBorder {
         }
     }
 
+
     public void read() {
         try {
             System.out.print("Enter Product Id: ");
@@ -100,7 +105,7 @@ public class ProductController implements BoxBorder {
         System.out.print("Enter Product Id To Delete : ");
         int proId = Integer.parseInt(scanner.nextLine());
         for (int i = 0; i < productList.size(); i++) {
-            if (productList.get(i).getId().equals(proId)) {
+            if (productList.get(i).getId()==proId) {
                 productDaoImpl.read(proId, productList);
                 System.out.print("ℹ️ Are you sure to delete a  product? [Y/N] : ");
                 String op = scanner.nextLine();
@@ -176,5 +181,24 @@ public class ProductController implements BoxBorder {
         } while (true);
     }
 
+    public void BackUpFile(){
+        String source = "src/AllFile/dataFile.txt";
+        String target = "src/backupfiles";
+        isContinue = true;
+        while(isContinue){
+            System.out.print("ℹ️ Are you sure to back up the file ? [Y/N] : ");
+            String ans = scanner.nextLine();
+            if(ans.equalsIgnoreCase("y")){
+                backUpFileProcessImpl.performBackup(source,target);
+                isContinue = false;
+            }else if(ans.equalsIgnoreCase("n")){
+                System.out.println("🏠 Back to Menu...");
+                isContinue = false;
+            }else{
+                System.out.println(" ❌ Invalid Option");
+            }
+        }
 
+
+    }
 }

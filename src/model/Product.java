@@ -8,7 +8,7 @@ public class Product {
     private Integer id;
     private String name;
     private Double unitPrice;
-    private Double qty;
+    private Integer qty;
     private LocalDate importAt;
     private static Integer lastAssignedId = 0;
 
@@ -16,7 +16,7 @@ public class Product {
         this.id = lastAssignedId++;
     }
 
-    public Product(String name, Double unitPrice, Double qty) {
+    public Product(String name, Double unitPrice, Integer qty) {
         this.id = ++lastAssignedId;
         this.name = name;
         this.unitPrice = unitPrice;
@@ -24,7 +24,8 @@ public class Product {
         this.importAt = LocalDate.now();
     }
 
-    public Product(int id, String name, double unitPrice, double qty, LocalDate date) {
+
+    public Product(int id, String name, Double unitPrice, Integer qty, LocalDate date) {
         this.id=id;
         this.name=name;
         this.unitPrice=unitPrice;
@@ -68,11 +69,11 @@ public class Product {
         this.unitPrice = unitPrice;
     }
 
-    public Double getQty() {
+    public Integer getQty() {
         return qty;
     }
 
-    public void setQty(Double qty) {
+    public void setQty(Integer qty) {
         this.qty = qty;
     }
 

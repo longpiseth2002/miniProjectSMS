@@ -35,4 +35,7 @@ public class BackgroundProcessController {
     public void commit() throws FileNotFoundException {
         backgroundProcess.commit("src/allFile/TransectionFile.txt","src/allFile/dataFile.txt",scanner);
     }
+    public void restore(){
+        backgroundProcess.restore(productslist,"src/allFile/dataFile.txt",scanner);
+    }
 }

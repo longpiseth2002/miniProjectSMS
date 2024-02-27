@@ -2,6 +2,7 @@ package dao;
 
 import model.Product;
 
+import javax.security.sasl.SaslClient;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -24,5 +25,6 @@ public interface BackgroundProcess {
 
     public void randomWrite(String filename, Scanner input);
     public void setListSize(int listSize);
+    public void restore (List<Product> products , String dataSource ,Scanner scanner);
     public Boolean clearFile(String filePath);
 }
