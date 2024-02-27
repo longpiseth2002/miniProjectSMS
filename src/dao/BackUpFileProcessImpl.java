@@ -25,13 +25,13 @@ public class BackUpFileProcessImpl implements BackUpFileProcess{
         int latestVersion = getLatestBackupVersion(backupFiles);
         int newVersion = latestVersion + 1;
 
-        String backupFileName = fileName + "_v" + newVersion + "_" + timestamp + ".txt";
+        String backupFileName = targetFolder + "/" + fileName + "_v" + newVersion + "_" + timestamp + ".txt";
 
         Path target = Paths.get(backupFileName);
 
         try {
             Files.copy(source, target);
-            System.out.println("✅ File backup completed successfully. \n\t➡️ Backup saved in: " + targetFolder + "\n\t➡️ Filename saved as: " + backupFileName);
+            System.out.println("✅ File backup completed successfully. \n\t➡️ Backup saved in: " + backupFileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
