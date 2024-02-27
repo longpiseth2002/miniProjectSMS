@@ -12,7 +12,7 @@ import java.util.*;
 
 public class ProductDaoImpl implements ProductDao , BoxBorder {
 
-
+    private BackgroundProcessImpl process=BackgroundProcessImpl.createObject();
 
     @Override
     public void display(List<Product> productList, int numberOfRow, Scanner input) {
@@ -42,7 +42,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 table.addCell("  UNIT PRICE ", cellStyle);
                 table.addCell("  QTY ", cellStyle);
                 table.addCell("  IMPORTED AT ", cellStyle);
-                for (int i = numberOfRowStart; i < productList.size() ; i++) {
+                for (int i = numberOfRowStart; i < numberOfRowEnd ; i++) {
                     table.addCell(String.valueOf(productList.get(i).getId()), cellStyle);
                     table.addCell(productList.get(i).getName(), cellStyle);
                     table.addCell(String.valueOf(productList.get(i).getUnitPrice()), cellStyle);
@@ -60,6 +60,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 System.out.print(String.format(textBlock, numberOfCurrentPage, numberOfPage, numberOfAllData));
                 System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
             }
+
             System.out.print("⏩ Navigation page : ");
             String op = input.nextLine().toUpperCase();
             System.out.println("\n");
@@ -155,6 +156,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     @Override
     public void write(Product product,List<Product> productList,String status) {
         productList.add(product);
+        process.writeToFile(product,productList,status);
     }
 
 
@@ -223,6 +225,8 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         }
         return null;
     }
+
+
     public void setUpRow(int inputRow, int setRow) {
 
         if (inputRow >= 1) {

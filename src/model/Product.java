@@ -24,6 +24,14 @@ public class Product {
         this.importAt = LocalDate.now();
     }
 
+    public Product(int id, String name, double unitPrice, double qty, LocalDate date) {
+        this.id=id;
+        this.name=name;
+        this.unitPrice=unitPrice;
+        this.qty=qty;
+        this.importAt=date;
+    }
+
 
     @Override
     public String toString() {

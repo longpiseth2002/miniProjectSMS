@@ -3,6 +3,7 @@ package controller;
 import dao.BackgroundProcessImpl;
 import model.Product;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,22 +11,24 @@ import java.util.Scanner;
 public class BackgroundProcessController {
     private Scanner scanner;
     private BackgroundProcessImpl backgroundProcess;
-    private List<Product> products;
+    private List<Product> productslist;
     private Product product ;
 
     public BackgroundProcessController(){
-        backgroundProcess = BackgroundProcessImpl.CreateObject();
+        backgroundProcess = BackgroundProcessImpl.createObject();
         scanner = new Scanner(System.in);
-        products = new ArrayList<>();
+        productslist = ProductController.products();
         product = new Product();
     }
 
 
-    public void writeToFile(){
-        backgroundProcess.writeToFile(products,"");
-    }
-
     public void randomWrite(){
-        backgroundProcess.randomWrite("test.txt",scanner);
+        backgroundProcess.randomWrite("src/allFile/dataFile.txt",scanner);
+    }
+    public void start() throws IOException {
+//        if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
+//
+//        }
+        backgroundProcess.readFromFile(productslist,"src/allFile/dataFile.txt","start");
     }
 }

@@ -21,28 +21,26 @@ import java.util.Scanner;
 public class ProductController implements BoxBorder {
     private Scanner scanner;
     private ProductDaoImpl productDaoImpl;
-    private List<Product> products;
-
+    private int setRow = 5;
+    private Product product;
     boolean isContinue = true;
-
-
+    private static List<Product> productList = new ArrayList<>();
+    public static List<Product> products(){
+        return productList;
+    }
     public ProductController() {
         scanner = new Scanner(System.in);
         productDaoImpl = new ProductDaoImpl();
-        products = new ArrayList<>();
+        product=new Product();
     }
-
-    // Default number of rows
-    int setRow = 5;
 
 
     public void display() {
-        System.out.println(setRow);
-        productDaoImpl.display(products, setRow, scanner);
+        productDaoImpl.display(productList, setRow, scanner);
     }
 
     public void write() {
-        Integer proId = products.size() + 1;
+        Integer proId = productList.size() + 1;
 
         try {
             System.out.print("Enter product name: ");
@@ -58,21 +56,21 @@ public class ProductController implements BoxBorder {
             Double qty = scanner.nextDouble();
             scanner.nextLine();
             isContinue = true;
-            while (isContinue) {
+            while(isContinue){
                 System.out.print("ℹ️ Are you sure to create a new product? [Y/N] : ");
                 String ans = scanner.nextLine();
-                if (ans.equalsIgnoreCase("y")) {
-                    productDaoImpl.write(new Product(proName, unitPrice, qty), products, "write");
+                if(ans.equalsIgnoreCase("y")){
+                    productDaoImpl.write(new Product(proName,unitPrice,qty),productList,"write");
                     System.out.println("✅ Product has been created successfully");
                     isContinue = false;
-                } else if (ans.equalsIgnoreCase("n")) {
+                }else if(ans.equalsIgnoreCase("n")){
                     System.out.println("🏠 Back to Menu...");
                     isContinue = false;
-                } else {
+                }else{
                     System.out.println(" ❌ Invalid Option");
                 }
             }
-        } catch (Exception e) {
+        }catch (Exception e){
             System.out.println(" ❌ Invalid Input");
             scanner.nextLine();
         }
@@ -82,7 +80,7 @@ public class ProductController implements BoxBorder {
         try {
             System.out.print("Enter Product Id: ");
             int proId = Integer.parseInt(scanner.nextLine());
-            Product product = productDaoImpl.read(proId, products);
+            Product product = productDaoImpl.read(proId, productList);
             if (product != null) {
                 System.out.println("Product Detail of CODE[" + product.getId() + "]");
                 InterfaceViews.readDetail(product);
@@ -98,13 +96,13 @@ public class ProductController implements BoxBorder {
     public void deleteById() {
         System.out.print("Enter Product Id To Delete : ");
         int proId = Integer.parseInt(scanner.nextLine());
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getId().equals(proId)) {
-                productDaoImpl.read(proId, products);
+        for (int i = 0; i < productList.size(); i++) {
+            if (productList.get(i).getId().equals(proId)) {
+                productDaoImpl.read(proId, productList);
                 System.out.print("ℹ️ Are you sure to delete a  product? [Y/N] : ");
                 String op = scanner.nextLine();
                 if (op.equals("y")) {
-                    productDaoImpl.deleteById(proId, products);
+                    productDaoImpl.deleteById(proId, productList);
                     System.out.println("✅ Product has been deleted successfully");
 
                 } else if (op.equalsIgnoreCase("n")) {
@@ -123,7 +121,7 @@ public class ProductController implements BoxBorder {
         System.out.print("Enter product name: ");
         String proName = scanner.nextLine();
 
-        List<Product> matchingProducts = productDaoImpl.selectByName(products, proName);
+        List<Product> matchingProducts = productDaoImpl.selectByName(productList, proName);
         if (!matchingProducts.isEmpty()) {
             CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
             table.setColumnWidth(0, 25, 30);
@@ -160,6 +158,7 @@ public class ProductController implements BoxBorder {
             try {
                 System.out.print("⏩ ENTER NUMBER OF ROW: ");
                 inputRow = scanner.nextInt();
+                scanner.nextLine();
                 if (inputRow > 0) {
                     productDaoImpl.setUpRow(inputRow, setRow);
                     setRow = inputRow;
