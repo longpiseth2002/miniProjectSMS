@@ -77,7 +77,6 @@ public class BackgroundProcessImpl implements BackgroundProcess{
 
         return result;
     }
-
     private void writeTotalSize(int totalSize,String fileName){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(totalSize+"");
@@ -144,16 +143,11 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                         .append(System.lineSeparator());
                 writer.write(batch.toString());
             } catch (IOException e) {
-                e.printStackTrace();
-                currenSize.set(-1);
+                //e.printStackTrace();
             }
         });
         Thread thread2=new Thread(()->{
-            try {
-                loadingProgress(1,"","");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            loadingProgress(list.size(),"");
         });
         thread1.start();
         thread2.start();
@@ -163,37 +157,43 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         } catch (InterruptedException e) {
         }
         long end=System.nanoTime();
-        if(currenSize.get()!=-1)
-            System.out.println(Colors.blue()+"\nData written to file successfully.");
+        System.out.println(Colors.blue()+"\nData written to file successfully.");
         System.out.println(Colors.reset()+"\ntime = "+(end-start)/1000000+"ms\n");
         currenSize.set(0);
     }
     @Override
-    public boolean commitCheck(String fileTransection,Scanner input) throws IOException {
-        Path path = Paths.get(fileTransection);
-        if(Files.exists(path)&&Files.size(path)!=0){
-            do {
-                System.out.println("Do you want to commit[y/n]: ");
-                String commit=input.nextLine();
-                if(commit.equalsIgnoreCase("y")) return true;
-                else if(commit.equalsIgnoreCase("n")) return false;
-            }while (true);
+    public boolean commitCheck(String fileTransection, String fileData, Scanner input) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileTransection))) {
+            if(reader.readLine()!=null){
+                do {
+                    System.out.println("Do you want to commit[y/n]: ");
+                    String commit=input.nextLine();
+                    if(commit.equalsIgnoreCase("y")) return true;
+                    else if(commit.equalsIgnoreCase("n")) return false;
+                }while (true);
+            }
+        } catch (IOException ignored) {
         }
         return false;
     }
 
     @Override
-    public void randomRead(List<Product> list, String fileName, Scanner input) {
-        list.clear();
+    public void commit(List<Product> list, String tranSectionFile, String datFile) {
+
+    }
+
+    @Override
+    public void ramdomRead(String fileName,Scanner input) {
+
     }
 
     @Override
     public void randomWrite(String filename,Scanner input) {
         System.out.print("Enter number of file: ");
         int n=input.nextInt();
-        writeTotalSize(n,"src/allFile/totalSize.txt");
+        writeTotalSize(n,"totalSize.txt");
         long start=System.nanoTime();
-        BackgroundProcessImpl obj =  BackgroundProcessImpl.createObject();
+        BackgroundProcessImpl obj =  BackgroundProcessImpl.CreateObject();
         Thread thread1=new Thread(()->{
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
                 StringBuilder batch = new StringBuilder();
@@ -218,17 +218,12 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                         count = 0; // Reset the counter
                     }
                 }
-                obj.writeTotalSize(n,"src/allFile/totalSize.txt");
             } catch (IOException e) {
                 //e.printStackTrace();
             }
         });
         Thread thread2=new Thread(()->{
-            try {
-                obj.loadingProgress(n,"","");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            obj.loadingProgress(n,"");
         });
         thread1.start();
         thread2.start();
@@ -249,43 +244,10 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     }
 
     private  BackgroundProcessImpl(){};
-    public static BackgroundProcessImpl createObject(){
+    public static BackgroundProcessImpl CreateObject(){
         if(instance==null){
             return new BackgroundProcessImpl();
         }
         return instance;
-    }
-    public static long countLines(String filename) throws IOException {
-        try (Stream<String> lines = Files.lines(Paths.get(filename))) {
-            return lines.count();
-        }
-    }
-    public static int countLines(String filename,String status) {
-        int numberToRead=0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line=reader.readLine())!=null){
-                numberToRead=Integer.parseInt(line);
-            }
-        } catch (IOException |OutOfMemoryError ignored) {
-
-        }
-        return numberToRead;
-    }
-
-    public static void main(String[] args) throws IOException {
-        BackgroundProcessImpl obj=BackgroundProcessImpl.createObject();
-        Scanner input =new Scanner(System.in);
-        List<Product> list =new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        obj.randomWrite("src/allFile/RandomWriteTest.txt",input);
-//        Product product=new Product(10,"hello",25.2,5.3,LocalDate.parse("10/02/2020",formatter));
-//        obj.writeToFile(product,list,"");
-        //obj.readFromFile(list,"src/allFile/RandomWriteTest.txt");
-        //System.out.println( obj.commitCheck("src/allFile/TransectionFile.txt",input));
-        long st=System.nanoTime();
-        System.out.println(countLines("src/allFile/RandomWriteTest.txt"));
-        long en=System.nanoTime();
-        System.out.println((en-st)/1000000);
     }
 }
