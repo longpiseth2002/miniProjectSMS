@@ -13,7 +13,7 @@ public class Product {
 
 
     public Product() {
-        this.id = ++lastAssignedId;
+        this.id = lastAssignedId++;
     }
 
     public Product(String name, Double unitPrice, Double qty) {

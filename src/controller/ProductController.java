@@ -3,6 +3,10 @@ package controller;
 import dao.BackgroundProcessImpl;
 import dao.ProductDaoImpl;
 import model.Product;
+import org.nocrala.tools.texttablefmt.BorderStyle;
+import org.nocrala.tools.texttablefmt.CellStyle;
+import org.nocrala.tools.texttablefmt.ShownBorders;
+import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 import views.InterfaceViews;
 
@@ -30,27 +34,25 @@ public class ProductController implements BoxBorder {
         product=new Product();
     }
 
-    // Default number of rows
 
     public void display() {
         productDaoImpl.display(productList, setRow, scanner);
     }
 
-    public void write(){
+    public void write() {
         Integer proId = productList.size() + 1;
-        LocalDate importAt = LocalDate.now();
 
-        try{
-            System.out.print("Enter product name: " );
+        try {
+            System.out.print("Enter product name: ");
             String proName = scanner.nextLine().trim();
-            for (char i : proName.toCharArray()){
-                if(Character.isDigit(i)){
+            for (char i : proName.toCharArray()) {
+                if (Character.isDigit(i)) {
                     throw new Exception();
                 }
             }
-            System.out.print("Enter product Unit Price: " );
+            System.out.print("Enter product Unit Price: ");
             Double unitPrice = scanner.nextDouble();
-            System.out.print("Enter product Qty: " );
+            System.out.print("Enter product Qty: ");
             Double qty = scanner.nextDouble();
             scanner.nextLine();
             isContinue = true;
@@ -74,22 +76,80 @@ public class ProductController implements BoxBorder {
         }
     }
 
-    public void read(){
-            try {
-                System.out.print("Enter Product Id: ");
-                int proId = Integer.parseInt(scanner.nextLine());
-                Product product = productDaoImpl.read(proId, productList);
-                if (product != null) {
-                    System.out.println("Product Detail of CODE[" + product.getId() + "]");
-                    InterfaceViews.readDetail(product);
-                } else {
-                    System.out.println(" ❌ Invalid ID");
-                }
-            } catch (Exception e) {
-                System.out.println(" ❌ Please enter number only.");
+    public void read() {
+        try {
+            System.out.print("Enter Product Id: ");
+            int proId = Integer.parseInt(scanner.nextLine());
+            Product product = productDaoImpl.read(proId, productList);
+            if (product != null) {
+                System.out.println("Product Detail of CODE[" + product.getId() + "]");
+                InterfaceViews.readDetail(product);
+            } else {
+                System.out.println(" ❌ Invalid ID");
             }
+        } catch (Exception e) {
+            System.out.println(" ❌ Please enter number only.");
+        }
 
     }
+
+    public void deleteById() {
+        System.out.print("Enter Product Id To Delete : ");
+        int proId = Integer.parseInt(scanner.nextLine());
+        for (int i = 0; i < productList.size(); i++) {
+            if (productList.get(i).getId().equals(proId)) {
+                productDaoImpl.read(proId, productList);
+                System.out.print("ℹ️ Are you sure to delete a  product? [Y/N] : ");
+                String op = scanner.nextLine();
+                if (op.equals("y")) {
+                    productDaoImpl.deleteById(proId, productList);
+                    System.out.println("✅ Product has been deleted successfully");
+
+                } else if (op.equalsIgnoreCase("n")) {
+                    System.out.println("🏠 Back to Menu...");
+                    isContinue = false;
+                } else {
+                    System.out.println(" ❌ Invalid Option");
+                }
+
+            }
+        }
+
+    }
+    public void searchByName() {
+        Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.ALL);
+        System.out.print("Enter product name: ");
+        String proName = scanner.nextLine();
+
+        List<Product> matchingProducts = productDaoImpl.selectByName(productList, proName);
+        if (!matchingProducts.isEmpty()) {
+            CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
+            table.setColumnWidth(0, 25, 30);
+            table.setColumnWidth(1, 25, 30);
+            table.setColumnWidth(2, 25, 30);
+            table.setColumnWidth(3, 25, 30);
+            table.setColumnWidth(4, 25, 30);
+
+            table.addCell("  CODE ", cellStyle);
+            table.addCell("  NAME ", cellStyle);
+            table.addCell("  UNIT PRICE ", cellStyle);
+            table.addCell("  QTY ", cellStyle);
+            table.addCell("  IMPORTED AT ", cellStyle);
+
+            for (Product product : matchingProducts) {
+                table.addCell(String.valueOf(product.getId()), cellStyle);
+                table.addCell(product.getName(), cellStyle);
+                table.addCell(String.valueOf(product.getUnitPrice()), cellStyle);
+                table.addCell(String.valueOf(product.getQty()), cellStyle);
+                table.addCell(String.valueOf(product.getImportAt()), cellStyle);
+            }
+
+            System.out.println(table.render());
+        } else {
+            System.out.println("No products found with name: " + proName);
+        }
+    }
+
 
     public void setNumberRow() {
         int inputRow;
@@ -98,6 +158,7 @@ public class ProductController implements BoxBorder {
             try {
                 System.out.print("⏩ ENTER NUMBER OF ROW: ");
                 inputRow = scanner.nextInt();
+                scanner.nextLine();
                 if (inputRow > 0) {
                     productDaoImpl.setUpRow(inputRow, setRow);
                     setRow = inputRow;

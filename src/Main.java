@@ -54,10 +54,10 @@ public class Main {
                     System.out.println("Edit");
                 }
                 case "dl" -> {
-                    System.out.println("Delete");
+                    productController.deleteById();
                 }
                 case "s" -> {
-                    System.out.println("Search");
+                    productController.searchByName();
                 }
                 case "sr" -> {
                     productController.setNumberRow();
