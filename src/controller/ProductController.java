@@ -11,6 +11,7 @@ import views.BoxBorder;
 import views.InterfaceViews;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.InputMismatchException;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class ProductController implements BoxBorder {
     private int setRow = 5;
     private Product product;
     boolean isContinue = true;
+    static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static List<Product> productList = new ArrayList<>();
     public static List<Product> products(){
         return productList;
@@ -72,6 +74,7 @@ public class ProductController implements BoxBorder {
             }
         }catch (Exception e){
             System.out.println(" ❌ Invalid Input");
+            System.out.println(e.getMessage());
             scanner.nextLine();
         }
     }
@@ -172,5 +175,6 @@ public class ProductController implements BoxBorder {
             }
         } while (true);
     }
+
 
 }

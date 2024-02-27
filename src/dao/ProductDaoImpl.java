@@ -286,7 +286,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     @Override
     public void write(Product product,List<Product> productList,String status) {
         productList.add(product);
-        process.writeToFile(product,productList,status);
+        process.writeToFile(product,status);
     }
 
 
