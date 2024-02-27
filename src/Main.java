@@ -62,7 +62,7 @@ public class Main {
                     System.out.println("Commit");
                 }
                 case "bu" -> {
-                    System.out.println("back Up");
+                    productController.BackUpFile();
                 }
                 case "rs" -> {
                     System.out.println("Restore");

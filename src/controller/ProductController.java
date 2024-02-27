@@ -1,10 +1,13 @@
 package controller;
 
+import dao.BackUpFileProcessImpl;
 import dao.ProductDaoImpl;
 import model.Product;
 import views.BoxBorder;
 import views.InterfaceViews;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.InputMismatchException;
@@ -12,6 +15,7 @@ import java.util.InputMismatchException;
 public class ProductController implements BoxBorder {
     private Scanner scanner;
     private ProductDaoImpl productDaoImpl;
+    private BackUpFileProcessImpl backUpFileProcessImpl;
 
     boolean isContinue = true;
 //    static List<Integer> list = new ArrayList<>();
@@ -27,6 +31,7 @@ public class ProductController implements BoxBorder {
     public ProductController() {
         scanner = new Scanner(System.in);
         productDaoImpl = new ProductDaoImpl();
+        backUpFileProcessImpl = new BackUpFileProcessImpl();
     }
 
 
@@ -129,4 +134,9 @@ public class ProductController implements BoxBorder {
         } while (true);
     }
 
+    public void BackUpFile(){
+        String source = "src/AllFile/dataFile.txt";
+        String target = "src/backupfiles";
+        backUpFileProcessImpl.performBackup(source,target);
+    }
 }
