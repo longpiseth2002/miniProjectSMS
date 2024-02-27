@@ -45,7 +45,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 table.addCell("  UNIT PRICE ", cellStyle);
                 table.addCell("  QTY ", cellStyle);
                 table.addCell("  IMPORTED AT ", cellStyle);
-                for (int i = numberOfRowStart; i < numberOfRowEnd; i++) {
+                for (int i = numberOfRowStart; i <  i++) {
                     table.addCell("CODE[" + i + "]=" + productList.get(i).getId(), cellStyle);
                     table.addCell(productList.get(i).getName(), cellStyle);
                     table.addCell(productList.get(i).getUnitPrice()+"", cellStyle);
