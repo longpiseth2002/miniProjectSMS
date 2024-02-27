@@ -9,19 +9,40 @@ public class Product {
     private Double unitPrice;
     private Double qty;
     private LocalDate importAt;
+    private static Integer lastAssignedId = 0;
 
 
     public Product() {
+        this.id = lastAssignedId++;
     }
 
-    public Product(Integer id, String name, Double unitPrice, Double qty, LocalDate importAt) {
-        this.id = id;
+    public Product(String name, Double unitPrice, Double qty) {
+        this.id = ++lastAssignedId;
         this.name = name;
         this.unitPrice = unitPrice;
         this.qty = qty;
-        this.importAt = importAt;
+        this.importAt = LocalDate.now();
     }
 
+    public Product(int id, String name, double unitPrice, double qty, LocalDate date) {
+        this.id=id;
+        this.name=name;
+        this.unitPrice=unitPrice;
+        this.qty=qty;
+        this.importAt=date;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", unitPrice=" + unitPrice +
+                ", qty=" + qty +
+                ", importAt=" + importAt +
+                '}';
+    }
 
     public Integer getId() {
         return id;
