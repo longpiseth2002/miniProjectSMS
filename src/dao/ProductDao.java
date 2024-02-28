@@ -17,5 +17,7 @@ public interface ProductDao {
     Product updateById(Product product);
     Product deleteById(Integer id , List<Product> products);
     List<Product> selectByName(List<Product> products ,String name);
+    public Product searchByName(List<Product> products , String searchName);
+
     void setUpRow(int numberOfRow,int setRow);
 }

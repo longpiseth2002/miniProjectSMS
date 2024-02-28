@@ -63,13 +63,13 @@ public class Main {
                     productController.setNumberRow();
                 }
                 case "c" -> {
-                    System.out.println("Commit");
+                    backgroundProcessController.commit();
                 }
                 case "bu" -> {
                     System.out.println("back Up");
                 }
                 case "rs" -> {
-                    System.out.println("Restore");
+                    backgroundProcessController.restore();
                 }
                 case "h" -> {
                     InterfaceViews.displayHelp();

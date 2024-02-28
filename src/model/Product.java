@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Product {
 
@@ -10,7 +11,6 @@ public class Product {
     private Integer qty;
     private LocalDate importAt;
     private static Integer lastAssignedId = 0;
-
 
     public Product() {
         this.id = lastAssignedId++;

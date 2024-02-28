@@ -15,10 +15,9 @@ import java.util.stream.Stream;
 import model.Product;
 import views.Colors;
 
-public class BackgroundProcessImpl implements BackgroundProcess {
-    private static AtomicInteger currenSize = new AtomicInteger(0);
-    private static AtomicInteger AtotalSize = new AtomicInteger(0);
-    static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+public class BackgroundProcessImpl implements BackgroundProcess{
+    private static AtomicInteger currenSize=new AtomicInteger(0);
+    private static AtomicInteger AtotalSize=new AtomicInteger(0);
 
     private static BackgroundProcessImpl instance;
 
@@ -45,14 +44,69 @@ public class BackgroundProcessImpl implements BackgroundProcess {
     }
 
     @Override
-    public void commit(List<Product> list, String tranSectionFile, String dataFile, Scanner input) throws FileNotFoundException {
-        List<Product> listData = new ArrayList<>();
-        readFromFile(listData, dataFile, "start");
-        try (BufferedReader reader = new BufferedReader(new FileReader(tranSectionFile))) {
-
+    public void commit( String tranSectionFile, String dataFile, Scanner input) throws FileNotFoundException {
+        List<Product> listData=new ArrayList<>();
+        readFromFile(listData,dataFile,"start");
+        int change=0;
+        try(BufferedReader reader=new BufferedReader(new FileReader(tranSectionFile))){
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String status=parts[5];
+                if(status.equalsIgnoreCase("write")){
+                    listData.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4])));
+                }
+                else if(status.equalsIgnoreCase("delete")){
+                    int idToDelete=Integer.parseInt(parts[0]);
+                    listData.removeIf(product -> product.getId() == idToDelete);
+                }
+                else if(status.equalsIgnoreCase("update")){
+                    int idToUpdate = Integer.parseInt(parts[0].trim());
+                    for (Product product : listData) {
+                        if (product.getId() == idToUpdate) {
+                            product.setName(parts[1].trim());
+                            product.setQty(Integer.parseInt(parts[2]));
+                            product.setUnitPrice(Double.parseDouble(parts[3]));
+                            break;
+                        }
+                    }
+                }
+                change++;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println("There are "+change+" record change");
+        System.out.println("Commit all change: y");
+        System.out.println(Colors.red()+"Cancel all change: c");
+        System.out.println(Colors.darkYellow()+"Commit later     : n"+Colors.reset());
+        String op=null;
+        do {
+            System.out.print("Are you sure to commit?[y/c/n]");
+            op=input.nextLine();
+        }while (!(op.equalsIgnoreCase("y")||op.equalsIgnoreCase("n")||op.equalsIgnoreCase("c")));
+        if(op.equalsIgnoreCase("y")){
+            writeToFile(listData,"src/allFile/dataFile.txt");
+            listData.clear();
+            clearFile(tranSectionFile);
+        }else if(op.equalsIgnoreCase("n")){
+            listData.clear();
+            return;
+        }else{
+            clearFile(tranSectionFile);
+            listData.clear();
+        }
+    }
+    @Override
+    public Boolean clearFile(String filePath) {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write("");
+            System.out.println("File cleared successfully.");
+        } catch (IOException e) {
+            //e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -95,8 +149,8 @@ public class BackgroundProcessImpl implements BackgroundProcess {
         Thread thread1 = new Thread(() -> {
             try (Stream<String> lines = Files.lines(Paths.get(dataFile))) {
                 lines.forEach(line -> {
-                    String[] parts = split(line, ',');
-                    list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4], DATE_FORMATTER)));
+                    String[] parts = split(line,',');
+                    list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4])));
                     currenSize.incrementAndGet();
                 });
             } catch (IOException e) {
@@ -127,9 +181,9 @@ public class BackgroundProcessImpl implements BackgroundProcess {
     }
 
     @Override
-    public void writeToFile(Product product, List<Product> list, String status) {
-        long start = System.nanoTime();
-        Thread thread1 = new Thread(() -> {
+    public void writeToFile(Product product,String status) {
+        long start=System.nanoTime();
+        Thread thread1=new Thread(()->{
             try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/allFile/TransectionFile.txt"))) {
                 StringBuilder batch = new StringBuilder();
                 currenSize.incrementAndGet();
@@ -165,23 +219,80 @@ public class BackgroundProcessImpl implements BackgroundProcess {
             thread2.join();
         } catch (InterruptedException e) {
         }
-        long end = System.nanoTime();
-        if (currenSize.get() != -1)
-            System.out.println(Colors.blue() + "\nData written to file successfully.");
-        System.out.println(Colors.reset() + "\ntime = " + (end - start) / 1000000 + "ms\n");
+        long end=System.nanoTime();
+        if(currenSize.get()!=-1)
+            System.out.println(Colors.blue()+"\nData written to file successfully.");
+        System.out.println(Colors.reset()+"\ntime = "+(end-start)/1000000+"ms\n");
         currenSize.set(0);
     }
 
     @Override
+    public void writeToFile(List<Product> list,String fileName){
+        long start=System.nanoTime();
+        BackgroundProcessImpl obj =  BackgroundProcessImpl.createObject();
+        Thread thread1=new Thread(()->{
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+                StringBuilder batch = new StringBuilder();
+                int count = 0;
+                int batchSize=1000;
+                for (int i = 0; i < list.size(); i++) {
+                    currenSize.incrementAndGet();
+                    batch.append(list.get(i).getId())
+                            .append(",")
+                            .append(list.get(i).getName())
+                            .append(",")
+                            .append(list.get(i).getUnitPrice())
+                            .append(",")
+                            .append(list.get(i).getQty())
+                            .append(",")
+                            .append(list.get(i).getImportAt())
+                            .append(System.lineSeparator());
+                    count++;
+                    if (count == batchSize || i==list.size()-1) {
+                        writer.write(batch.toString());
+                        batch.setLength(0); // Clear the batch
+                        count = 0; // Reset the counter
+                    }
+                }
+                obj.writeTotalSize(list.size(),"src/allFile/totalSize.txt");
+            } catch (IOException e) {
+                //e.printStackTrace();
+            }
+        });
+        Thread thread2=new Thread(()->{
+            try {
+                loadingProgress(list.size(),"","");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        thread1.start();
+        thread2.start();
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+        }
+        long end=System.nanoTime();
+        if(currenSize.get()!=-1)
+            System.out.println(Colors.blue()+"\nData written to file successfully.");
+        System.out.println(Colors.reset()+"\ntime = "+(end-start)/1000000+"ms\n");
+        currenSize.set(0);
+    }
+    @Override
     public boolean commitCheck(String fileTransection, Scanner input) throws IOException {
         Path path = Paths.get(fileTransection);
-        if (Files.exists(path) && Files.size(path) != 0) {
+        if(Files.exists(path)&&Files.size(path)!=0){
+            System.out.println("There are many record have change and not commit yet..!");
             do {
-                System.out.println("Do you want to commit[y/n]: ");
-                String commit = input.nextLine();
-                if (commit.equalsIgnoreCase("y")) return true;
-                else if (commit.equalsIgnoreCase("n")) return false;
-            } while (true);
+                System.out.print("Check and commit?[y/n]: ");
+                String commit=input.nextLine();
+                if(commit.equalsIgnoreCase("y")) return true;
+                else if(commit.equalsIgnoreCase("n")) {
+                    clearFile(fileTransection);
+                    return false;
+                }
+            }while (true);
         }
         return false;
     }
@@ -202,18 +313,18 @@ public class BackgroundProcessImpl implements BackgroundProcess {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
                 StringBuilder batch = new StringBuilder();
                 int count = 0;
-                int batchSize = 1000;
+                int batchSize=1000;
                 for (int i = 0; i < n; i++) {
                     currenSize.incrementAndGet();
                     batch.append(i)
                             .append(",")
-                            .append("name")
+                            .append("CSTAD"+i)
                             .append(",")
                             .append(10.5)
                             .append(",")
-                            .append(5.6)
+                            .append(5)
                             .append(",")
-                            .append("10/02/2002")
+                            .append(LocalDate.now())
                             .append(System.lineSeparator());
                     count++;
                     if (count == batchSize || i == n - 1) {
@@ -252,18 +363,14 @@ public class BackgroundProcessImpl implements BackgroundProcess {
         AtotalSize.set(listSize);
     }
 
-    private BackgroundProcessImpl() {
-    }
 
-    ;
-
-    public static BackgroundProcessImpl createObject() {
-        if (instance == null) {
+    private  BackgroundProcessImpl(){};
+    public static BackgroundProcessImpl createObject(){
+        if(instance==null){
             return new BackgroundProcessImpl();
         }
         return instance;
     }
-
     public static long countLines(String filename) throws IOException {
         try (Stream<String> lines = Files.lines(Paths.get(filename))) {
             return lines.count();
@@ -284,18 +391,16 @@ public class BackgroundProcessImpl implements BackgroundProcess {
     }
 
     @Override
-    public void restore(List<Product> products, String dataSource, String backUpFile , Scanner scanner) {
+    public void restore(List<Product> products, String dataSource, Scanner scanner) {
         List<String> storeFile = new ArrayList<>();
-        // Specify the package path
-        String packagePath = "text";
         // the directory of the package
-        File packageDir = new File("src/" + packagePath);
+        File packageDir = new File("src/backUp");
         File[] files = packageDir.listFiles();
         int i = 1;
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    String relativePath = file.getPath().replaceFirst("^src/" + packagePath + "/", "");
+                    String relativePath = file.getPath().replaceFirst("^src/backUp" , "");
                     System.out.println(i + ". " + relativePath);
                     storeFile.add(file.getPath());
                     i++;
@@ -309,7 +414,7 @@ public class BackgroundProcessImpl implements BackgroundProcess {
         // Thread 1
         Thread thread1 = new Thread(() -> {
             try (BufferedReader reader = new BufferedReader(new FileReader(filePath));
-                 BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"))) {
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(dataSource))) {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -324,7 +429,7 @@ public class BackgroundProcessImpl implements BackgroundProcess {
 
 
         Thread thread2 = new Thread(() -> {
-
+            writeToFile(products,filePath);
         });
         thread1.start();
         thread2.start();
@@ -338,5 +443,4 @@ public class BackgroundProcessImpl implements BackgroundProcess {
         }
 
     }
-
 }
