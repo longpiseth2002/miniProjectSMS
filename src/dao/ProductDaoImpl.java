@@ -189,8 +189,17 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
 
     @Override
-    public Product updateById(Product product) {
-        return null;
+    public Product updateById(Integer id, List<Product> products, String status) {
+        Optional<Product> updateProduct = selectById(id, products);
+        if (updateProduct.isPresent()) {
+            Product productToUpdate = updateProduct.get();
+            productToUpdate.setStatus("EDIT");
+            // Save the updated productList to the file
+            write(productToUpdate, products, status);
+            return productToUpdate;
+        } else {
+            return null;
+        }
     }
 
     @Override

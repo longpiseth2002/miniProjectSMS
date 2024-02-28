@@ -51,7 +51,7 @@ public class Main {
                     productController.read();
                 }
                 case "e" -> {
-                    System.out.println("Edit");
+                    productController.editProduct();
                 }
                 case "dl" -> {
                     productController.deleteById();

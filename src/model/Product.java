@@ -8,6 +8,7 @@ public class Product {
     private String name;
     private Double unitPrice;
     private Double qty;
+    private String status;
     private LocalDate importAt;
     private static Integer lastAssignedId = 0;
 
@@ -51,6 +52,12 @@ public class Product {
     public void setId(Integer id) {
         this.id = id;
     }
+    public String getStatus(){
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getName() {
         return name;
@@ -59,7 +66,6 @@ public class Product {
     public void setName(String name) {
         this.name = name;
     }
-
     public Double getUnitPrice() {
         return unitPrice;
     }
