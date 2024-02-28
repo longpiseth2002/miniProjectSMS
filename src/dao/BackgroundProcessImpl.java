@@ -168,51 +168,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         System.out.println(Colors.reset()+"\ntime = "+(end-start)/1000000+"ms\n");
         currenSize.set(0);
     }
-    @Override
-    public void editToFile(Product product, List<Product> list,String status){
-        long start = System.nanoTime();
-        Thread thread1 = new Thread(() -> {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/allFile/TransectionFile.txt", false))) {
-                StringBuilder batch = new StringBuilder();
-                currenSize.incrementAndGet();
-                batch.append(product.getId())
-                        .append(",")
-                        .append(product.getName())
-                        .append(",")
-                        .append(product.getUnitPrice())
-                        .append(",")
-                        .append(product.getQty())
-                        .append(",")
-                        .append(product.getImportAt())
-                        .append(",")
-                        .append(status)
-                        .append(System.lineSeparator());
-                writer.write(batch.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-                currenSize.set(-1);
-            }
-        });
-        Thread thread2 = new Thread(() -> {
-            try {
-                loadingProgress(1, "", "");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        thread1.start();
-        thread2.start();
-        try {
-            thread1.join();
-            thread2.join();
-        } catch (InterruptedException e) {
-        }
-        long end = System.nanoTime();
-        if (currenSize.get() != -1)
-            System.out.println(Colors.blue() + "\nData written to file successfully.");
-        System.out.println(Colors.reset() + "\ntime = " + (end - start) / 1000000 + "ms\n");
-        currenSize.set(0);
-    }
+
     @Override
     public boolean commitCheck(String fileTransection,Scanner input) throws IOException {
         Path path = Paths.get(fileTransection);

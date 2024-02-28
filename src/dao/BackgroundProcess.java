@@ -13,8 +13,6 @@ public interface BackgroundProcess {
 
     public void readFromFile(List<Product> list,String datFile,String status);
     public void writeToFile(Product product,List<Product> list,String status);
-    public void editToFile(Product product,List<Product> list,String status);
-
     public boolean commitCheck(String fileTransection,  Scanner input) throws IOException;
     public void loadingProgress(int totalSize,String fileName,String status) throws IOException;
     public void commit(List<Product> list,String tranSectionFile,String dataFile,Scanner input) throws FileNotFoundException;

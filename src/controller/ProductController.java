@@ -119,7 +119,6 @@ public class ProductController implements BoxBorder {
         }
 
     }
-
     private void editSingleElement(int proId) {
         String op;
         System.out.println("\nWhich element of product you want to EDIT?");
@@ -146,6 +145,7 @@ public class ProductController implements BoxBorder {
                             }
                         }
                         productList.get(i).setName(newName);
+
                         System.out.println("✅ NAME of this product was edited successfully.");
                     } else {
                         System.out.println("❌ The process of editing was canceled.");
@@ -183,7 +183,6 @@ public class ProductController implements BoxBorder {
             }
         }
     }
-
     private void editMultiElement(int proId) {
         System.out.println("Multiple operation for EDITING product...");
         System.out.println("### Instruction [ N , Q ]");
@@ -260,7 +259,6 @@ public class ProductController implements BoxBorder {
         System.out.print("\nClick [ ENTER ] to Continue Operation ...");
         scanner.nextLine();
     }
-
     private void editAllElement(int proId) throws Exception {
         for (int i = 0; i < productList.size(); i++) {
             if (productList.get(i).getId().equals(proId)) {
@@ -283,6 +281,7 @@ public class ProductController implements BoxBorder {
                     productList.get(i).setName(newName);
                     productList.get(i).setUnitPrice(newPrice);
                     productList.get(i).setQty(newQty);
+                    productDaoImpl.write(new Product(newName, newPrice, newQty), productList, "edit");
                     System.out.println("✅ This product has been edited successfully.");
                 } else {
                     System.out.println("❌ The process of editing was canceled.");
@@ -292,7 +291,6 @@ public class ProductController implements BoxBorder {
             }
         }
     }
-
     public void editProduct() {
         read();
         try {
@@ -333,7 +331,6 @@ public class ProductController implements BoxBorder {
             scanner.nextLine();
         }
     }
-
     public void searchByName() {
         Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.ALL);
         System.out.print("Enter product name: ");
@@ -367,8 +364,6 @@ public class ProductController implements BoxBorder {
             System.out.println("No products found with name: " + proName);
         }
     }
-
-
     public void setNumberRow() {
         int inputRow;
         System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(100));
