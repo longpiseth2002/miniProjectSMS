@@ -24,6 +24,7 @@ public class Product {
         this.importAt = LocalDate.now();
     }
 
+
     public Product(int id, String name, Double unitPrice, Integer qty, LocalDate date) {
         this.id=id;
         this.name=name;

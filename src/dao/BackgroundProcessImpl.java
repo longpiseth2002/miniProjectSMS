@@ -394,13 +394,13 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     public void restore(List<Product> products, String dataSource, Scanner scanner) {
         List<String> storeFile = new ArrayList<>();
         // the directory of the package
-        File packageDir = new File("src/backUp");
+        File packageDir = new File("src/backupfiles");
         File[] files = packageDir.listFiles();
         int i = 1;
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    String relativePath = file.getPath().replaceFirst("^src/backUp" , "");
+                    String relativePath = file.getPath().replaceFirst("^src/backupfiles" , "");
                     System.out.println(i + ". " + relativePath);
                     storeFile.add(file.getPath());
                     i++;
@@ -429,7 +429,9 @@ public class BackgroundProcessImpl implements BackgroundProcess{
 
 
         Thread thread2 = new Thread(() -> {
-            writeToFile(products,filePath);
+            products.clear();
+            readFromFile(products,filePath,"start");
+            System.out.println("  Successfully");
         });
         thread1.start();
         thread2.start();

@@ -66,7 +66,7 @@ public class Main {
                     backgroundProcessController.commit();
                 }
                 case "bu" -> {
-                    System.out.println("back Up");
+                    productController.BackUpFile();
                 }
                 case "rs" -> {
                     backgroundProcessController.restore();
