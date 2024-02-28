@@ -42,8 +42,9 @@ public class Main {
                         productController.display();
                 }
                 case "rd" -> {
-                    backgroundProcessController.randomWrite();
+                    backgroundProcessController.random();
                 }
+
                 case "w" -> {
                     productController.write();
                 }
