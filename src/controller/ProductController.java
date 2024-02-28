@@ -29,7 +29,8 @@ public class ProductController implements BoxBorder {
     private int setRow = 5;
     boolean isContinue = true;
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    private static List<Product> productList = new ArrayList<>();
+    private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
+
     public static List<Product> products(){
         return productList;
     }

@@ -20,6 +20,7 @@ public class BackgroundProcessController {
         scanner = new Scanner(System.in);
         productslist = ProductController.products();
         product = new Product();
+
     }
 
     public void random() throws IOException {

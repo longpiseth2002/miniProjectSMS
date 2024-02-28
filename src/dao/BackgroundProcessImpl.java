@@ -6,9 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -20,6 +18,17 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     private static AtomicInteger AtotalSize=new AtomicInteger(0);
 
     private static BackgroundProcessImpl instance;
+    private static Map<String, LocalDate> dateMap = new HashMap<>();
+
+    public static LocalDate convertToDate(String dateString) {
+        if (dateMap.containsKey(dateString)) {
+            return dateMap.get(dateString);
+        } else {
+            LocalDate localDate = LocalDate.parse(dateString);
+            dateMap.put(dateString, localDate);
+            return localDate;
+        }
+    }
 
     @Override
     public void loadingProgress(int totalSize, String fileName, String status) throws IOException {
@@ -113,11 +122,6 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         return true;
     }
 
-    @Override
-    public void randomRead(List<Product> list, String fileName) {
-
-    }
-
     public static String[] split(final String line, final char delimiter) {
         CharSequence[] temp = new CharSequence[(line.length() / 2) + 1];
         int wordCount = 0;
@@ -152,9 +156,9 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         long start = System.nanoTime();
         Thread thread1 = new Thread(() -> {
             try (Stream<String> lines = Files.lines(Paths.get(dataFile))) {
-                lines.forEach(line -> {
+                lines.parallel().forEach(line -> {
                     String[] parts = split(line,',');
-                    list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4])));
+                    list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
                     currenSize.incrementAndGet();
                 });
             } catch (IOException e) {
@@ -170,7 +174,8 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         });
 
         thread1.start();
-       thread2.start();
+
+        thread2.start();
         try {
             thread1.join();
             thread2.join();
@@ -418,5 +423,6 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         }
 
     }
+
 
 }

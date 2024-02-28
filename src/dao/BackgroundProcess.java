@@ -19,7 +19,6 @@ public interface BackgroundProcess {
     public boolean commitCheck(String fileTransection,  Scanner input) throws IOException;
     public void loadingProgress(int totalSize,String fileName,String status) throws IOException;
     public void commit(String tranSectionFile,String dataFile,String operation,Scanner input) throws IOException;
-    public void randomRead(List<Product> list,String fileName);
 
     public void random(List<Product> productList,String filename, Scanner input) throws IOException;
     public void setListSize(int listSize);
