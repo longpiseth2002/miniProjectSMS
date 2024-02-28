@@ -115,7 +115,7 @@ public class InterfaceViews implements BoxBorder {
     }
     public static void displayHelp() {
         System.out.println("# Help Instruction");
-        Table table = new Table(1, BorderStyle.CLASSIC_COMPATIBLE_WIDE, ShownBorders.SURROUND);
+        Table table = new Table(1, BorderStyle.UNICODE_BOX, ShownBorders.SURROUND);
         table.addCell("1.      Press       D : Display product as table");
         table.addCell("2.      Press       w : Create a new product");
         table.addCell("3.      Press       R : View product details by code");

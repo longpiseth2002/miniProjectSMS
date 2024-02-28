@@ -12,7 +12,7 @@ import java.util.*;
 
 public class ProductDaoImpl implements ProductDao , BoxBorder {
 
-    private BackgroundProcessImpl process=BackgroundProcessImpl.createObject();
+
 
     @Override
     public void display(List<Product> productList, int numberOfRow, Scanner input) {
@@ -28,7 +28,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         do {
             if (stepCheck) {
 
-                Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.ALL);
+                Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND_HEADER_AND_COLUMNS);
                 CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
                 table.setColumnWidth(0, 25, 30);
                 table.setColumnWidth(1, 25, 30);
@@ -42,12 +42,12 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 table.addCell("  UNIT PRICE ", cellStyle);
                 table.addCell("  QTY ", cellStyle);
                 table.addCell("  IMPORTED AT ", cellStyle);
-                for (int i = numberOfRowStart; i < numberOfRowEnd; i++) {
-                    table.addCell("CODE[" + i + "]=" + productList.get(i), cellStyle);
-                    table.addCell(" PRODUCT ::" + i, cellStyle);
-                    table.addCell(" $500 ", cellStyle);
-                    table.addCell(" " + i, cellStyle);
-                    table.addCell(" 2024-12-09 ", cellStyle);
+                for (int i = numberOfRowStart; i < numberOfRowEnd ; i++) {
+                    table.addCell(String.valueOf(productList.get(i).getId()), cellStyle);
+                    table.addCell(productList.get(i).getName(), cellStyle);
+                    table.addCell(String.valueOf(productList.get(i).getUnitPrice()), cellStyle);
+                    table.addCell(String.valueOf(productList.get(i).getQty()), cellStyle);
+                    table.addCell(String.valueOf(productList.get(i).getImportAt()), cellStyle);
 
                 }
                 System.out.println(table.render());
@@ -62,7 +62,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
             }
             System.out.print("⏩ Navigation page : ");
             String op = input.nextLine().toUpperCase();
-            System.out.println("\n\n");
+            System.out.println("\n");
             switch (op) {
                 case "N" -> {
                     if (numberOfRowEnd < numberOfAllData) {
@@ -143,7 +143,10 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                 case "B" -> {
                     return;
                 }
-                default -> stepCheck = false;
+                default -> {
+                    System.out.println("  ⚠️INVALID INPUT !!!! PLEASE ENTER AGAIN .\n      YOU CAN SELECT THESE OPTIONS\n      N -> next\n      P -> Previous\n      G -> Goto\n      L -> last\n      F -> First\n      B -> BACK TO APPLICATION MENU \n");
+                    stepCheck = false;
+                }
             }
             if (op.equalsIgnoreCase("G")) input.nextLine();
         } while (true);
@@ -198,6 +201,16 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         return p;
     }
 
+    @Override
+    public List<Product> selectByName(List<Product> products ,String name) {
+
+        for (Product p : products){
+            if(name.equals(p.getName())){
+                System.out.println(p.getName());
+            }
+        }
+        return products;
+    }
 
 
     public void setUpRow(int inputRow, int setRow) {

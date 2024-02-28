@@ -51,9 +51,9 @@ public class ProductController implements BoxBorder {
                 }
             }
             System.out.print("Enter product Unit Price: ");
-            Integer unitPrice = scanner.nextInt();
+            Double unitPrice = scanner.nextDouble();
             System.out.print("Enter product Qty: ");
-            Double qty = scanner.nextDouble();
+            Integer qty = scanner.nextInt();
             scanner.nextLine();
             isContinue = true;
             while(isContinue){
