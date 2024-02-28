@@ -309,29 +309,13 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         writeTotalSize(n, "src/allFile/totalSize.txt");
         long start = System.nanoTime();
         BackgroundProcessImpl obj = BackgroundProcessImpl.createObject();
+        String date= String.valueOf(LocalDate.now());
         Thread thread1 = new Thread(() -> {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-                StringBuilder batch = new StringBuilder();
-                int count = 0;
-                int batchSize=1000;
                 for (int i = 0; i < n; i++) {
                     currenSize.incrementAndGet();
-                    batch.append(i)
-                            .append(",")
-                            .append("CSTAD"+i)
-                            .append(",")
-                            .append(10.5)
-                            .append(",")
-                            .append(5)
-                            .append(",")
-                            .append(LocalDate.now())
-                            .append(System.lineSeparator());
-                    count++;
-                    if (count == batchSize || i == n - 1) {
-                        writer.write(batch.toString());
-                        batch.setLength(0); // Clear the batch
-                        count = 0; // Reset the counter
-                    }
+                    String line = i + "," + "CSTAD" + "," + 10.5 + "," + 5 + "," + date + "\n";
+                    writer.write(line);
                 }
                 obj.writeTotalSize(n, "src/allFile/totalSize.txt");
             } catch (IOException e) {
