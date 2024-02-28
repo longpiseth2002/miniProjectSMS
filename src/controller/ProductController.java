@@ -137,6 +137,21 @@ public class ProductController implements BoxBorder {
     public void BackUpFile(){
         String source = "src/AllFile/dataFile.txt";
         String target = "src/backupfiles";
-        backUpFileProcessImpl.performBackup(source,target);
+        isContinue = true;
+        while(isContinue){
+            System.out.print("ℹ️ Are you sure to back up the file ? [Y/N] : ");
+            String ans = scanner.nextLine();
+            if(ans.equalsIgnoreCase("y")){
+                backUpFileProcessImpl.performBackup(source,target);
+                isContinue = false;
+            }else if(ans.equalsIgnoreCase("n")){
+                System.out.println("🏠 Back to Menu...");
+                isContinue = false;
+            }else{
+                System.out.println(" ❌ Invalid Option");
+            }
+        }
+
+
     }
 }
