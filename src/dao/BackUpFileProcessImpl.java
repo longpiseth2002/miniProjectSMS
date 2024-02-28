@@ -1,8 +1,6 @@
 package dao;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,7 +16,6 @@ public class BackUpFileProcessImpl implements BackUpFileProcess{
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         String timestamp = dateFormat.format(new Date());
 
-        //check th
         File folder = new File(targetFolder);
         File[] backupFiles = folder.listFiles(new BackupFilenameFilter());
 
@@ -27,10 +24,15 @@ public class BackUpFileProcessImpl implements BackUpFileProcess{
 
         String backupFileName = targetFolder + "/" + fileName + "_v" + newVersion + "_" + timestamp + ".txt";
 
-        Path target = Paths.get(backupFileName);
+        try (BufferedReader reader = new BufferedReader(new FileReader(source.toFile()));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(backupFileName))) {
 
-        try {
-            Files.copy(source, target);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.newLine();
+            }
+
             System.out.println("✅ File backup completed successfully. \n\t➡️ Backup saved in: " + backupFileName);
         } catch (IOException e) {
             e.printStackTrace();
