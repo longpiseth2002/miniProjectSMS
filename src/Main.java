@@ -1,24 +1,19 @@
+import controller.BackgroundProcessController;
 import controller.ProductController;
 import views.InterfaceViews;
 
 
+import java.io.IOException;
 import java.util.Scanner;
 
 
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         ProductController productController = new ProductController();
-
-        System.out.println(
-                " ".repeat(25) + "██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗    ████████╗ ██████╗ \n" +
-                        " ".repeat(25) + "██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝    ╚══██╔══╝██╔═══██╗   \n" +
-                        " ".repeat(25) + "██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗         ██║   ██║   ██║   \n" +
-                        " ".repeat(25) + "██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝         ██║   ██║   ██║   \n" +
-                        " ".repeat(25) + "╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗       ██║   ╚██████╔╝   \n" +
-                        " ".repeat(25) + " ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝       ╚═╝    ╚═════╝ ");
+        BackgroundProcessController backgroundProcessController = new BackgroundProcessController();
         System.out.println(
                 " ".repeat(30) + "  ██████╗███████╗████████╗ █████╗ ██████╗     ███████╗███╗   ███╗███████╗ \n" +
                         " ".repeat(30) + " ██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗    ██╔════╝████╗ ████║██╔════╝ \n" +
@@ -28,6 +23,7 @@ public class Main {
                         " ".repeat(30) + "  ╚═════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝     ╚═╝╚══════╝ ");
         String op;
         InterfaceViews.interfaceCSTAD();
+        backgroundProcessController.start();
         do {
             InterfaceViews.applicationMenu();
             System.out.print("➡ SELECT OPTION MENU : ");
@@ -35,37 +31,37 @@ public class Main {
             System.out.println();
             switch (op) {
                 case "d" -> {
-                    productController.display();
+                        productController.display();
                 }
                 case "rd" -> {
-                    System.out.println("Random");
+                    backgroundProcessController.randomWrite();
                 }
                 case "w" -> {
-                    System.out.println("Write");
+                    productController.write();
                 }
                 case "r" -> {
-                    System.out.println("Read");
+                    productController.read();
                 }
                 case "e" -> {
                     System.out.println("Edit");
                 }
                 case "dl" -> {
-                    System.out.println("Delete");
+                    productController.deleteById();
                 }
                 case "s" -> {
-                    System.out.println("Search");
+                    productController.searchByName();
                 }
                 case "sr" -> {
                     productController.setNumberRow();
                 }
                 case "c" -> {
-                    System.out.println("Commit");
+                    backgroundProcessController.commit();
                 }
                 case "bu" -> {
-                    System.out.println("back Up");
+                    productController.BackUpFile();
                 }
                 case "rs" -> {
-                    System.out.println("Restore");
+                    backgroundProcessController.restore();
                 }
                 case "h" -> {
                     InterfaceViews.displayHelp();
@@ -73,10 +69,10 @@ public class Main {
                 case "x" -> {
                     System.exit(0);
                 }
+                default -> {
+                    System.out.println("\n");
+                }
             }
-
-
-
 
 
         } while (op != "x");
