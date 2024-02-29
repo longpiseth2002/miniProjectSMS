@@ -23,12 +23,12 @@ public class BackUpFileProcessImpl implements BackUpFileProcess{
         int newVersion = latestVersion + 1;
 
         String backupFileName = targetFolder + "/" + fileName + "_v" + newVersion + "_" + timestamp + ".txt";
-
         try (BufferedReader reader = new BufferedReader(new FileReader(source.toFile()));
              BufferedWriter writer = new BufferedWriter(new FileWriter(backupFileName))) {
 
             String line;
             while ((line = reader.readLine()) != null) {
+
                 writer.write(line);
                 writer.newLine();
             }
