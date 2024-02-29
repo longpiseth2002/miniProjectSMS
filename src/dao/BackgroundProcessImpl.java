@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 import model.Product;
 import views.Colors;
 
+import static views.BoxBorder.reset;
+
 public class BackgroundProcessImpl implements BackgroundProcess{
     private static AtomicInteger currenSize=new AtomicInteger(0);
     private static AtomicInteger AtotalSize=new AtomicInteger(0);
@@ -288,8 +290,6 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         if (commitCheck("src/allFile/TransectionFile.txt", input)) {
             commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
         }
-        String op = null;
-        int n = 0;
         outloop: do {
             System.out.println("W.Write");
             System.out.println("R.Read");
@@ -303,6 +303,8 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                 break outloop;
             }
             if (wrOption.equalsIgnoreCase("w")) {
+                String op = null;
+                int n = 0;
                 do {
                     try {
                         System.out.print("Enter number of file[1-30M]: ");
@@ -351,6 +353,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                             }
                         }
                         System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
+                        System.out.println(reset);
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
                     }
@@ -362,7 +365,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                 }
 
             } else {
-                int num= n>0?n: (int) countLines(filename);
+                int n= (int) countLines(filename);
                 String stDigit = Integer.toString(n);
                 int digit = stDigit.length();
                 int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
@@ -385,12 +388,39 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                             productslist.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
                             i.getAndIncrement();
                             if (i.get() % divi == remain) {
-                                repeatNumber.set((int) (i.get() / (finalN / 100f)));
-                                System.out.printf("\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i, finalN, "█".repeat(repeatNumber.get()), "\u001B[37m▒".repeat(100 - repeatNumber.get()), i.get() / (finalN / 100f));
+                                int progress = Math.min(100, (int) (i.get() / (finalN / 100f)));
+                                repeatNumber.set(progress);
+                                System.out.printf("\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i.get(), finalN, "█".repeat(repeatNumber.get()), "\u001B[37m▒".repeat(100 - repeatNumber.get()), i.get() / (finalN / 100f));
+
                             }
                         });
+
                         System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
                     }
+
+//                    AtomicInteger i = new AtomicInteger();
+//                    try (Stream<String> lines = Files.lines(Paths.get(filename))) {
+//                        int finalN = n;
+//                        lines.parallel().forEach(line -> {
+//                            String[] parts = split(line, ',');
+//                            Product product = new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4]));
+//                            i.getAndIncrement();
+//                            synchronized (productslist) {
+//                                productslist.add(product);
+//                            }
+//                            i.incrementAndGet();
+//                            if (i.get() % divi == remain) {
+//                                int progress = (int) (i.get() / (finalN / 100f));
+//                                synchronized (System.out) {
+//                                    System.out.printf("\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i.get(), finalN, "█".repeat(progress), "\u001B[37m▒".repeat(100 - progress), i.get() / (finalN / 100f));
+//                                }
+//                            }
+//                        });
+//                        synchronized (System.out) {
+//                            System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
+//                        }
+//                    }
+
                 } else {
                     continue outloop;
                 }
