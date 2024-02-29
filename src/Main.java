@@ -22,6 +22,7 @@ public class Main {
                         " ".repeat(30) + " ╚██████╗███████║   ██║   ██║  ██║██████╔╝    ███████║██║ ╚═╝ ██║███████║ \n" +
                         " ".repeat(30) + "  ╚═════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝     ╚═╝╚══════╝ ");
         String op;
+
         InterfaceViews.interfaceCSTAD();
         backgroundProcessController.start();
         do {
@@ -34,8 +35,9 @@ public class Main {
                         productController.display();
                 }
                 case "rd" -> {
-                    backgroundProcessController.randomWrite();
+                    backgroundProcessController.random();
                 }
+
                 case "w" -> {
                     productController.write();
                 }

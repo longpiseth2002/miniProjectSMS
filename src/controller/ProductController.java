@@ -29,7 +29,9 @@ public class ProductController implements BoxBorder {
     private int setRow = 5;
     boolean isContinue = true;
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    private static List<Product> productList = new ArrayList<>();
+    private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
+
+
     public static List<Product> products(){
         return productList;
     }
@@ -175,23 +177,23 @@ public class ProductController implements BoxBorder {
 
     public void searchByName() {
         Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND_HEADER_AND_COLUMNS);
-        System.out.print("ENTER PRODUCTS NAME TO SEARCH : ");
-        String proName = scanner.nextLine();
+        System.out.print("ENTER PRODUCT NAME TO SEARCH: ");
+        String proName = scanner.nextLine().trim();
 
         List<Product> matchingProducts = productDaoImpl.searchByName(productList, proName);
         if (!matchingProducts.isEmpty()) {
             CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
-            table.setColumnWidth(0, 25, 30);
-            table.setColumnWidth(1, 25, 30);
-            table.setColumnWidth(2, 25, 30);
-            table.setColumnWidth(3, 25, 30);
-            table.setColumnWidth(4, 25, 30);
+            table.setColumnWidth(0, 10, 20); // Adjust column widths as needed
+            table.setColumnWidth(1, 20, 40);
+            table.setColumnWidth(2, 15, 25);
+            table.setColumnWidth(3, 5, 10);
+            table.setColumnWidth(4, 15, 25);
 
-            table.addCell("  CODE ", cellStyle);
-            table.addCell("  NAME ", cellStyle);
-            table.addCell("  UNIT PRICE ", cellStyle);
-            table.addCell("  QTY ", cellStyle);
-            table.addCell("  IMPORTED AT ", cellStyle);
+            table.addCell("CODE", cellStyle); // Remove extra spaces for table headers
+            table.addCell("NAME", cellStyle);
+            table.addCell("UNIT PRICE", cellStyle);
+            table.addCell("QTY", cellStyle);
+            table.addCell("IMPORTED AT", cellStyle);
 
             for (Product product : matchingProducts) {
                 table.addCell(String.valueOf(product.getId()), cellStyle);
@@ -203,9 +205,10 @@ public class ProductController implements BoxBorder {
 
             System.out.println(table.render());
         } else {
-            System.out.println(" PRODUCT : " + proName + " NOT FOUND ");
+            System.out.println("PRODUCT: " + proName + " NOT FOUND");
         }
     }
+
 
 
     public void setNumberRow() {
