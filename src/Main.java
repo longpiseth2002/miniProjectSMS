@@ -1,16 +1,19 @@
+import controller.BackgroundProcessController;
 import controller.ProductController;
 import views.InterfaceViews;
 
 
+import java.io.IOException;
 import java.util.Scanner;
 
 
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         ProductController productController = new ProductController();
+        BackgroundProcessController backgroundProcessController = new BackgroundProcessController();
 
         System.out.println(
                 " ".repeat(25) + "██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗    ████████╗ ██████╗ \n" +
@@ -28,6 +31,7 @@ public class Main {
                         " ".repeat(30) + "  ╚═════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝     ╚═╝╚══════╝ ");
         String op;
         InterfaceViews.interfaceCSTAD();
+        backgroundProcessController.start();
         do {
             InterfaceViews.applicationMenu();
             System.out.print("➡ SELECT OPTION MENU : ");
@@ -35,11 +39,12 @@ public class Main {
             System.out.println();
             switch (op) {
                 case "d" -> {
-                    productController.display();
+                        productController.display();
                 }
                 case "rd" -> {
-                    System.out.println("Random");
+                    backgroundProcessController.random();
                 }
+
                 case "w" -> {
                     productController.write();
                 }
@@ -50,22 +55,22 @@ public class Main {
                     System.out.println("Edit");
                 }
                 case "dl" -> {
-                    System.out.println("Delete");
+                    productController.deleteById();
                 }
                 case "s" -> {
-                    System.out.println("Search");
+                    productController.searchByName();
                 }
                 case "sr" -> {
                     productController.setNumberRow();
                 }
                 case "c" -> {
-                    System.out.println("Commit");
+                    backgroundProcessController.commit();
                 }
                 case "bu" -> {
                     productController.BackUpFile();
                 }
                 case "rs" -> {
-                    System.out.println("Restore");
+                    backgroundProcessController.restore();
                 }
                 case "h" -> {
                     InterfaceViews.displayHelp();
@@ -74,6 +79,7 @@ public class Main {
                     System.exit(0);
                 }
             }
+
 
         } while (op != "x");
 

@@ -1,27 +1,49 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Product {
 
     private Integer id;
     private String name;
     private Double unitPrice;
-    private Double qty;
+    private Integer qty;
     private LocalDate importAt;
-
+    private static Integer lastAssignedId = 0;
 
     public Product() {
+        this.id = lastAssignedId++;
     }
 
-    public Product(Integer id, String name, Double unitPrice, Double qty, LocalDate importAt) {
-        this.id = id;
+    public Product(String name, Double unitPrice, Integer qty) {
+        this.id = ++lastAssignedId;
         this.name = name;
         this.unitPrice = unitPrice;
         this.qty = qty;
-        this.importAt = importAt;
+        this.importAt = LocalDate.now();
     }
 
+
+    public Product(int id, String name, Double unitPrice, Integer qty, LocalDate date) {
+        this.id=id;
+        this.name=name;
+        this.unitPrice=unitPrice;
+        this.qty=qty;
+        this.importAt=date;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", unitPrice=" + unitPrice +
+                ", qty=" + qty +
+                ", importAt=" + importAt +
+                '}';
+    }
 
     public Integer getId() {
         return id;
@@ -47,11 +69,11 @@ public class Product {
         this.unitPrice = unitPrice;
     }
 
-    public Double getQty() {
+    public Integer getQty() {
         return qty;
     }
 
-    public void setQty(Double qty) {
+    public void setQty(Integer qty) {
         this.qty = qty;
     }
 
