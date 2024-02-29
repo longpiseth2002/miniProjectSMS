@@ -50,19 +50,19 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                     table.setColumnWidth(4, 25, 30);
 
 
-                    table.addCell("  CODE ", cellStyle);
-                    table.addCell("  NAME ", cellStyle);
-                    table.addCell("  UNIT PRICE ", cellStyle);
-                    table.addCell("  QTY ", cellStyle);
-                    table.addCell("  IMPORTED AT ", cellStyle);
+                    table.addCell(blue + "  CODE ", cellStyle);
+                    table.addCell(blue + "  NAME ", cellStyle);
+                    table.addCell(blue + "  UNIT PRICE ", cellStyle);
+                    table.addCell(blue + "  QTY ", cellStyle);
+                    table.addCell(blue + "  IMPORTED AT ", cellStyle);
                     if(ORDER){
                         //Display from index 0 to end
                         for (int i = numberOfRowStart; i < numberOfRowEnd ; i++) {
-                            table.addCell(String.valueOf(productList.get(i).getId()), cellStyle);
-                            table.addCell(productList.get(i).getName(), cellStyle);
-                            table.addCell(String.valueOf(productList.get(i).getUnitPrice()), cellStyle);
-                            table.addCell(String.valueOf(productList.get(i).getQty()), cellStyle);
-                            table.addCell(String.valueOf(productList.get(i).getImportAt()), cellStyle);
+                            table.addCell(darkCyan + "CSTAD" + productList.get(i).getId()+ "", cellStyle);
+                            table.addCell(darkGreen + productList.get(i).getName(), cellStyle);
+                            table.addCell(yellow + productList.get(i).getUnitPrice()+ "", cellStyle);
+                            table.addCell(yellow + productList.get(i).getQty()+ "", cellStyle);
+                            table.addCell(yellow + productList.get(i).getImportAt()+"", cellStyle);
 
                         }
                     }
@@ -335,25 +335,16 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public List<Product> selectByName(List<Product> products, String name) {
-
+    public List<Product> searchByName(List<Product> products, String name) {
+        List<Product> productList = new ArrayList<>();
         for (Product p : products){
-            if(name.equals(p.getName())){
-                System.out.println(p.getName());
+            if(p.getName().contains(name)){
+                productList.add(p);
             }
         }
-        return products;
+        return productList;
     }
 
-
-    @Override
-    public Product searchByName(List<Product> products , String searchName) {
-        List<Product> product = selectByName(products,searchName);
-        if(product!=null){
-
-        }
-        return null;
-    }
 
 
 

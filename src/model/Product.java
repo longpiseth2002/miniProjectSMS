@@ -35,17 +35,6 @@ public class Product {
     }
 
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", unitPrice=" + unitPrice +
-                ", qty=" + qty +
-                ", importAt=" + importAt +
-                '}';
-    }
-
     public Integer getId() {
         return id;
     }

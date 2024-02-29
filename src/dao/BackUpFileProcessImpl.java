@@ -1,7 +1,6 @@
 package dao;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -20,7 +19,6 @@ public class BackUpFileProcessImpl implements BackUpFileProcess{
     public void performBackup(String sourcePath, String targetFolder) throws IOException {
         Path source = Paths.get(sourcePath);
         String fileName = "BackUp";
-
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         String timestamp = dateFormat.format(new Date());

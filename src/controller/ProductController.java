@@ -1,7 +1,6 @@
 package controller;
 
 import dao.BackUpFileProcessImpl;
-import dao.BackgroundProcessImpl;
 import dao.ProductDaoImpl;
 import model.Product;
 import org.nocrala.tools.texttablefmt.BorderStyle;
@@ -10,16 +9,12 @@ import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 import views.InterfaceViews;
-
+import dao.BackgroundProcessImpl;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.InputMismatchException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -27,19 +22,17 @@ public class ProductController implements BoxBorder {
     private Scanner scanner;
     private ProductDaoImpl productDaoImpl;
     private BackUpFileProcessImpl backUpFileProcessImpl;
-    private BackgroundProcessImpl backgroundProcess = new BackgroundProcessImpl();
+    private BackgroundProcessImpl backgroundProcess;
 
     private int setRow = 5;
     boolean isContinue = true;
-    private int proId;
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
 
 
-    public static List<Product> products() {
+    public static List<Product> products(){
         return productList;
     }
-
     public ProductController() {
         scanner = new Scanner(System.in);
         productDaoImpl = new ProductDaoImpl();
@@ -53,67 +46,109 @@ public class ProductController implements BoxBorder {
     }
 
     public void write() {
-        Integer proId = productList.size() + 1;
+        boolean isValidInput = false;
+        while (!isValidInput) {
+            try {
+                System.out.print("ENTER PRODUCT NAME: ");
+                String proName = scanner.nextLine().trim();
 
-        try {
-            System.out.print("Enter product name: ");
-            String proName = scanner.nextLine().trim();
-            for (char i : proName.toCharArray()) {
-                if (Character.isDigit(i)) {
-                    throw new Exception();
+                // Check if the name contains at least one letter
+                boolean containsLetter = false;
+                for (char i : proName.toCharArray()) {
+                    if (Character.isLetter(i)) {
+                        containsLetter = true;
+                        break;
+                    }
                 }
-            }
-            System.out.print("Enter product Unit Price: ");
-            Double unitPrice = scanner.nextDouble();
-            System.out.print("Enter product Qty: ");
-            Integer qty = scanner.nextInt();
-            scanner.nextLine();
-            isContinue = true;
-            while (isContinue) {
-                System.out.print("ℹ️ Are you sure to create a new product? [Y/N] : ");
-                String ans = scanner.nextLine();
-                if (ans.equalsIgnoreCase("y")) {
-                    productDaoImpl.write(new Product(proName, unitPrice, qty), productList, "write");
-                    System.out.println("✅ Product has been created successfully");
-                    isContinue = false;
-                } else if (ans.equalsIgnoreCase("n")) {
-                    System.out.println("🏠 Back to Menu...");
-                    isContinue = false;
-                } else {
-                    System.out.println(" ❌ Invalid Option");
+                if (!containsLetter) {
+                    throw new Exception("PRODUCT NAME MUST CONTAIN AT LEAST ONE LETTER.");
                 }
+
+                Double unitPrice = null;
+                while (unitPrice == null) {
+                    System.out.print("ENTER PRODUCT UNIT PRICE: ");
+                    String unitPriceInput = scanner.nextLine();
+                    try {
+                        unitPrice = Double.parseDouble(unitPriceInput);
+                    } catch (NumberFormatException e) {
+                        System.out.println(red + " ❌ INVALID INPUT. PLEASE ENTER A VALID NUMBER. " + reset);
+                    }
+                }
+
+                Integer qty = null;
+                while (qty == null) {
+                    System.out.print("ENTER PRODUCT QTY: ");
+                    String qtyInput = scanner.nextLine();
+                    try {
+                        qty = Integer.parseInt(qtyInput);
+                    } catch (NumberFormatException e) {
+                        System.out.println(red + " ❌ INVALID INPUT. PLEASE ENTER A VALID NUMBER. " + reset);
+                    }
+                }
+
+                isContinue = true;
+                while(isContinue){
+                    System.out.print("ℹ️ ARE YOU SURE TO CREATE A NEW PRODUCT? [Y/N] : ");
+                    String ans = scanner.nextLine();
+                    if(ans.equalsIgnoreCase("Y")){
+                        productDaoImpl.write(new Product(proName,unitPrice,qty),productList,"write");
+                        System.out.println("✅ PRODUCT HAS BEEN CREATED SUCCESSFULLY");
+                        isContinue = false;
+                    } else if(ans.equalsIgnoreCase("N")){
+                        System.out.println(" 🏠 BACK TO APPLICATION MENU ...");
+                        isContinue = false;
+                    } else {
+                        System.out.println(red + " ❌ INVALID OPTION " + reset);
+                    }
+                }
+
+                isValidInput = true;
+            } catch (NumberFormatException e) {
+                System.out.println(red + " ❌ INVALID INPUT. PLEASE ENTER A VALID NUMBER. " + reset);
+            } catch (Exception e) {
+                System.out.println(red + " ❌ " + e.getMessage() + reset);
             }
-        } catch (Exception e) {
-            System.out.println(" ❌ Invalid Input");
-            System.out.println(e.getMessage());
-            scanner.nextLine();
         }
     }
+
 
 
     public void read() {
-        try {
-            System.out.print("Enter Product Id: ");
-            int proId = Integer.parseInt(scanner.nextLine());
-            Product product = productDaoImpl.read(proId, productList);
-            if (product != null) {
-                System.out.println("Product Detail of CODE[" + product.getId() + "]");
-                InterfaceViews.readDetail(product);
-            } else {
-                System.out.println(" ❌ Invalid ID");
+        boolean isValidInput = false;
+        while (!isValidInput) {
+            try {
+                System.out.print("ENTER PRODUCT ID: ");
+                int proId = Integer.parseInt(scanner.nextLine());
+                Product product = productDaoImpl.read(proId, productList);
+                if (product != null) {
+                    System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
+                    InterfaceViews.readDetail(product);
+                    isValidInput = true;
+                } else {
+                    System.out.println( red + " ❌ PRODUCT NOT FOUND" + reset);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(red + " ❌ INVALID FORMAT" + reset);
             }
-        } catch (Exception e) {
-            System.out.println(" ❌ Please enter number only.");
-        }
 
+            if (!isValidInput) {
+                System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
+                String choice = scanner.nextLine().toLowerCase();
+                if (!choice.equalsIgnoreCase("Y")) {
+                    System.out.println(" 🏠 BACK TO APPLICATION MENU...");
+                    isValidInput = true;
+                }
+            }
+        }
     }
+
+
 
 
     void clickEnter() {
         System.out.print("Click [ ENTER ] to Continue Operation ...");
         scanner.nextLine();
     }
-
     private String getValidProductName() {
         String newName = null;
         do {
@@ -125,7 +160,6 @@ public class ProductController implements BoxBorder {
         } while (newName.matches(".*\\d.*"));
         return newName;
     }
-
     private double getValidUnitPrice() {
         double newPrice = 0;
         while (true) {
@@ -139,9 +173,7 @@ public class ProductController implements BoxBorder {
         }
         return newPrice;
     }
-
-    private int getValidQuantity() {
-        String newName = null;
+    private int getValidQuantity() {String newName = null;
         int newQty = 0;
         while (true) {
             try {
@@ -154,14 +186,13 @@ public class ProductController implements BoxBorder {
         }
         return newQty;
     }
-
-    private void editSingleElement() {
+    private void editSingleElement(int proId) {
         String newName = null;
         double newPrice = 0;
         int newQty = 0;
         String op;
-        while (true) {
-            try {
+        try {
+            while (true) {
                 System.out.println("\nWhich element of the product do you want to EDIT?");
                 System.out.println("\t [ N ]. EDIT NAME");
                 System.out.println("\t [ P ]. EDIT UNIT PRICE");
@@ -178,11 +209,14 @@ public class ProductController implements BoxBorder {
                     if (productList.get(i).getId() == proId) {
                         if (op.equals("N") || op.equals("n")) {
                             newName = getValidProductName();
-                        } else if (op.equals("P") || op.equals("p")) {
+                        }
+                        else if (op.equals("P") || op.equals("p")) {
                             newPrice = getValidUnitPrice();
-                        } else if (op.equals("Q") || op.equals("q")) {
+                        }
+                        else if (op.equals("Q") || op.equals("q")) {
                             newQty = getValidQuantity();
-                        } else {
+                        }
+                        else {
                             System.out.println("### Please ENTER [ N || P || Q || B ]");
                             clickEnter();
                             break; // Break out of the for loop if an invalid option is chosen
@@ -222,13 +256,14 @@ public class ProductController implements BoxBorder {
                         break; // Break out of the for loop after the editing process
                     }
                 }
-            } catch (Exception e) {
-                scanner.nextLine();
             }
+        } catch (Exception e) {
+            System.out.println(" ❌ Invalid Input");
+            System.out.println(e.getMessage());
+            scanner.nextLine();
         }
     }
-
-    private void editMultiElement() {
+    private void editMultiElement(int proId) {
         String newName = null;
         double newPrice = 0;
         int newQty = 0;
@@ -281,7 +316,6 @@ public class ProductController implements BoxBorder {
                     }
                 }
 
-                // Confirm the update for all elements
                 System.out.print("ℹ️ Are you sure to update all elements of this product? [Y/N] : ");
                 String ans = scanner.nextLine();
                 if (!ans.equalsIgnoreCase("y")) {
@@ -289,7 +323,6 @@ public class ProductController implements BoxBorder {
                     return;
                 }
 
-                // Update product with the new values
                 if (newName != null) {
                     productList.get(proId).setName(newName);
                 }
@@ -311,8 +344,7 @@ public class ProductController implements BoxBorder {
             scanner.nextLine();
         }
     }
-
-    private void editAllElement() {
+    private void editAllElement(int proId) {
         String newName = null;
         double newPrice = 0;
         int newQty = 0;
@@ -352,9 +384,9 @@ public class ProductController implements BoxBorder {
             System.out.println(" ❌ Invalid Input");
         }
     }
-
     public void editProduct() {
-        while (true) {
+        int proId;
+        while (true){
             try {
                 System.out.print("Enter Product ID: ");
                 proId = Integer.parseInt(scanner.nextLine());
@@ -384,21 +416,21 @@ public class ProductController implements BoxBorder {
 
                 switch (choice) {
                     case "SE": {
-                        editSingleElement();
+                        editSingleElement(proId);
                         break;
                     }
                     case "ME": {
-                        editMultiElement();
+                        editMultiElement(proId);
                         break;
                     }
                     case "AE": {
-                        editAllElement();
+                        editAllElement(proId);
                         break;
                     }
                     case "B": {
                         break;
                     }
-                    default: {
+                    default:{
                         System.out.println("❌ Invalid Option!!");
                         clickEnter();
                     }
@@ -406,69 +438,79 @@ public class ProductController implements BoxBorder {
             } while (!choice.equals("B"));
 
         } catch (Exception e) {
+
             System.out.println("❌ Invalid Input");
             System.out.println("Enter the correct format ...");
             scanner.nextLine();
         }
     }
 
-    public void deleteById() {
-        System.out.print("Enter Product Id To Delete : ");
-        int proId = Integer.parseInt(scanner.nextLine());
-        for (int i = 0; i < productList.size(); i++) {
-            if (productList.get(i).getId() == proId) {
-                productDaoImpl.read(proId, productList);
-                System.out.print("ℹ️ Are you sure to delete a  product? [Y/N] : ");
-                String op = scanner.nextLine();
-                if (op.equals("y")) {
-                    productDaoImpl.deleteById(proId, productList);
-                    System.out.println("✅ Product has been deleted successfully");
 
-                } else if (op.equalsIgnoreCase("n")) {
-                    System.out.println("🏠 Back to Menu...");
-                    isContinue = false;
-                } else {
-                    System.out.println(" ❌ Invalid Option");
+
+
+    public void deleteById() {
+        while (true) {
+            try {
+                System.out.print("ENTER PRODUCT ID TO DELETE: ");
+                int proId = Integer.parseInt(scanner.nextLine());
+
+                boolean found = false;
+                for (int i = 0; i < productList.size(); i++) {
+                    if (productList.get(i).getId() == proId) {
+                        found = true;
+                        Product product = productDaoImpl.read(proId, productList);
+                        InterfaceViews.readDetail(product);
+                        System.out.print("ℹ️ ARE YOU SURE TO DELETE A PRODUCT? [Y/N] : ");
+                        String op = scanner.nextLine();
+                        if (op.equalsIgnoreCase("y")) {
+                            productDaoImpl.deleteById(proId, productList);
+                            System.out.println("✅ PRODUCT HAS BEEN DELETED SUCCESSFULLY");
+                        } else if (op.equalsIgnoreCase("n")) {
+                            System.out.println("🏠 BACK TO MENU...");
+                        } else {
+                            System.out.println(red + " ❌ INVALID OPTION" + reset);
+                        }
+                        break;
+                    }
                 }
 
+                if (!found) {
+                    System.out.println(red + " ❌ PRODUCT NOT FOUND" + reset);
+                    System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
+                    String choice = scanner.nextLine();
+                    if (!choice.equalsIgnoreCase("Y")) {
+                        System.out.println("🏠 BACK TO APPLICATION MENU...");
+                        break;
+                    }
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println(red + " ❌ INVALID FORMAT" + reset);
+                System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
+                String choice = scanner.nextLine();
+                if (!choice.equalsIgnoreCase("y")) {
+                    System.out.println(" 🏠 BACK TO APPLICATION MENU...");
+                    break;
+                }
             }
         }
-
     }
+
+
 
     public void searchByName() {
-        Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.ALL);
-        System.out.print("Enter product name: ");
-        String proName = scanner.nextLine();
+        Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND_HEADER_AND_COLUMNS);
+        System.out.print("ENTER PRODUCT NAME TO SEARCH: ");
+        String proName = scanner.nextLine().trim();
 
-        List<Product> matchingProducts = productDaoImpl.selectByName(productList, proName);
+        List<Product> matchingProducts = productDaoImpl.searchByName(productList, proName);
         if (!matchingProducts.isEmpty()) {
-            CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
-            table.setColumnWidth(0, 25, 30);
-            table.setColumnWidth(1, 25, 30);
-            table.setColumnWidth(2, 25, 30);
-            table.setColumnWidth(3, 25, 30);
-            table.setColumnWidth(4, 25, 30);
-
-            table.addCell("  CODE ", cellStyle);
-            table.addCell("  NAME ", cellStyle);
-            table.addCell("  UNIT PRICE ", cellStyle);
-            table.addCell("  QTY ", cellStyle);
-            table.addCell("  IMPORTED AT ", cellStyle);
-
-            for (Product product : matchingProducts) {
-                table.addCell(String.valueOf(product.getId()), cellStyle);
-                table.addCell(product.getName(), cellStyle);
-                table.addCell(String.valueOf(product.getUnitPrice()), cellStyle);
-                table.addCell(String.valueOf(product.getQty()), cellStyle);
-                table.addCell(String.valueOf(product.getImportAt()), cellStyle);
-            }
-
-            System.out.println(table.render());
+            productDaoImpl.display(matchingProducts,setRow,scanner);
         } else {
-            System.out.println("No products found with name: " + proName);
+            System.out.println("PRODUCT: " + proName + " NOT FOUND");
         }
     }
+
 
 
     public void setNumberRow() {
@@ -477,18 +519,33 @@ public class ProductController implements BoxBorder {
         do {
             try {
                 System.out.print("⏩ ENTER NUMBER OF ROW: ");
-                inputRow = scanner.nextInt();
-                scanner.nextLine();
-                if (inputRow > 0) {
-                    productDaoImpl.setUpRow(inputRow, setRow);
-                    setRow = inputRow;
-                    break;
+                String input = scanner.nextLine().trim();
+
+                // Check if the input contains at least one letter
+                boolean containsLetter = false;
+                for (char c : input.toCharArray()) {
+                    if (Character.isLetter(c)) {
+                        containsLetter = true;
+                        break;
+                    }
+                }
+
+                if (!containsLetter) {
+                    inputRow = Integer.parseInt(input);
+                    if (inputRow > 0) {
+                        productDaoImpl.setUpRow(inputRow, setRow);
+                        setRow = inputRow;
+                        break;
+                    } else {
+                        System.out.println(red + "   ❌ NUMBERS OF ROWS MUST BE GREATER THAN 0!!!!!" + reset);
+                    }
                 } else {
-                    System.out.println(red + "   ❌ NUMBERS OF ROWS MUST BE GREATER THAN 0!!!!!" + reset);
+                    throw new InputMismatchException();
                 }
             } catch (InputMismatchException e) {
                 System.out.println(red + "   ❌ PLEASE ENTER A VALID INTEGER VALUE!!!!!" + reset);
-                scanner.nextLine();
+            } catch (NumberFormatException e) {
+                System.out.println(red + "   ❌ PLEASE ENTER A VALID INTEGER VALUE!!!!!" + reset);
             }
         } while (true);
     }
@@ -497,17 +554,35 @@ public class ProductController implements BoxBorder {
         String source = "src/AllFile/dataFile.txt";
         String target = "src/backupfiles";
         isContinue = true;
-        while (isContinue) {
+        while(isContinue){
             System.out.print("ℹ️ Are you sure to back up the file ? [Y/N] : ");
             String ans = scanner.nextLine();
-            if (ans.equalsIgnoreCase("y")) {
-                backUpFileProcessImpl.performBackup(source, target);
+            if(ans.equalsIgnoreCase("y")){
+                backUpFileProcessImpl.performBackup(source,target);
                 isContinue = false;
-            } else if (ans.equalsIgnoreCase("n")) {
+            }else if(ans.equalsIgnoreCase("n")){
                 System.out.println("🏠 Back to Menu...");
                 isContinue = false;
-            } else {
+            }else{
                 System.out.println(" ❌ Invalid Option");
+            }
+        }
+    }
+
+    public void exitProgram(){
+        isContinue = true;
+        while(isContinue){
+            System.out.print("ℹ️ Are you sure to exit the program ? [Y/N] : ");
+            String ans = scanner.nextLine();
+            if(ans.equalsIgnoreCase("y")){
+                System.out.println("\n🙏 Thank you for using our program!\n\n\t╰┈➤ Exiting the program....");
+                System.exit(0);
+                isContinue = false;
+            }else if(ans.equalsIgnoreCase("n")){
+                System.out.println("\n🏠 Back to Menu Application...");
+                isContinue = false;
+            }else{
+                System.out.println(red + " ❌ Invalid Option" + reset);
             }
         }
     }
