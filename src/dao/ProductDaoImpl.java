@@ -345,6 +345,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         return products;
     }
 
+
     @Override
     public Product searchByName(List<Product> products , String searchName) {
         List<Product> product = selectByName(products,searchName);

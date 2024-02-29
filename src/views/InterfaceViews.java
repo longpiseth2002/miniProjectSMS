@@ -28,6 +28,7 @@ public class InterfaceViews implements BoxBorder {
         System.out.println(SPACE.repeat(35) +BOTTOM_LEFT_CONNECTOR_CORNER + HORIZONTAL_CONNECTOR_BORDER.repeat(72) + BOTTOM_RIGHT_CONNECTOR_CORNER);
         System.out.print(reset);
     }
+
     public static void applicationMenu (){
         Table table = new Table(7, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
         CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);

@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public interface BackgroundProcess {
 
 
+
     public void readFromFile(List<Product> list,String datFile,String status);
     public void writeToFile(Product product,String status);
     public void writeToFile(List<Product> list,String fileName);

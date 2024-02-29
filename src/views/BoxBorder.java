@@ -9,6 +9,7 @@ public interface BoxBorder {
     static final String VERTICAL_BORDER = "│";
     static final String SPACE = " ";
 
+
     static final String LEFT_CONNECTOR_BORDER = "╠";
     static final String RIGHT_CONNECTOR_BORDER = "╣";
     static final String TOP_CONNECTOR_BORDER = "╦";
