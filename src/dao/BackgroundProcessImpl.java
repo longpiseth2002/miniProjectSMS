@@ -46,13 +46,13 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         while (currenSize.get() != numberToRead) {
             if (currenSize.get() % divi == remain) {
                 repeatNumber = (int) (currenSize.get() / (numberToRead / 100f));
-                System.out.printf(red + "\r[ %d/%d ]", currenSize.get(), numberToRead);
+                System.out.printf(Colors.red() + "\r[ %d/%d ]", currenSize.get(), numberToRead);
                 System.out.printf(" %s%s", "\u001B[31m\u2588".repeat(repeatNumber), "\u001B[37m\u2592".repeat(100 - repeatNumber));
-                System.out.printf(red + " [ %.2f%% ]", currenSize.get() / (numberToRead / 100f));
+                System.out.printf(Colors.red() + " [ %.2f%% ]", currenSize.get() / (numberToRead / 100f));
                 System.out.flush();
             }
         }
-        System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", currenSize.get(), numberToRead, "\u001B[35m\u2588".repeat(100), 100f);
+        System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", currenSize.get(), numberToRead, "\u001B[35m\u2588".repeat(100), 100f);
     }
 
     @Override
@@ -336,6 +336,20 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                 System.out.println(e.getMessage());
             }
         } while (n <1 || n > 30000000);
+        String op = null;
+        boolean apov=false;
+        input.nextLine();
+        do {
+            try{
+                System.out.println("(A):Append  ||  (O): Override");
+
+                System.out.print("Enter option: ");
+                op=input.nextLine();
+                apov= op.equalsIgnoreCase("a");
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+        } while (!(op.equalsIgnoreCase("a")||op.equalsIgnoreCase("o")));
         long start = System.nanoTime();
         String stDigit = Integer.toString(n);
         int digit = stDigit.length();
