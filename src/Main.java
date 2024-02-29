@@ -1,5 +1,6 @@
 import controller.BackgroundProcessController;
 import controller.ProductController;
+import views.BoxBorder;
 import views.InterfaceViews;
 
 
@@ -32,7 +33,7 @@ public class Main {
             System.out.println();
             switch (op) {
                 case "d" -> {
-                        productController.display();
+                    productController.display();
                 }
                 case "rd" -> {
                     backgroundProcessController.random();
@@ -45,7 +46,7 @@ public class Main {
                     productController.read();
                 }
                 case "e" -> {
-                    System.out.println("Edit");
+                    productController.editProduct();
                 }
                 case "dl" -> {
                     productController.deleteById();
@@ -69,11 +70,13 @@ public class Main {
                     InterfaceViews.displayHelp();
                 }
                 case "x" -> {
-                    System.exit(0);
+                    productController.exitProgram();
                 }
                 default -> {
-                    System.out.println("\n");
+                    System.out.println(BoxBorder.red + " ❌ Invalid Option." +
+                            "" + BoxBorder.reset + "\n\t🏠 Back to Menu Application...");
                 }
+
             }
 
 

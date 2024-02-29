@@ -84,7 +84,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                             int idToDelete=Integer.parseInt(parts[0]);
                             productList.removeIf(product -> product.getId() == idToDelete);
                         }
-                        else if(status.equalsIgnoreCase("update")){
+                        else if(status.equalsIgnoreCase("edit")){
                             int idToUpdate = Integer.parseInt(parts[0].trim());
                             for (Product product : productList) {
                                 if (product.getId() == idToUpdate) {
@@ -118,7 +118,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
     public Boolean clearFile(String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write("");
-            System.out.println("FILE CLEAred SUCCESSFULLY.");
+            System.out.println("File cleared successfully.");
         } catch (IOException e) {
             //e.printStackTrace();
             return false;
@@ -306,6 +306,15 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
         if(Files.exists(path)&&Files.size(path)!=0){
             System.out.println("There are many record have change and not commit yet..!");
             return true;
+//            do {
+//                System.out.print("Check and commit?[y/n]: ");
+//                String commit=input.nextLine();
+//                if(commit.equalsIgnoreCase("y")) return true;
+//                else if(commit.equalsIgnoreCase("n")) {
+//                    clearFile(fileTransection);
+//                    return false;
+//                }
+//            }while (true);
         }else return false;
     }
 
@@ -333,7 +342,6 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
         do {
             try{
                 System.out.println("(A):Append  ||  (O): Override");
-
                 System.out.print("Enter option: ");
                 op=input.nextLine();
                 apov= op.equalsIgnoreCase("a");
