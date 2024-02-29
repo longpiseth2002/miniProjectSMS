@@ -369,7 +369,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         }
         return instance;
     }
-    public static long countLines(String filename) throws IOException {
+    public long countLines(String filename) throws IOException {
         try (Stream<String> lines = Files.lines(Paths.get(filename))) {
             return lines.count();
         }

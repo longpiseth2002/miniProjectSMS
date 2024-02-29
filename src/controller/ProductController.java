@@ -10,6 +10,7 @@ import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 import views.InterfaceViews;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -182,7 +183,7 @@ public class ProductController implements BoxBorder {
         } while (true);
     }
 
-    public void BackUpFile(){
+    public void BackUpFile() throws IOException {
         String source = "src/AllFile/dataFile.txt";
         String target = "src/backupfiles";
         isContinue = true;
