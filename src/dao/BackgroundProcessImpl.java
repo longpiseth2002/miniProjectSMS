@@ -291,9 +291,11 @@ public class BackgroundProcessImpl implements BackgroundProcess{
             commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
         }
         outloop: do {
-            System.out.println("\nW.Write");
+            System.out.println("\n--------------------------");
+            System.out.println("W.Write");
             System.out.println("R.Read");
             System.out.println("B.Back");
+            System.out.println("--------------------------");
             String wrOption = null;
             do {
                 System.out.print("Choose option: ");
@@ -327,7 +329,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                     apov = op.equalsIgnoreCase("a");
                 } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
                 String wrirteCheck = null;
-                System.out.println("--------------------------");
+                System.out.println("\n--------------------------");
                 System.out.println("S.Start writing");
                 System.out.println("B.Back");
                 System.out.println("--------------------------");
@@ -372,7 +374,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                 int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
                 int remain = n % divi;
                 AtomicInteger repeatNumber = new AtomicInteger();
-                System.out.println("--------------------------");
+                System.out.println("\n--------------------------");
                 System.out.println("S.Start reading");
                 System.out.println("B.Back");
                 System.out.println("--------------------------");
