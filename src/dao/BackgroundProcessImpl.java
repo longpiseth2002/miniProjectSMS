@@ -5,9 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.DoubleToIntFunction;
 import java.util.stream.Stream;
 
 import model.Product;
@@ -120,7 +120,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
             writer.write("");
             System.out.println("File cleared successfully.");
         } catch (IOException e) {
-            //e.printStackTrace();
+            System.out.println("Can not clear file");
             return false;
         }
         return true;
@@ -160,7 +160,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         long start = System.nanoTime();
         Thread thread1 = new Thread(() -> {
             try (Stream<String> lines = Files.lines(Paths.get(dataFile))) {
-                lines.parallel().forEach(line -> {
+                lines.forEach(line -> {
                     String[] parts = split(line,',');
                     list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
                     currenSize.incrementAndGet();
@@ -249,28 +249,6 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                     String line = list.get(i).getId() + "," + list.get(i).getName() + "," + list.get(i).getUnitPrice() + "," + list.get(i).getQty() + "," +list.get(i).getImportAt()+ "\n";
                     writer.write(line);
                 }
-//                StringBuilder batch = new StringBuilder();
-//                int count = 0;
-//                int batchSize=1000;
-//                for (int i = 0; i < list.size(); i++) {
-//                    currenSize.incrementAndGet();
-//                    batch.append(list.get(i).getId())
-//                            .append(",")
-//                            .append(list.get(i).getName())
-//                            .append(",")
-//                            .append(list.get(i).getUnitPrice())
-//                            .append(",")
-//                            .append(list.get(i).getQty())
-//                            .append(",")
-//                            .append(list.get(i).getImportAt())
-//                            .append(System.lineSeparator());
-//                    count++;
-//                    if (count == batchSize || i==list.size()-1) {
-//                        writer.write(batch.toString());
-//                        batch.setLength(0); // Clear the batch
-//                        count = 0; // Reset the counter
-//                    }
-//                }
                 obj.writeTotalSize(list.size(),"src/allFile/totalSize.txt");
             } catch (IOException e) {
                 //e.printStackTrace();
@@ -284,10 +262,10 @@ public class BackgroundProcessImpl implements BackgroundProcess{
             }
         });
         thread1.start();
-        //thread2.start();
+        thread2.start();
         try {
             thread1.join();
-            //thread2.join();
+            thread2.join();
         } catch (InterruptedException e) {
         }
         long end=System.nanoTime();
@@ -307,68 +285,118 @@ public class BackgroundProcessImpl implements BackgroundProcess{
 
     @Override
     public void random(List<Product> productslist,String filename, Scanner input) throws IOException {
-        if (commitCheck("src/allFile/TransectionFile.txt",input)){
-            commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","random",input);
+        if (commitCheck("src/allFile/TransectionFile.txt", input)) {
+            commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
         }
-        System.out.println("1.Write");
-        System.out.println("2.Read");
-        System.out.print("Choose option: ");
-
-        int n=0;
-        do {
-            try{
-            System.out.print("Enter number of file[1-30M]: ");
-            n = input.nextInt();
-            }catch (Exception e){
-                System.out.println(e.getMessage());
-            }
-        } while (n <1 || n > 30000000);
         String op = null;
-        boolean apov=false;
-        input.nextLine();
-        do {
-            try{
-                System.out.println("(A):Append  ||  (O): Override");
-
-                System.out.print("Enter option: ");
-                op=input.nextLine();
-                apov= op.equalsIgnoreCase("a");
-            }catch (Exception e){
-                System.out.println(e.getMessage());
+        int n = 0;
+        outloop: do {
+            System.out.println("W.Write");
+            System.out.println("R.Read");
+            System.out.println("B.Back");
+            String wrOption = null;
+            do {
+                System.out.print("Choose option: ");
+                wrOption = input.nextLine();
+            } while (!(wrOption.equalsIgnoreCase("w") || wrOption.equalsIgnoreCase("r")||wrOption.equalsIgnoreCase("b")));
+            if(wrOption.equalsIgnoreCase("b")){
+                break outloop;
             }
-        } while (!(op.equalsIgnoreCase("a")||op.equalsIgnoreCase("o")));
-        long start = System.nanoTime();
-        String stDigit = Integer.toString(n);
-        int digit = stDigit.length();
-        int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
-        int remain = n % divi;
-        int repeatNumber ;
-        Product obj;
-        if(!productslist.isEmpty()){
-            obj=productslist.get(productslist.size()-1);
-        }else{
-            obj=new Product("CSTAD",10.2,2);
-        }
-        int first=obj.getId();
-        String  line=","+obj.getName()+","+obj.getQty()+","+obj.getQty()+","+obj.getImportAt()+"\n";
-        String date= String.valueOf(LocalDate.now());
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename,apov))) {
-                for (int i = 0; i < n; i++) {
-                    writer.write(first+(i)+line);
-                    if (i % divi == remain) {
-                        repeatNumber = (int) (i / (n/ 100f));
-                        System.out.printf( "\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i, n,"█".repeat(repeatNumber),"\u001B[37m▒".repeat(100 - repeatNumber), i / (n / 100f));
-                     }
+            if (wrOption.equalsIgnoreCase("w")) {
+                do {
+                    try {
+                        System.out.print("Enter number of file[1-30M]: ");
+                        n = input.nextInt();
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                } while (n < 1 || n > 30000000);
+                boolean apov = false;
+                String stDigit = Integer.toString(n);
+                int digit = stDigit.length();
+                int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
+                int remain = n % divi;
+                int repeatNumber;
+                input.nextLine();
+                do {
+                    System.out.println("(A):Append  ||  (O): Override");
+                    System.out.print("Enter option: ");
+                    op = input.nextLine();
+                    apov = op.equalsIgnoreCase("a");
+                } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
+                String wrirteCheck = null;
+                System.out.println("S.Start writing");
+                System.out.println("B.Back");
+                do {
+                    System.out.print("Choose option: ");
+                    wrirteCheck = input.nextLine();
+                } while (!(wrirteCheck.equalsIgnoreCase("s") || wrirteCheck.equalsIgnoreCase("b")));
+                if (wrirteCheck.equalsIgnoreCase("s")) {
+                    long start = System.nanoTime();
+                    Product obj;
+                    if (!productslist.isEmpty()) {
+                        obj = productslist.get(productslist.size() - 1);
+                    } else {
+                        obj = new Product("coca", 2.5, 12);
+                    }
+                    int first = obj.getId();
+                    String line = "," + obj.getName() + "," + obj.getQty() + "," + obj.getQty() + "," + obj.getImportAt() + "\n";
+                    String date = String.valueOf(LocalDate.now());
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, apov))) {
+                        for (int i = 0; i < n; i++) {
+                            writer.write(first + (i) + line);
+                            if (i % divi == remain) {
+                                repeatNumber = (int) (i / (n / 100f));
+                                System.out.printf("\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i, n, "█".repeat(repeatNumber), "\u001B[37m▒".repeat(100 - repeatNumber), i / (n / 100f));
+                            }
+                        }
+                        System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
+                    } catch (IOException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    long end = System.nanoTime();
+                    System.out.println(Colors.blue() + "\nData written to file successfully.");
+                    System.out.println(Colors.reset() + "\ntime = " + (end - start) / 1000000 + "ms\n");
+                } else {
+                    continue outloop;
                 }
-                System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n,n, "\u001B[35m█".repeat(100), 100f);
-            } catch (IOException e) {
-            System.out.println(e.getMessage());
-            }
-        long end = System.nanoTime();
-        System.out.println(Colors.blue() + "\nData written to file successfully.");
-        System.out.println(Colors.reset() + "\ntime = " + (end - start) / 1000000 + "ms\n");
-    }
 
+            } else {
+                int num= n>0?n: (int) countLines(filename);
+                String stDigit = Integer.toString(n);
+                int digit = stDigit.length();
+                int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
+                int remain = n % divi;
+                AtomicInteger repeatNumber = new AtomicInteger();
+                System.out.println("S.Start reading");
+                System.out.println("B.Back");
+                System.out.print("Choose option: ");
+                String startAndBack = null;
+                do {
+                    System.out.print("Choose option: ");
+                    wrOption = input.nextLine();
+                } while (!(wrOption.equalsIgnoreCase("s") || wrOption.equalsIgnoreCase("b")));
+                if (wrOption.equalsIgnoreCase("s")) {
+                    AtomicInteger i = new AtomicInteger();
+                    try (Stream<String> lines = Files.lines(Paths.get(filename))) {
+                        int finalN = n;
+                        lines.parallel().forEach(line -> {
+                            String[] parts = split(line, ',');
+                            productslist.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
+                            i.getAndIncrement();
+                            if (i.get() % divi == remain) {
+                                repeatNumber.set((int) (i.get() / (finalN / 100f)));
+                                System.out.printf("\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i, finalN, "█".repeat(repeatNumber.get()), "\u001B[37m▒".repeat(100 - repeatNumber.get()), i.get() / (finalN / 100f));
+                            }
+                        });
+                        System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
+                    }
+                } else {
+                    continue outloop;
+                }
+            }
+        }while (true);
+    }
     @Override
     public void setListSize(int listSize) {
         AtotalSize.set(listSize);
