@@ -69,24 +69,23 @@ public class BackgroundProcessImpl implements BackgroundProcess{
             if(operation.equalsIgnoreCase("random")&&!op.equalsIgnoreCase("n")) continue;
         }while (!(op.equalsIgnoreCase("y")||op.equalsIgnoreCase("c")||(op.equalsIgnoreCase("n")&&!operation.equalsIgnoreCase("random"))));
 
-        //List<Product> listData=new ArrayList<>();
-
-        if(op.equalsIgnoreCase("y")){
-            productList.clear();
-            readFromFile(productList,dataFile,"start");
+        if(op.equalsIgnoreCase("y")||(op.equalsIgnoreCase("n")&&operation.equalsIgnoreCase("start"))){
+            if(op.equalsIgnoreCase("y")) productList.clear();
+            readFromFile(productList,dataFile,"startcommit");
             try(BufferedReader reader=new BufferedReader(new FileReader(tranSectionFile))){
                 String line;
                 while ((line = reader.readLine()) != null) {
                     String[] parts = line.split(",");
                     String status=parts[5];
                     if(status.equalsIgnoreCase("write")){
+                        System.out.println(parts[0]);
                         productList.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4])));
                     }
                     else if(status.equalsIgnoreCase("delete")){
                         int idToDelete=Integer.parseInt(parts[0]);
                         productList.removeIf(product -> product.getId() == idToDelete);
                     }
-                    else if(status.equalsIgnoreCase("update")){
+                    else if(status.equalsIgnoreCase("edit")){
                         int idToUpdate = Integer.parseInt(parts[0].trim());
                         for (Product product : productList) {
                             if (product.getId() == idToUpdate) {
@@ -98,31 +97,25 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                         }
                     }
                 }
-                clearFile(tranSectionFile);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            writeToFile(productList,"src/allFile/dataFile.txt");
+            if(op.equalsIgnoreCase("y")) {
+                clearFile(tranSectionFile);
+                writeToFile(productList, "src/allFile/dataFile.txt");
+            }
         }else if(op.equalsIgnoreCase("c")){
             clearFile(tranSectionFile);
             productList.clear();
             readFromFile(productList,"src/allFile/dataFile.txt",operation);
-
-        }else{
-            if(operation.equalsIgnoreCase("start")){
-                readFromFile(productList,dataFile,"start");
-            }
         }
-
         return op;
     }
     @Override
     public Boolean clearFile(String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write("");
-            System.out.println("File cleared successfully.");
         } catch (IOException e) {
-            System.out.println("Can not clear file");
             return false;
         }
         return true;
@@ -203,15 +196,16 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         });
 
         thread1.start();
-
-        thread2.start();
+        if(!status.equalsIgnoreCase("startcommit"))  thread2.start();
         try {
             thread1.join();
-            thread2.join();
+            if(!status.equalsIgnoreCase("startcommit"))
+                thread2.join();
         } catch (InterruptedException e) {
         }
         if (currenSize.get() != -1)
-            System.out.println(Colors.blue() + "\nCompleted.");
+            if(!status.equalsIgnoreCase("startcommit"))
+                System.out.println(Colors.blue() + "\nCompleted.");
         currenSize.set(0);
     }
 
@@ -269,6 +263,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                 for (int i = 0; i < list.size(); i++) {
                     String line = list.get(i).getId() + "," + list.get(i).getName() + "," + list.get(i).getUnitPrice() + "," + list.get(i).getQty() + "," +list.get(i).getImportAt()+ "\n";
                     writer.write(line);
+                    currenSize.getAndIncrement();
                 }
                 obj.writeTotalSize(list.size(),"src/allFile/totalSize.txt");
             } catch (IOException e) {
@@ -291,7 +286,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         }
         long end=System.nanoTime();
         if(currenSize.get()!=-1)
-            System.out.println(Colors.blue()+"\nData written to file successfully.");
+            System.out.println(Colors.blue()+"\nCompleted.");
         currenSize.set(0);
     }
     @Override
@@ -359,13 +354,9 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                 if (wrirteCheck.equalsIgnoreCase("s")) {
                     long start = System.nanoTime();
                     Product obj;
-                    if (!productslist.isEmpty()) {
-                        obj = productslist.get(productslist.size() - 1);
-                    } else {
-                        obj = new Product("coca", 2.5, 12);
-                    }
+                    obj = new Product("coca", 2.5, 12);
                     int first = (op.equalsIgnoreCase("a"))?readFromFile("src/allFile/lastId.txt")+1:1;
-                    String line = "," + obj.getName() + "," + obj.getQty() + "," + obj.getQty() + "," + obj.getImportAt() + "\n";
+                    String line = "," + obj.getName() + "," + obj.getUnitPrice() + "," + obj.getQty() + "," + obj.getImportAt() + "\n";
                     String date = String.valueOf(LocalDate.now());
                     int id=0;
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, apov))) {
@@ -400,7 +391,6 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                 System.out.println("S.Start reading");
                 System.out.println("B.Back");
                 System.out.println("--------------------------");
-                System.out.print("Choose option: ");
                 String startAndBack = null;
                 do {
                     System.out.print("Choose option: ");
