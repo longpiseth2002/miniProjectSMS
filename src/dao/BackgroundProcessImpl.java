@@ -53,7 +53,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
     }
 
     @Override
-    public void commit( String tranSectionFile, String dataFile,String operation, Scanner input) throws IOException {
+    public String commit(List<Product> productList, String tranSectionFile, String dataFile,String operation, Scanner input) throws IOException {
         String opera=operation.equalsIgnoreCase("random")?"[y/c]":"[y/c/n]";
         System.out.println("Commit all change: y");
         System.out.println(Colors.red()+"Cancel all change: c"+Colors.reset());
@@ -67,48 +67,52 @@ public class BackgroundProcessImpl implements BackgroundProcess{
             if(operation.equalsIgnoreCase("random")&&!op.equalsIgnoreCase("n")) continue;
         }while (!(op.equalsIgnoreCase("y")||op.equalsIgnoreCase("c")||(op.equalsIgnoreCase("n")&&!operation.equalsIgnoreCase("random"))));
 
-        List<Product> listData=new ArrayList<>();
-            readFromFile(listData,dataFile,"start");
-            int change=0;
-            try(BufferedReader reader=new BufferedReader(new FileReader(tranSectionFile))){
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    String status=parts[5];
-                    if(status.equalsIgnoreCase("write")){
-                        listData.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4])));
-                    }
-                    else if(status.equalsIgnoreCase("delete")){
-                        int idToDelete=Integer.parseInt(parts[0]);
-                        listData.removeIf(product -> product.getId() == idToDelete);
-                    }
-                    else if(status.equalsIgnoreCase("update")){
-                        int idToUpdate = Integer.parseInt(parts[0].trim());
-                        for (Product product : listData) {
-                            if (product.getId() == idToUpdate) {
-                                product.setName(parts[1].trim());
-                                product.setQty(Integer.parseInt(parts[2]));
-                                product.setUnitPrice(Double.parseDouble(parts[3]));
-                                break;
+        //List<Product> listData=new ArrayList<>();
+
+            if(op.equalsIgnoreCase("y")){
+                productList.clear();
+                readFromFile(productList,dataFile,"start");
+                try(BufferedReader reader=new BufferedReader(new FileReader(tranSectionFile))){
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] parts = line.split(",");
+                        String status=parts[5];
+                        if(status.equalsIgnoreCase("write")){
+                            productList.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4])));
+                        }
+                        else if(status.equalsIgnoreCase("delete")){
+                            int idToDelete=Integer.parseInt(parts[0]);
+                            productList.removeIf(product -> product.getId() == idToDelete);
+                        }
+                        else if(status.equalsIgnoreCase("update")){
+                            int idToUpdate = Integer.parseInt(parts[0].trim());
+                            for (Product product : productList) {
+                                if (product.getId() == idToUpdate) {
+                                    product.setName(parts[1].trim());
+                                    product.setQty(Integer.parseInt(parts[2]));
+                                    product.setUnitPrice(Double.parseDouble(parts[3]));
+                                    break;
+                                }
                             }
                         }
                     }
-                    change++;
+                    clearFile(tranSectionFile);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            System.out.println("There are "+change+" operation change in file");
-            if(op.equalsIgnoreCase("y")){
-                writeToFile(listData,"src/allFile/dataFile.txt");
-                listData.clear();
-                clearFile(tranSectionFile);
-            }else if(op.equalsIgnoreCase("n")){
-                listData.clear();
+                    writeToFile(productList,"src/allFile/dataFile.txt");
+            }else if(op.equalsIgnoreCase("c")){
+                    clearFile(tranSectionFile);
+                    productList.clear();
+                    readFromFile(productList,"src/allFile/dataFile.txt",operation);
+
             }else{
-                clearFile(tranSectionFile);
-                listData.clear();
+                if(operation.equalsIgnoreCase("start")){
+                    readFromFile(productList,dataFile,"start");
+                }
             }
+
+        return op;
     }
     @Override
     public Boolean clearFile(String filePath) {
@@ -241,28 +245,32 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         BackgroundProcessImpl obj =  BackgroundProcessImpl.createObject();
         Thread thread1=new Thread(()->{
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-                StringBuilder batch = new StringBuilder();
-                int count = 0;
-                int batchSize=1000;
                 for (int i = 0; i < list.size(); i++) {
-                    currenSize.incrementAndGet();
-                    batch.append(list.get(i).getId())
-                            .append(",")
-                            .append(list.get(i).getName())
-                            .append(",")
-                            .append(list.get(i).getUnitPrice())
-                            .append(",")
-                            .append(list.get(i).getQty())
-                            .append(",")
-                            .append(list.get(i).getImportAt())
-                            .append(System.lineSeparator());
-                    count++;
-                    if (count == batchSize || i==list.size()-1) {
-                        writer.write(batch.toString());
-                        batch.setLength(0); // Clear the batch
-                        count = 0; // Reset the counter
-                    }
+                    String line = list.get(i).getId() + "," + list.get(i).getName() + "," + list.get(i).getUnitPrice() + "," + list.get(i).getQty() + "," +list.get(i).getImportAt()+ "\n";
+                    writer.write(line);
                 }
+//                StringBuilder batch = new StringBuilder();
+//                int count = 0;
+//                int batchSize=1000;
+//                for (int i = 0; i < list.size(); i++) {
+//                    currenSize.incrementAndGet();
+//                    batch.append(list.get(i).getId())
+//                            .append(",")
+//                            .append(list.get(i).getName())
+//                            .append(",")
+//                            .append(list.get(i).getUnitPrice())
+//                            .append(",")
+//                            .append(list.get(i).getQty())
+//                            .append(",")
+//                            .append(list.get(i).getImportAt())
+//                            .append(System.lineSeparator());
+//                    count++;
+//                    if (count == batchSize || i==list.size()-1) {
+//                        writer.write(batch.toString());
+//                        batch.setLength(0); // Clear the batch
+//                        count = 0; // Reset the counter
+//                    }
+//                }
                 obj.writeTotalSize(list.size(),"src/allFile/totalSize.txt");
             } catch (IOException e) {
                 //e.printStackTrace();
@@ -293,24 +301,24 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         Path path = Paths.get(fileTransection);
         if(Files.exists(path)&&Files.size(path)!=0){
             System.out.println("There are many record have change and not commit yet..!");
-            do {
-                System.out.print("Check and commit?[y/n]: ");
-                String commit=input.nextLine();
-                if(commit.equalsIgnoreCase("y")) return true;
-                else if(commit.equalsIgnoreCase("n")) {
-                    clearFile(fileTransection);
-                    return false;
-                }
-            }while (true);
-        }
-        return false;
+            return true;
+//            do {
+//                System.out.print("Check and commit?[y/n]: ");
+//                String commit=input.nextLine();
+//                if(commit.equalsIgnoreCase("y")) return true;
+//                else if(commit.equalsIgnoreCase("n")) {
+//                    clearFile(fileTransection);
+//                    return false;
+//                }
+//            }while (true);
+        }else return false;
     }
 
 
     @Override
     public void random(List<Product> productslist,String filename, Scanner input) throws IOException {
         if (commitCheck("src/allFile/TransectionFile.txt",input)){
-            commit("src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","random",input);
+            commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","random",input);
         }
 //        readFromFile(productslist,"src/allFile/dataFile.txt","start");
         int n=0;
