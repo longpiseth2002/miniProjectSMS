@@ -385,6 +385,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                     wrOption = input.nextLine();
                 } while (!(wrOption.equalsIgnoreCase("s") || wrOption.equalsIgnoreCase("b")));
                 if (wrOption.equalsIgnoreCase("s")) {
+                    productslist.clear();
                     AtomicInteger i = new AtomicInteger();
                     try (Stream<String> lines = Files.lines(Paths.get(filename))) {
                         lines.parallel().forEach(line -> {
