@@ -323,7 +323,14 @@ public class BackgroundProcessImpl implements BackgroundProcess{
         if (commitCheck("src/allFile/TransectionFile.txt",input)){
             commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","random",input);
         }
+<<<<<<< HEAD
 //        readFromFile(productslist,"src/allFile/dataFile.txt","start");
+=======
+        System.out.println("1.Write");
+        System.out.println("2.Read");
+        System.out.print("Choose option: ");
+
+>>>>>>> d8ca05d48a50bb2062137496b9ec65c4acee1f4a
         int n=0;
         do {
             try{
