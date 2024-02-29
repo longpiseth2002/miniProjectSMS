@@ -46,6 +46,7 @@ public class ProductController implements BoxBorder {
         productDaoImpl.display(productList, setRow, scanner);
     }
 
+
     public void write() {
         Integer proId = productList.size() + 1;
 
