@@ -18,4 +18,5 @@ public interface ProductDao {
     Product deleteById(Integer id , List<Product> products);
     List<Product> searchByName(List<Product> products ,String name);
     void setUpRow(int numberOfRow,int setRow);
+
 }

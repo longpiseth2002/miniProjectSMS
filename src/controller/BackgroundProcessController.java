@@ -23,18 +23,25 @@ public class BackgroundProcessController {
     }
 
 
-    public void randomWrite(){
-        backgroundProcess.randomWrite("src/allFile/dataFile.txt",scanner);
+    public void random() throws IOException {
+        backgroundProcess.random(productslist,"src/allFile/dataFile.txt",scanner);
     }
     public void start() throws IOException {
+        String op=null;
         if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
-            backgroundProcess.commit("src/allFile/TransectionFile.txt","src/allFile/dataFile.txt",scanner);
+           op= backgroundProcess.commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","commit",scanner);
         }
-        backgroundProcess.readFromFile(productslist,"src/allFile/dataFile.txt","start");
+        if(op==null){
+            backgroundProcess.readFromFile(productslist,"src/allFile/dataFile.txt","start");
+        }
     }
-    public void commit() throws FileNotFoundException {
-        backgroundProcess.commit("src/allFile/TransectionFile.txt","src/allFile/dataFile.txt",scanner);
-    }
+    public void commit() throws IOException {
+        if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
+            backgroundProcess.commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","commit",scanner);
+        }else
+            System.out.println("There are nothing to commit..!");
+        }
+
     public void restore(){
         backgroundProcess.restore(productslist,"src/allFile/dataFile.txt",scanner);
     }
