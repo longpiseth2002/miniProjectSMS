@@ -16,6 +16,7 @@ public class Product {
         this.id = lastAssignedId++;
     }
 
+
     public Product(String name, Double unitPrice, Integer qty) {
         this.id = ++lastAssignedId;
         this.name = name;
