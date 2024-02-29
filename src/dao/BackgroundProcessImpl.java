@@ -291,7 +291,7 @@ public class BackgroundProcessImpl implements BackgroundProcess{
             commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
         }
         outloop: do {
-            System.out.println("W.Write");
+            System.out.println("\nW.Write");
             System.out.println("R.Read");
             System.out.println("B.Back");
             String wrOption = null;
@@ -327,8 +327,10 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                     apov = op.equalsIgnoreCase("a");
                 } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
                 String wrirteCheck = null;
+                System.out.println("--------------------------");
                 System.out.println("S.Start writing");
                 System.out.println("B.Back");
+                System.out.println("--------------------------");
                 do {
                     System.out.print("Choose option: ");
                     wrirteCheck = input.nextLine();
@@ -353,7 +355,6 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                             }
                         }
                         System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
-                        System.out.println(reset);
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
                     }
@@ -371,8 +372,10 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                 int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
                 int remain = n % divi;
                 AtomicInteger repeatNumber = new AtomicInteger();
+                System.out.println("--------------------------");
                 System.out.println("S.Start reading");
                 System.out.println("B.Back");
+                System.out.println("--------------------------");
                 System.out.print("Choose option: ");
                 String startAndBack = null;
                 do {
@@ -382,45 +385,21 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                 if (wrOption.equalsIgnoreCase("s")) {
                     AtomicInteger i = new AtomicInteger();
                     try (Stream<String> lines = Files.lines(Paths.get(filename))) {
-                        int finalN = n;
                         lines.parallel().forEach(line -> {
                             String[] parts = split(line, ',');
                             productslist.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
                             i.getAndIncrement();
                             if (i.get() % divi == remain) {
-                                int progress = Math.min(100, (int) (i.get() / (finalN / 100f)));
+                                int progress = Math.min(100, (int) (i.get() / (n / 100f)));
                                 repeatNumber.set(progress);
-                                System.out.printf("\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i.get(), finalN, "█".repeat(repeatNumber.get()), "\u001B[37m▒".repeat(100 - repeatNumber.get()), i.get() / (finalN / 100f));
+                                System.out.printf("\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i.get(), n, "█".repeat(repeatNumber.get()), "\u001B[37m▒".repeat(100 - repeatNumber.get()), i.get() / (n / 100f));
 
                             }
                         });
 
                         System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
+                        System.out.println(reset);
                     }
-
-//                    AtomicInteger i = new AtomicInteger();
-//                    try (Stream<String> lines = Files.lines(Paths.get(filename))) {
-//                        int finalN = n;
-//                        lines.parallel().forEach(line -> {
-//                            String[] parts = split(line, ',');
-//                            Product product = new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4]));
-//                            i.getAndIncrement();
-//                            synchronized (productslist) {
-//                                productslist.add(product);
-//                            }
-//                            i.incrementAndGet();
-//                            if (i.get() % divi == remain) {
-//                                int progress = (int) (i.get() / (finalN / 100f));
-//                                synchronized (System.out) {
-//                                    System.out.printf("\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i.get(), finalN, "█".repeat(progress), "\u001B[37m▒".repeat(100 - progress), i.get() / (finalN / 100f));
-//                                }
-//                            }
-//                        });
-//                        synchronized (System.out) {
-//                            System.out.printf(Colors.blue() + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
-//                        }
-//                    }
-
                 } else {
                     continue outloop;
                 }
