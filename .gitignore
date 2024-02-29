@@ -8,5 +8,8 @@
 .idea/
 .vscode/
 
-src/allFile
+src/allFile/*
+src/backupfiles/*
+
+src/allFile/
 src/backupfiles
