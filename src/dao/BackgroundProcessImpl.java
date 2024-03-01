@@ -90,8 +90,9 @@ public class BackgroundProcessImpl implements BackgroundProcess{
                         for (Product product : productList) {
                             if (product.getId() == idToUpdate) {
                                 product.setName(parts[1].trim());
-                                product.setQty(Integer.parseInt(parts[2]));
-                                product.setUnitPrice(Double.parseDouble(parts[3]));
+                                product.setUnitPrice(Double.parseDouble(parts[2]));
+                                product.setQty(Integer.parseInt(parts[3]));
+
                                 break;
                             }
                         }
