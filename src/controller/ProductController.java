@@ -10,6 +10,7 @@ import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 import views.InterfaceViews;
 import dao.BackgroundProcessImpl;
+
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -28,18 +29,22 @@ public class ProductController implements BoxBorder {
     private int proId;
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
-    public static List<Product> products(){
+
+    public static List<Product> products() {
         return productList;
     }
+
     public ProductController() {
         scanner = new Scanner(System.in);
         productDaoImpl = new ProductDaoImpl();
         backUpFileProcessImpl = new BackUpFileProcessImpl();
 
     }
+
     public void display() {
         productDaoImpl.display(productList, setRow, scanner);
     }
+
     public void write() {
         boolean isValidInput = false;
         while (!isValidInput) {
@@ -82,14 +87,14 @@ public class ProductController implements BoxBorder {
                 }
 
                 isContinue = true;
-                while(isContinue){
+                while (isContinue) {
                     System.out.print("ℹ️ ARE YOU SURE TO CREATE A NEW PRODUCT? [Y/N] : ");
                     String ans = scanner.nextLine();
-                    if(ans.equalsIgnoreCase("Y")){
-                        productDaoImpl.write(new Product(proName,unitPrice,qty),productList,"write");
+                    if (ans.equalsIgnoreCase("Y")) {
+                        productDaoImpl.write(new Product(proName, unitPrice, qty), productList, "write");
                         System.out.println("✅ PRODUCT HAS BEEN CREATED SUCCESSFULLY");
                         isContinue = false;
-                    } else if(ans.equalsIgnoreCase("N")){
+                    } else if (ans.equalsIgnoreCase("N")) {
                         System.out.println(" 🏠 BACK TO APPLICATION MENU ...");
                         isContinue = false;
                     } else {
@@ -105,6 +110,7 @@ public class ProductController implements BoxBorder {
             }
         }
     }
+
     public void read() {
         boolean isValidInput = false;
         while (!isValidInput) {
@@ -117,7 +123,7 @@ public class ProductController implements BoxBorder {
                     InterfaceViews.readDetail(product);
                     isValidInput = true;
                 } else {
-                    System.out.println( red + "   ❌ PRODUCT NOT FOUND" + reset);
+                    System.out.println(red + "   ❌ PRODUCT NOT FOUND" + reset);
                 }
             } catch (NumberFormatException e) {
                 System.out.println(red + "   ❌ INVALID FORMAT" + reset);
@@ -133,10 +139,12 @@ public class ProductController implements BoxBorder {
             }
         }
     }
+
     void clickEnter() {
         System.out.print("CLICK [ ENTER ] TO CONTINUE OPERATION ...");
         scanner.nextLine();
     }
+
     private String getValidProductName() {
         String newName = null;
         do {
@@ -150,6 +158,7 @@ public class ProductController implements BoxBorder {
         } while (newName.matches(".*\\d.*") || !newName.matches("[a-zA-Z]+"));
         return newName;
     }
+
     private double getValidUnitPrice() {
         double newPrice = 0;
         while (true) {
@@ -163,6 +172,7 @@ public class ProductController implements BoxBorder {
         }
         return newPrice;
     }
+
     private int getValidQuantity() {
         String newName = null;
         int newQty = 0;
@@ -177,6 +187,7 @@ public class ProductController implements BoxBorder {
         }
         return newQty;
     }
+
     private void editSingleElement() {
         String newName = null;
         double newPrice = 0;
@@ -210,7 +221,7 @@ public class ProductController implements BoxBorder {
                             clickEnter();
                             break; // BREAK OUT OF THE FOR LOOP IF AN INVALID OPTION IS CHOSEN
                         }
-                        while (true){
+                        while (true) {
                             System.out.print(darkYellow + "ℹ️ ARE YOU SURE TO UPDATE THIS PRODUCT? [Y/N] : " + reset);
                             String ans = scanner.nextLine();
 
@@ -236,13 +247,12 @@ public class ProductController implements BoxBorder {
                                 backgroundProcess.writeToFile(productList.get(i), "edit");
                                 clickEnter();
                                 break;
-                            } else if(ans.equalsIgnoreCase("N")) {
+                            } else if (ans.equalsIgnoreCase("N")) {
                                 System.out.println();
                                 System.out.println(red + "❌ THE PROCESS OF EDITING WAS CANCELED." + reset);
                                 clickEnter();
                                 break;
-                            }
-                            else {
+                            } else {
                                 System.out.println("❌ INVALID INPUT. PLEASE ENTER [ Y || N ].");
                             }
                         }
@@ -261,7 +271,7 @@ public class ProductController implements BoxBorder {
         try {
             while (true) {
                 System.out.println("Multiple operations for EDITING product...");
-                System.out.println(darkYellow + "### Instruction [ N , P ] || [ N , Q ] || [ P , Q ] || ... " + reset);
+                System.out.println(darkYellow + "### Instruction [ N , P ]  [ N , Q ]  [ P , Q ]  ... " + reset);
                 System.out.print("Enter multiple operations : ");
                 String operations = scanner.nextLine().toUpperCase();
                 String[] ops = operations.split(",");
@@ -275,7 +285,7 @@ public class ProductController implements BoxBorder {
                 }
                 for (String op : ops) {
                     op = op.trim();
-                    while (true){
+                    while (true) {
                         if (!uniqueOps.add(op)) {
                             System.out.println(red + "❌ Duplicate operation: " + reset);
                             System.out.println();
@@ -287,36 +297,39 @@ public class ProductController implements BoxBorder {
                 }
                 for (String op : ops) {
                     op = op.trim();
-
-
                     if (op.equals("B") || op.equals("b")) {
                         break; // Break out of the while loop if 'B' is chosen
                     }
 
-                    switch (op) {
-                        case "N": {
-                            newName = getValidProductName();
-                            break;
+                    if (op.matches("^[nNpPqQ]+$")) {
+                        switch (op) {
+                            case "N": {
+                                newName = getValidProductName();
+                                break;
+                            }
+                            case "P": {
+                                newPrice = getValidUnitPrice();
+                                break;
+                            }
+                            case "Q": {
+                                newQty = getValidQuantity();
+                                break;
+                            }
+                            default: {
+                                break; // Terminate immediately if an invalid input is detected
+                            }
                         }
-                        case "P": {
-                            newPrice = getValidUnitPrice();
-                            break;
-                        }
-                        case "Q": {
-                            newQty = getValidQuantity();
-                            break;
-                        }
-                        case "B": {
-                            break;
-                        }
+                    } else {
+                        System.out.println("❌ INVALID INPUT, PLEASE ENTER [ N  P  Q ]");
+                        return; // Terminate immediately if an invalid input is detected
                     }
+                    continue;
                 }
-
                 boolean editingSuccessful = false;
 
                 for (int i = 0; i < productList.size(); i++) {
                     if (productList.get(i).getId() == proId) {
-                        while (true){
+                        while (true) {
                             System.out.print(darkYellow + "ℹ️ ARE YOU SURE TO UPDATE THIS PRODUCT? [Y/N] : " + reset);
                             String ans = scanner.nextLine();
 
@@ -335,7 +348,6 @@ public class ProductController implements BoxBorder {
                                     productList.get(i).setUnitPrice(newPrice);
                                     editingSuccessful = true;
                                 }
-
                                 if (newQty != 0) {
                                     productList.get(i).setQty(newQty);
                                     editingSuccessful = true;
@@ -344,11 +356,10 @@ public class ProductController implements BoxBorder {
                                 System.out.println();
                                 backgroundProcess.writeToFile(productList.get(i), "edit");
                                 break;
-                            } else if(ans.equalsIgnoreCase("N")) {
+                            } else if (ans.equalsIgnoreCase("N")) {
                                 System.out.println(red + "❌ THE PROCESS OF EDITING WAS CANCELED." + reset);
                                 break;
-                            }
-                            else {
+                            } else {
                                 System.out.println(red + "❌ INVALID INPUT. PLEASE ENTER [ Y || N ]." + reset);
                             }
                         }
@@ -356,7 +367,6 @@ public class ProductController implements BoxBorder {
                         break; // Break out of the for loop after processing the current product
                     }
                 }
-                // Check if editing was successful and break out of the outer loop
                 if (editingSuccessful) {
                     break;
                 }
@@ -374,7 +384,7 @@ public class ProductController implements BoxBorder {
         try {
             while (true) {
                 for (int i = 0; i < productList.size(); i++) {
-                    if (productList.get(i).getId()==(proId)) {
+                    if (productList.get(i).getId() == (proId)) {
                         newName = getValidProductName();
                         newPrice = getValidUnitPrice();
                         newQty = getValidQuantity();
@@ -393,14 +403,12 @@ public class ProductController implements BoxBorder {
                                 clickEnter();
                                 editSuccessful = true;
                                 break;
-                            }
-                            else if(ans.equalsIgnoreCase("N")) {
+                            } else if (ans.equalsIgnoreCase("N")) {
                                 System.out.println(red + "❌ THE PROCESS OF EDITING WAS CANCELED." + reset);
                                 System.out.println();
                                 clickEnter();
                                 return;
-                            }
-                            else {
+                            } else {
                                 System.out.println(red + "❌ INVALID INPUT. PLEASE ENTER [ Y || N ]." + reset);
                                 editSuccessful = true;
                             }
@@ -412,11 +420,12 @@ public class ProductController implements BoxBorder {
                 }
             }
         } catch (Exception e) {
-            System.out.println(red + "❌ INVALID INPUT"+ reset);
+            System.out.println(red + "❌ INVALID INPUT" + reset);
         }
     }
+
     public void editProduct() {
-        while (true){
+        while (true) {
             try {
                 System.out.print("ENTER PRODUCT ID: ");
                 proId = Integer.parseInt(scanner.nextLine());
@@ -425,18 +434,16 @@ public class ProductController implements BoxBorder {
                     System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
                     InterfaceViews.readDetail(product);
                     break;
-                }
-                else {
+                } else {
                     System.out.println(red + "❌ INVALID ID" + reset);
                     clickEnter();
                     System.out.println("[ EN ] . ENTER NEW ID");
                     System.out.println("[ B ] . BACK \n");
                     System.out.print("ENTER OPTION : ");
                     String an = scanner.nextLine();
-                    if (an.equalsIgnoreCase("en")){
+                    if (an.equalsIgnoreCase("en")) {
                         continue;
-                    }
-                    else if(an.equalsIgnoreCase("b")){
+                    } else if (an.equalsIgnoreCase("b")) {
                         return;
                     }
                 }
@@ -472,8 +479,8 @@ public class ProductController implements BoxBorder {
                     case "B": {
                         break;
                     }
-                    default:{
-                        System.out.println( red + "❌ INVALID OPTION!!" + reset);
+                    default: {
+                        System.out.println(red + "❌ INVALID OPTION!!" + reset);
                         clickEnter();
                     }
                 }
@@ -485,6 +492,7 @@ public class ProductController implements BoxBorder {
             scanner.nextLine();
         }
     }
+
     public void deleteById() {
         while (true) {
             try {
@@ -532,6 +540,7 @@ public class ProductController implements BoxBorder {
             }
         }
     }
+
     public void searchByName() {
         Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND_HEADER_AND_COLUMNS);
         System.out.print("ENTER PRODUCT NAME TO SEARCH: ");
@@ -539,11 +548,12 @@ public class ProductController implements BoxBorder {
 
         List<Product> matchingProducts = productDaoImpl.searchByName(productList, proName);
         if (!matchingProducts.isEmpty()) {
-            productDaoImpl.display(matchingProducts,setRow,scanner);
+            productDaoImpl.display(matchingProducts, setRow, scanner);
         } else {
             System.out.println("PRODUCT: " + proName + " NOT FOUND");
         }
     }
+
     public void setNumberRow() {
         int inputRow;
         System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(100));
@@ -580,37 +590,39 @@ public class ProductController implements BoxBorder {
             }
         } while (true);
     }
+
     public void BackUpFile() throws IOException {
         String source = "src/AllFile/dataFile.txt";
         String target = "src/backupfiles";
         isContinue = true;
-        while(isContinue){
+        while (isContinue) {
             System.out.print("ℹ️ ARE YOU SURE TO BACK UP THE FILE ? [Y/N] : ");
             String ans = scanner.nextLine();
-            if(ans.equalsIgnoreCase("Y")){
-                backUpFileProcessImpl.performBackup(source,target);
+            if (ans.equalsIgnoreCase("Y")) {
+                backUpFileProcessImpl.performBackup(source, target);
                 isContinue = false;
-            }else if(ans.equalsIgnoreCase("N")){
+            } else if (ans.equalsIgnoreCase("N")) {
                 System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
                 isContinue = false;
-            }else{
-                System.out.println( red + "   ❌ INVALID OPTION" +reset);
+            } else {
+                System.out.println(red + "   ❌ INVALID OPTION" + reset);
             }
         }
     }
-    public void exitProgram(){
+
+    public void exitProgram() {
         isContinue = true;
-        while(isContinue){
+        while (isContinue) {
             System.out.print("ℹ️ ARE YOU SURE TO EXIT THE PROGRAM ? [Y/N] : ");
             String ans = scanner.nextLine();
-            if(ans.equalsIgnoreCase("Y")){
+            if (ans.equalsIgnoreCase("Y")) {
                 System.out.println("\n  🙏 THANK YOU FOR USING OUR PROGRAM!\n\n\t╰┈➤ EXITING THE PROGRAM....");
                 System.exit(0);
                 isContinue = false;
-            }else if(ans.equalsIgnoreCase("n")){
+            } else if (ans.equalsIgnoreCase("n")) {
                 System.out.println("\n🏠 Back to Menu Application...");
                 isContinue = false;
-            }else{
+            } else {
                 System.out.println(red + " ❌ Invalid Option" + reset);
             }
         }
