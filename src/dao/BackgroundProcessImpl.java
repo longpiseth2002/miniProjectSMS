@@ -339,7 +339,8 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                             System.out.print("Enter number of file[1-30M]: ");
                             n = input.nextInt();
                         } catch (Exception e) {
-                            System.out.println(e.getMessage());
+                            System.out.println("❌INVALID INPUT");
+                            input.next();
                         }
                     } while (n < 1 || n > 30000000);
                     boolean apov = false;
@@ -353,6 +354,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                         System.out.println("(A):Append  ||  (O): Override");
                         System.out.print("Enter option: ");
                         op = input.nextLine();
+                        if(op==null) input.nextLine();
                         apov = op.equalsIgnoreCase("a");
                     } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
                     String wrirteCheck = null;
@@ -365,6 +367,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                         System.out.println(table1.render());
                         System.out.print("Choose option: ");
                         wrirteCheck = input.nextLine();
+                        if(wrirteCheck==null) input.nextLine();
                     } while (!(wrirteCheck.equalsIgnoreCase("s") || wrirteCheck.equalsIgnoreCase("b")));
                     if (wrirteCheck.equalsIgnoreCase("s")) {
                         long start = System.nanoTime();
