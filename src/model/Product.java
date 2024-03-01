@@ -18,7 +18,7 @@ public class Product {
 
 
     public Product(String name, Double unitPrice, Integer qty) {
-        this.id = ++lastAssignedId;
+        this.id = lastAssignedId;
         this.name = name;
         this.unitPrice = unitPrice;
         this.qty = qty;
@@ -34,17 +34,6 @@ public class Product {
         this.importAt=date;
     }
 
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", unitPrice=" + unitPrice +
-                ", qty=" + qty +
-                ", importAt=" + importAt +
-                '}';
-    }
 
     public Integer getId() {
         return id;
