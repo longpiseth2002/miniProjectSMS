@@ -11,13 +11,17 @@ import java.util.function.DoubleToIntFunction;
 import java.util.stream.Stream;
 
 import model.Product;
+import org.nocrala.tools.texttablefmt.BorderStyle;
+import org.nocrala.tools.texttablefmt.CellStyle;
+import org.nocrala.tools.texttablefmt.ShownBorders;
+import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 
 import static views.BoxBorder.reset;
 
-public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
-    private static AtomicInteger currenSize=new AtomicInteger(0);
-    private static AtomicInteger AtotalSize=new AtomicInteger(0);
+public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
+    private static AtomicInteger currenSize = new AtomicInteger(0);
+    private static AtomicInteger AtotalSize = new AtomicInteger(0);
 
     private static BackgroundProcessImpl instance;
     private static Map<String, LocalDate> dateMap = new HashMap<>();
@@ -36,7 +40,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
     public void loadingProgress(int totalSize, String fileName, String status) throws IOException {
         System.out.println("LOADING...");
         AtotalSize.set(totalSize);
-        int numberToRead = status.equalsIgnoreCase("start") ? (int) countLines(fileName) : AtotalSize.get();
+        int numberToRead = status.equalsIgnoreCase("START") ? (int) countLines(fileName) : AtotalSize.get();
         String stDigit = Integer.toString(numberToRead);
         int digit = stDigit.length();
         int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
@@ -55,67 +59,67 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
     }
 
     @Override
-    public String commit(List<Product> productList, String tranSectionFile, String dataFile,String operation, Scanner input) throws IOException {
-        String opera=operation.equalsIgnoreCase("random")?"[y/c]":"[y/c/n]";
-        System.out.println("Commit all change: y");
-        System.out.println(red+"Cancel all change: c"+reset);
-        if(!operation.equalsIgnoreCase("random"))
-            System.out.println(darkYellow+"Commit later     : n"+reset);
+    public String commit(List<Product> productList, String tranSectionFile, String dataFile, String operation, Scanner input) throws IOException {
+        String opera = operation.equalsIgnoreCase("random") ? "[y/c]" : "[y/c/n]";
+        System.out.println(blue + "Commit all change: y");
+        System.out.println(red + "Cancel all change: c");
+        if (!operation.equalsIgnoreCase("random"))
+            System.out.println(darkYellow + "Commit later     : n" + reset);
 
-        String op=null;
+        String op = null;
         do {
-            System.out.print("Are you sure to commit?"+opera+": ");
-            op=input.nextLine().trim();
-            if(operation.equalsIgnoreCase("random")&&!op.equalsIgnoreCase("n")) continue;
-        }while (!(op.equalsIgnoreCase("y")||op.equalsIgnoreCase("c")||(op.equalsIgnoreCase("n")&&!operation.equalsIgnoreCase("random"))));
+            System.out.print("Are you sure to commit?" + opera + ": ");
+            op = input.nextLine().trim();
+            System.out.println("\n");
+            if (operation.equalsIgnoreCase("random") && !op.equalsIgnoreCase("n")) continue;
+        } while (!(op.equalsIgnoreCase("y") || op.equalsIgnoreCase("c") || (op.equalsIgnoreCase("n") && !operation.equalsIgnoreCase("random"))));
 
         //List<Product> listData=new ArrayList<>();
 
-            if(op.equalsIgnoreCase("y")){
-                productList.clear();
-                readFromFile(productList,dataFile,"start");
-                try(BufferedReader reader=new BufferedReader(new FileReader(tranSectionFile))){
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        String[] parts = line.split(",");
-                        String status=parts[5];
-                        if(status.equalsIgnoreCase("write")){
-                            productList.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4])));
-                        }
-                        else if(status.equalsIgnoreCase("delete")){
-                            int idToDelete=Integer.parseInt(parts[0]);
-                            productList.removeIf(product -> product.getId() == idToDelete);
-                        }
-                        else if(status.equalsIgnoreCase("edit")){
-                            int idToUpdate = Integer.parseInt(parts[0].trim());
-                            for (Product product : productList) {
-                                if (product.getId() == idToUpdate) {
-                                    product.setName(parts[1].trim());
-                                    product.setQty(Integer.parseInt(parts[2]));
-                                    product.setUnitPrice(Double.parseDouble(parts[3]));
-                                    break;
-                                }
+        if (op.equalsIgnoreCase("y")) {
+            productList.clear();
+            readFromFile(productList, dataFile, "start");
+            try (BufferedReader reader = new BufferedReader(new FileReader(tranSectionFile))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    String status = parts[5];
+                    if (status.equalsIgnoreCase("write")) {
+                        productList.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4])));
+                    } else if (status.equalsIgnoreCase("delete")) {
+                        int idToDelete = Integer.parseInt(parts[0]);
+                        productList.removeIf(product -> product.getId() == idToDelete);
+                    } else if (status.equalsIgnoreCase("edit")) {
+                        int idToUpdate = Integer.parseInt(parts[0].trim());
+                        for (Product product : productList) {
+                            if (product.getId() == idToUpdate) {
+                                product.setName(parts[1].trim());
+                                product.setQty(Integer.parseInt(parts[2]));
+                                product.setUnitPrice(Double.parseDouble(parts[3]));
+                                break;
                             }
                         }
                     }
-                    clearFile(tranSectionFile);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
-                    writeToFile(productList,"src/allFile/dataFile.txt");
-            }else if(op.equalsIgnoreCase("c")){
-                    clearFile(tranSectionFile);
-                    productList.clear();
-                    readFromFile(productList,"src/allFile/dataFile.txt",operation);
-
-            }else{
-                if(operation.equalsIgnoreCase("start")){
-                    readFromFile(productList,dataFile,"start");
-                }
+                clearFile(tranSectionFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+            writeToFile(productList, "src/allFile/dataFile.txt");
+        } else if (op.equalsIgnoreCase("c")) {
+            clearFile(tranSectionFile);
+            productList.clear();
+            readFromFile(productList, "src/allFile/dataFile.txt", operation);
+
+        } else {
+            if (operation.equalsIgnoreCase("start")) {
+                readFromFile(productList, dataFile, "start");
+            }
+        }
 
         return op;
     }
+
     @Override
     public Boolean clearFile(String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
@@ -158,12 +162,12 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
     }
 
     @Override
-    public  void readFromFile(List<Product> list, String dataFile, String status) {
+    public void readFromFile(List<Product> list, String dataFile, String status) {
         long start = System.nanoTime();
         Thread thread1 = new Thread(() -> {
             try (Stream<String> lines = Files.lines(Paths.get(dataFile))) {
                 lines.forEach(line -> {
-                    String[] parts = split(line,',');
+                    String[] parts = split(line, ',');
                     list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
                     currenSize.incrementAndGet();
                 });
@@ -251,10 +255,10 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
                 int count = 0;
                 int batchSize = 1000;
                 for (int i = 0; i < list.size(); i++) {
-                    String line = list.get(i).getId() + "," + list.get(i).getName() + "," + list.get(i).getUnitPrice() + "," + list.get(i).getQty() + "," +list.get(i).getImportAt()+ "\n";
+                    String line = list.get(i).getId() + "," + list.get(i).getName() + "," + list.get(i).getUnitPrice() + "," + list.get(i).getQty() + "," + list.get(i).getImportAt() + "\n";
                     writer.write(line);
                 }
-                obj.writeTotalSize(list.size(),"src/allFile/totalSize.txt");
+                obj.writeTotalSize(list.size(), "src/allFile/totalSize.txt");
             } catch (IOException e) {
                 //e.printStackTrace();
             }
@@ -283,8 +287,8 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
     @Override
     public boolean commitCheck(String fileTransection, Scanner input) throws IOException {
         Path path = Paths.get(fileTransection);
-        if(Files.exists(path)&&Files.size(path)!=0){
-            System.out.println("There are many record have change and not commit yet..!");
+        if (Files.exists(path) && Files.size(path) != 0) {
+            System.out.println(darkMagenta + "There are many record have change and not commit yet..!" + reset);
             return true;
 //            do {
 //                System.out.print("Check and commit?[y/n]: ");
@@ -295,28 +299,38 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
 //                    return false;
 //                }
 //            }while (true);
-        }else return false;
+        } else return false;
     }
 
     @Override
-    public void random(List<Product> productslist,String filename, Scanner input) throws IOException {
+    public void random(List<Product> productslist, String filename, Scanner input) throws IOException {
+        Table table = new Table(3, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND);
+        CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
+        table.setColumnWidth(0,20,25);
+        table.setColumnWidth(1,20,25);
+        table.setColumnWidth(2,20,25);
+        table.addCell(cyan + "W.Write",cellStyle);
+        table.addCell(cyan + "R.Read",cellStyle);
+        table.addCell(cyan + "B.Back" + reset,cellStyle);
+
         if (commitCheck("src/allFile/TransectionFile.txt", input)) {
             commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
         }
-        outloop: do {
-            System.out.println("\n--------------------------");
-            System.out.println("W.Write");
-            System.out.println("R.Read");
-            System.out.println("B.Back");
-            System.out.println("--------------------------");
+
+        outloop:
+        do {
             String wrOption = null;
             do {
+                System.out.println(table.render());
                 System.out.print("Choose option: ");
                 wrOption = input.nextLine();
-            } while (!(wrOption.equalsIgnoreCase("w") || wrOption.equalsIgnoreCase("r")||wrOption.equalsIgnoreCase("b")));
-            if(wrOption.equalsIgnoreCase("b")){
+            } while (!(wrOption.equalsIgnoreCase("w") || wrOption.equalsIgnoreCase("r") || wrOption.equalsIgnoreCase("b")));
+
+            if (wrOption.equalsIgnoreCase("b")) {
+                System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
                 break outloop;
             }
+
             if (wrOption.equalsIgnoreCase("w")) {
                 String op = null;
                 int n = 0;
@@ -342,11 +356,13 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
                     apov = op.equalsIgnoreCase("a");
                 } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
                 String wrirteCheck = null;
-                System.out.println("\n--------------------------");
-                System.out.println("S.Start writing");
-                System.out.println("B.Back");
-                System.out.println("--------------------------");
+                Table table1 = new Table(1,BorderStyle.UNICODE_BOX_DOUBLE_BORDER,ShownBorders.SURROUND);
+                table1.setColumnWidth(0,30,35);
+                table1.addCell(cyan + "  S.Start writing");
+                table1.addCell(cyan + "  B.Back" + reset);
+
                 do {
+                    System.out.println(table1.render());
                     System.out.print("Choose option: ");
                     wrirteCheck = input.nextLine();
                 } while (!(wrirteCheck.equalsIgnoreCase("s") || wrirteCheck.equalsIgnoreCase("b")));
@@ -381,19 +397,19 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
                 }
 
             } else {
-                int n= (int) countLines(filename);
+                int n = (int) countLines(filename);
                 String stDigit = Integer.toString(n);
                 int digit = stDigit.length();
                 int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
                 int remain = n % divi;
                 AtomicInteger repeatNumber = new AtomicInteger();
-                System.out.println("\n--------------------------");
-                System.out.println("S.Start reading");
-                System.out.println("B.Back");
-                System.out.println("--------------------------");
-                System.out.print("Choose option: ");
+                Table table1 = new Table(1,BorderStyle.UNICODE_BOX_DOUBLE_BORDER,ShownBorders.SURROUND);
+                table1.addCell(cyan + "  S.Start reading");
+                table1.addCell(cyan + "  B.Back" + reset);
+
                 String startAndBack = null;
                 do {
+                    System.out.println(table1.render());
                     System.out.print("Choose option: ");
                     wrOption = input.nextLine();
                 } while (!(wrOption.equalsIgnoreCase("s") || wrOption.equalsIgnoreCase("b")));
@@ -402,7 +418,15 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
                     try (Stream<String> lines = Files.lines(Paths.get(filename))) {
                         lines.parallel().forEach(line -> {
                             String[] parts = split(line, ',');
-                            productslist.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
+                            productslist.add(new Product
+                                    (
+                                            Integer.parseInt(parts[0]),
+                                            parts[1],
+                                            Double.parseDouble(parts[2]),
+                                            Integer.parseInt(parts[3]),
+                                            convertToDate(parts[4])
+                                    )
+                            );
                             i.getAndIncrement();
                             if (i.get() % divi == remain) {
                                 int progress = Math.min(100, (int) (i.get() / (n / 100f)));
@@ -419,17 +443,22 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
                     continue outloop;
                 }
             }
-        }while (true);
+        } while (true);
     }
+
     @Override
     public void setListSize(int listSize) {
         AtotalSize.set(listSize);
     }
 
 
-    private  BackgroundProcessImpl(){};
-    public static BackgroundProcessImpl createObject(){
-        if(instance==null){
+    private BackgroundProcessImpl() {
+    }
+
+    ;
+
+    public static BackgroundProcessImpl createObject() {
+        if (instance == null) {
             return new BackgroundProcessImpl();
         }
         return instance;
@@ -440,7 +469,6 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder{
             return lines.count();
         }
     }
-
 
 
     @Override
