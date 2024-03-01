@@ -50,19 +50,19 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                     table.setColumnWidth(4, 25, 30);
 
 
-                    table.addCell(blue + "  CODE ", cellStyle);
-                    table.addCell(blue + "  NAME ", cellStyle);
-                    table.addCell(blue + "  UNIT PRICE ", cellStyle);
-                    table.addCell(blue + "  QTY ", cellStyle);
-                    table.addCell(blue + "  IMPORTED AT ", cellStyle);
+                    table.addCell(darkRed + "  CODE ", cellStyle);
+                    table.addCell(darkRed + "  NAME ", cellStyle);
+                    table.addCell(darkRed + "  UNIT PRICE ", cellStyle);
+                    table.addCell(darkRed + "  QTY ", cellStyle);
+                    table.addCell(darkRed + "  IMPORTED AT ", cellStyle);
                     if(ORDER){
                         //Display from index 0 to end
                         for (int i = numberOfRowStart; i < numberOfRowEnd ; i++) {
-                            table.addCell(darkCyan + "CSTAD" + productList.get(i).getId()+ "", cellStyle);
-                            table.addCell(darkGreen + productList.get(i).getName(), cellStyle);
-                            table.addCell(yellow + productList.get(i).getUnitPrice()+ "", cellStyle);
-                            table.addCell(yellow + productList.get(i).getQty()+ "", cellStyle);
-                            table.addCell(yellow + productList.get(i).getImportAt()+"", cellStyle);
+                            table.addCell(darkBlue +  "CSTAD-" + productList.get(i).getId()+ "", cellStyle);
+                            table.addCell(darkBlue +  productList.get(i).getName(), cellStyle);
+                            table.addCell(darkBlue +  productList.get(i).getUnitPrice()+ "", cellStyle);
+                            table.addCell(darkBlue +  productList.get(i).getQty()+ "", cellStyle);
+                            table.addCell(darkBlue +  productList.get(i).getImportAt()+"", cellStyle);
 
                         }
                     }
@@ -79,10 +79,10 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
                     System.out.println(table.render());
                     System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
-                    String textBlock = """
+                    String textBlock = darkMagenta + """
                         Page %d of %d                                                                                                 Total record:%d
                         Page Navigation                (O):order || (N):next || (P):Previous || (G):Goto || (L):last || (F):First || (B):BACK TO APPLICATION MENU
-                        """;
+                        """ + reset;
 
                     System.out.print(String.format(textBlock, numberOfCurrentPage, numberOfPage, numberOfAllData));
                     System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
@@ -286,13 +286,17 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
     @Override
     public void write(Product product,List<Product> productList,String status) {
-        productList.add(product);
-        process.writeToFile(product,status);
+        try {
+            productList.add(product);
+            process.writeToFile(product,status);
+            process.writeIdToFile(product.getId(),"src/allFile/lastId.txt");
+        }catch (Exception e){
+
+        }
     }
 
-
     @Override
-    public Product read(Integer proId, List<Product> productList) {
+    public Product read(int proId, List<Product> productList) {
         Optional<Product> product = selectById(proId,productList);
         Product foundProduct = null;
         if(product!=null){
@@ -303,10 +307,10 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
 
     @Override
-    public Optional<Product> selectById(Integer id,List<Product> productList) {
+    public Optional<Product> selectById(int id,List<Product> productList) {
         try{
             for(Product product : productList){
-                if(product.getId().equals(id)){
+                if(product.getId()==(id)){
                     return Optional.of(product);
                 }
             }
@@ -324,11 +328,12 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public Product deleteById(Integer id , List<Product> products ) {
+    public Product deleteById(int id , List<Product> products ) {
         Optional<Product> product = selectById(id,products);
         Product p = null;
         if(product!=null){
             p = product.get();
+            process.writeToFile(p,"delete");
             products.removeIf(pro -> pro.getId() == id);
         }
         return p;

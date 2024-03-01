@@ -29,11 +29,14 @@ public class BackgroundProcessController {
     public void start() throws IOException {
         String op=null;
         if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
-           op= backgroundProcess.commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","commit",scanner);
+           op= backgroundProcess.commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","start",scanner);
         }
         if(op==null){
             backgroundProcess.readFromFile(productslist,"src/allFile/dataFile.txt","start");
         }
+        int lastId=productslist.get(productslist.size()-1).getId();
+        product.setLastAssignedId( lastId);
+        backgroundProcess.writeIdToFile(lastId,"src/allFile/lastId.txt");
     }
     public void commit() throws IOException {
         if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
