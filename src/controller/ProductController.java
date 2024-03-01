@@ -268,18 +268,21 @@ public class ProductController implements BoxBorder {
                 Set<String> uniqueOps = new HashSet<>();
 
                 if (ops.length != 2) {
-                    System.out.println("❌ Invalid. \n");
+                    System.out.println(red + "❌ Invalid. \n" + reset);
                     clickEnter();
                     System.out.println();
                     continue;
                 }
-
                 for (String op : ops) {
                     op = op.trim();
-                    if (!uniqueOps.add(op)) {
-                        System.out.println(red + "❌ Duplicate operation: " + reset);
-                        clickEnter();
-                        return;
+                    while (true){
+                        if (!uniqueOps.add(op)) {
+                            System.out.println(red + "❌ Duplicate operation: " + reset);
+                            System.out.println();
+                            clickEnter();
+                            return;
+                        }
+                        break;
                     }
                 }
                 for (String op : ops) {
@@ -422,8 +425,20 @@ public class ProductController implements BoxBorder {
                     System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
                     InterfaceViews.readDetail(product);
                     break;
-                } else {
+                }
+                else {
                     System.out.println(red + "❌ INVALID ID" + reset);
+                    clickEnter();
+                    System.out.println("[ EN ] . ENTER NEW ID");
+                    System.out.println("[ B ] . BACK \n");
+                    System.out.print("ENTER OPTION : ");
+                    String an = scanner.nextLine();
+                    if (an.equalsIgnoreCase("en")){
+                        continue;
+                    }
+                    else if(an.equalsIgnoreCase("b")){
+                        return;
+                    }
                 }
             } catch (NumberFormatException e) {
                 System.out.println(red + "❌ INVALID ID, ENTER A VALID ID." + reset);
