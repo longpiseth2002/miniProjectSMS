@@ -34,9 +34,11 @@ public class BackgroundProcessController {
         if(op==null){
             backgroundProcess.readFromFile(productslist,"src/allFile/dataFile.txt","start");
         }
-        int lastId=productslist.get(productslist.size()-1).getId();
-        product.setLastAssignedId( lastId);
-        backgroundProcess.writeSizeToFile(lastId,"src/allFile/lastId.txt");
+        if(!productslist.isEmpty()){
+            int lastId=productslist.get(productslist.size()-1).getId();
+            product.setLastAssignedId( lastId);
+            backgroundProcess.writeSizeToFile(lastId,"src/allFile/lastId.txt");
+        }
     }
     public void commit() throws IOException {
         if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){

@@ -62,13 +62,13 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
     public String commit(List<Product> productList, String tranSectionFile, String dataFile, String operation, Scanner input) throws IOException {
         String opera = operation.equalsIgnoreCase("random") ? "[y/c]" : "[y/c/n]";
         System.out.println(blue + "Commit all change: y");
-        System.out.println(red + "Cancel all change: c");
+        System.out.println(red + "Cancel all change: c"+reset);
         if (!operation.equalsIgnoreCase("random"))
             System.out.println(darkYellow + "Commit later     : n" + reset);
 
         String op = null;
         do {
-            System.out.print("Are you sure to commit?" + opera + ": ");
+            System.out.print("Are you sure to commit?" + opera + ": "+reset);
             op = input.nextLine().trim();
             System.out.println("\n");
             if (operation.equalsIgnoreCase("random") && !op.equalsIgnoreCase("n")) continue;
@@ -182,7 +182,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     currenSize.incrementAndGet();
                 });
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Not have data yet..!");
             }
         });
 
@@ -190,7 +190,8 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
             try {
                 loadingProgress(list.size(), dataFile, status);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
+               // System.out.println("");
             }
         });
 
