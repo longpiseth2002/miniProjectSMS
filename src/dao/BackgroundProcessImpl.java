@@ -489,14 +489,25 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     storeFile.add(file.getPath());
                     last = i;
                     i++;
-
                 }
             }
         }
+        if (storeFile.isEmpty()) {
+            System.out.println(" NO FILES AVAILABLE FOR RESTORATION");
+            System.out.println(" 🏠 BACK TO APPLICATION MENU...");
+        }
         while (true) {
             try {
-                System.out.print("CHOICE FILE TO RESTORE: ");
-                int option = scanner.nextInt();
+                System.out.print("CHOICE FILE TO RESTORE (OR 'B' TO LEAVE) : ");
+                String choice = scanner.nextLine().trim();
+                if (choice.equalsIgnoreCase("b")) {
+                    System.out.println("Leaving file restoration.");
+                    return;
+                }
+                int option = Integer.parseInt(choice);
+                if (option < start || option > last) {
+                    throw new IndexOutOfBoundsException();
+                }
                 String filePath = storeFile.get(option - 1);
                 System.out.println("SELECTED FILE PATH : " + filePath.toUpperCase());
                 // Thread 1
@@ -530,16 +541,13 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     throw new RuntimeException(e);
                 }
                 break;
-            } catch (InputMismatchException e) {
+            } catch (NumberFormatException | InputMismatchException e) {
                 System.out.println(red + "   ❌ INVALID INPUT. PLEASE ENTER A VALID NUMBER." + reset);
                 scanner.nextLine(); // Consume the invalid input
             } catch (IndexOutOfBoundsException e) {
                 System.out.println(red + "   ❌ CHOICE OUT OF BOUNDS. PLEASE ENTER A NUMBER WITHIN THE RANGE " + "[" + start + " TO " + last + "]" + reset);
-                scanner.nextLine(); // Consume the invalid input
             }
         }
-
     }
-
 
 }

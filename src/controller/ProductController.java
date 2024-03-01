@@ -396,7 +396,7 @@ public class ProductController implements BoxBorder {
 //                break;
             }
         } catch (Exception e) {
-            System.out.println(" ❌ Invalid Input");
+            System.out.println( red + " ❌ Invalid Input" + reset);
             System.out.println(e.getMessage());
             scanner.nextLine();
         }
