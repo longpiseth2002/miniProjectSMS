@@ -328,41 +328,42 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                 wrOption = input.nextLine();
             } while (!(wrOption.equalsIgnoreCase("w") || wrOption.equalsIgnoreCase("r") || wrOption.equalsIgnoreCase("b")));
 
-            if (wrOption.equalsIgnoreCase("b")) {
-                System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
-                break outloop;
-            }
-
-            if (wrOption.equalsIgnoreCase("w")) {
-                String lastId=null;
-                String op = null;
-                int n = 0;
-                do {
-                    try {
-                        System.out.print("Enter number of file[1-30M]: ");
-                        n = input.nextInt();
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                } while (n < 1 || n > 30000000);
-                boolean apov = false;
-                String stDigit = Integer.toString(n);
-                int digit = stDigit.length();
-                int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
-                int remain = n % divi;
-                int repeatNumber;
-                input.nextLine();
-                do {
-                    System.out.println("(A):Append  ||  (O): Override");
-                    System.out.print("Enter option: ");
-                    op = input.nextLine();
-                    apov = op.equalsIgnoreCase("a");
-                } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
-                String wrirteCheck = null;
-                Table table1 = new Table(1,BorderStyle.UNICODE_BOX_DOUBLE_BORDER,ShownBorders.SURROUND);
-                table1.setColumnWidth(0,30,35);
-                table1.addCell(cyan + "  S.Start writing");
-                table1.addCell(cyan + "  B.Back" + reset);
+                if (wrOption.equalsIgnoreCase("b")) {
+                    System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
+                    break outloop;
+                }
+                if (wrOption.equalsIgnoreCase("w")) {
+                    String lastId = null;
+                    String op = null;
+                    int n = 0;
+                    do {
+                        try {
+                            System.out.print("Enter number of file[1-30M]: ");
+                            n = input.nextInt();
+                        } catch (Exception e) {
+                            System.out.println("❌INVALID INPUT");
+                            input.next();
+                        }
+                    } while (n < 1 || n > 30000000);
+                    boolean apov = false;
+                    String stDigit = Integer.toString(n);
+                    int digit = stDigit.length();
+                    int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
+                    int remain = n % divi;
+                    int repeatNumber;
+                    input.nextLine();
+                    do {
+                        System.out.println("(A):Append  ||  (O): Override");
+                        System.out.print("Enter option: ");
+                        op = input.nextLine();
+                        if(op==null) input.nextLine();
+                        apov = op.equalsIgnoreCase("a");
+                    } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
+                    String wrirteCheck = null;
+                    Table table1 = new Table(1, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
+                    table1.setColumnWidth(0, 30, 35);
+                    table1.addCell(cyan + "  S.Start writing");
+                    table1.addCell(cyan + "  B.Back" + reset);
 
                 do {
                     System.out.println(table1.render());
@@ -438,17 +439,25 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                             }
                         });
 
-                        System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
-                        System.out.println(reset);
+                                System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n, n, "\u001B[35m█".repeat(100), 100f);
+                                System.out.println(reset);
+                            }
+                            long end = System.nanoTime();
+                            System.out.println(blue + "COMPLETE.");
+                            System.out.println("\uD83D\uDD52TIME = " + (end - start) / 1000000 + "ms\n" + reset);
+                            ProductDaoImpl.setSORT(true);
+                        } else {
+                            continue outloop;
+                        }
+                    } else {
+                        System.out.println(yellow + "⚠️NO DATA FILE");
+                        System.out.println(blue + "\uD83D\uDC49WRITE DATA FIRST OR " + red + "BACK" + reset);
                     }
-                    long end = System.nanoTime();
-                    System.out.println(blue + "\nComplete.");
-                    System.out.println( "time = " + (end - start) / 1000000 + "ms\n" + reset);
-                } else {
-                    continue outloop;
                 }
-            }
-        } while (true);
+            } while (true);
+        }catch (OutOfMemoryError e){
+            System.out.println("⛔FULL MEMORY");
+        }
     }
 
     @Override
@@ -522,6 +531,11 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
 
                     } catch (IOException e) {
                         System.out.println("ERROR OCCURRED WHILE RESTORING FILE: " + e.getMessage().toUpperCase());
+                    }
+                    if(lastLine != null) {
+                        String[] lastLineArr = split(lastLine, ',');
+                        writeSizeToFile(Integer.parseInt(lastLineArr[0]), "src/allFile/lastId.txt");
+                        product.setLastAssignedId(Integer.parseInt(lastLineArr[0]));
                     }
                 });
 
