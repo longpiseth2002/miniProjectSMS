@@ -250,7 +250,7 @@ public class ProductController implements BoxBorder {
                             }
 
                             System.out.println();
-                            backgroundProcess.writeToFile(productList.get(proId), "edit");
+                            backgroundProcess.writeToFile(productList.get(i), "edit");
                         } else {
                             System.out.println(red + "   ❌ THE PROCESS OF EDITING WAS CANCELED." + reset);
                         }
@@ -357,7 +357,7 @@ public class ProductController implements BoxBorder {
         try {
             while (true) {
                 for (int i = 0; i < productList.size(); i++) {
-                    if (productList.get(i).getId().equals(proId)) {
+                    if (productList.get(i).getId()==(proId)) {
                         newName = getValidProductName();
                         newPrice = getValidUnitPrice();
                         newQty = getValidQuantity();

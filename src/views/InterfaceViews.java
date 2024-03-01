@@ -83,13 +83,13 @@ public class InterfaceViews implements BoxBorder {
 
 
         table.addCell(darkRed + "      CODE " + " ".repeat(20) + ": ");
-        table.addCell(darkBlue + "CSTAD-" + product.getId().toString());
+        table.addCell(darkBlue + "CSTAD-" + product.getId() + "");
         table.addCell(darkRed + "      NAME " + " ".repeat(20) + ": ");
         table.addCell(darkBlue + product.getName());
         table.addCell(darkRed + "      UNIT PRICE " + " ".repeat(14) + ": ");
-        table.addCell(darkBlue + product.getUnitPrice().toString());
+        table.addCell(darkBlue + product.getUnitPrice() + "");
         table.addCell(darkRed + "      QTY " + " ".repeat(21) + ": ");
-        table.addCell(darkBlue + product.getQty().toString());
+        table.addCell(darkBlue + product.getQty() + "");
         table.addCell(darkRed + "      IMPORTED AT " + " ".repeat(13) + ": ");
         table.addCell(darkBlue + product.getImportAt().toString());
 
