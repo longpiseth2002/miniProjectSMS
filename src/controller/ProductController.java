@@ -273,15 +273,15 @@ public class ProductController implements BoxBorder {
         int newQty = 0;
         try {
             while (true) {
-                System.out.println("MULTIPLE OPERATIONS FOR EDITING PRODUCT...");
-                System.out.println("### INSTRUCTION [ N , P ] || [ N , Q ] || [ P , Q ] || ... ");
-                System.out.print("ENTER MULTIPLE OPERATIONS : ");
+                System.out.println("Multiple operations for EDITING product...");
+                System.out.println("### Instruction [ N , P ] || [ N , Q ] || [ P , Q ] || ... ");
+                System.out.print("Enter multiple operations : ");
                 String operations = scanner.nextLine().toUpperCase();
                 String[] ops = operations.split(",");
                 Set<String> uniqueOps = new HashSet<>();
 
                 if (ops.length != 2) {
-                    System.out.println(red + "   ❌ INVALID. \n" + reset);
+                    System.out.println("❌ Invalid. \n");
                     clickEnter();
                     System.out.println();
                     continue;
@@ -290,15 +290,16 @@ public class ProductController implements BoxBorder {
                 for (String op : ops) {
                     op = op.trim();
                     if (!uniqueOps.add(op)) {
-                        System.out.println(red + "   ❌ DUPLICATE OPERATION: " + op + reset);
+                        System.out.println(" ❌ Duplicate operation: " + op);
                         return;
                     }
                 }
                 for (String op : ops) {
                     op = op.trim();
 
-                    if (op.equals("B") || op.equals("B")) {
-                        break;
+
+                    if (op.equals("B") || op.equals("b")) {
+                        break; // Break out of the while loop if 'B' is chosen
                     }
 
                     switch (op) {
@@ -320,30 +321,82 @@ public class ProductController implements BoxBorder {
                     }
                 }
 
-                System.out.print("ℹ️ ARE YOU SURE TO UPDATE ALL ELEMENTS OF THIS PRODUCT? [Y/N] : ");
-                String ans = scanner.nextLine();
-                if (!ans.equalsIgnoreCase("Y")) {
-                    System.out.println(red + "   ❌ THE PROCESS OF EDITING WAS CANCELED." + reset);
-                    return;
+                boolean editingSuccessful = false;
+
+                for (int i = 0; i < productList.size(); i++) {
+                    if (productList.get(i).getId() == proId) {
+                        System.out.print("ℹ️ Are you sure to update all elements of this product? [Y/N] : ");
+                        String ans = scanner.nextLine();
+                        if (ans.equalsIgnoreCase("y")) {
+                            if (newName != null) {
+                                for (char j : newName.toCharArray()) {
+                                    if (Character.isDigit(j)) {
+                                        throw new RuntimeException("Invalid name, contains digits.");
+                                    }
+                                }
+                                productList.get(i).setName(newName);
+                                System.out.println("✅ NAME of this product was edited successfully.");
+                                editingSuccessful = true;
+                            }
+
+                            if (newPrice != 0) {
+                                productList.get(i).setUnitPrice(newPrice);
+                                System.out.println("✅ UNIT PRICE of this product was edited successfully.");
+                                editingSuccessful = true;
+                            }
+
+                            if (newQty != 0) {
+                                productList.get(i).setQty(newQty);
+                                System.out.println("✅ QUANTITY of this product was edited successfully.");
+                                editingSuccessful = true;
+                            }
+
+                            if (editingSuccessful) {
+                                System.out.println();
+                                backgroundProcess.writeToFile(productList.get(i), "edit");
+                            }
+
+                            clickEnter();
+                            break; // Break out of the for loop after the editing process
+                        } else {
+                            System.out.println("❌ The process of editing was canceled.");
+                        }
+
+                        clickEnter();
+                        break; // Break out of the for loop after processing the current product
+                    }
                 }
 
-                if (newName != null) {
-                    productList.get(proId).setName(newName);
-                }
-                if (newPrice != 0) {
-                    productList.get(proId).setUnitPrice(newPrice);
-                }
-                if (newQty != 0) {
-                    productList.get(proId).setQty(newQty);
+                // Check if editing was successful and break out of the outer loop
+                if (editingSuccessful) {
+                    break;
                 }
 
-                System.out.println(" ✅ THIS PRODUCT HAS BEEN EDITED SUCCESSFULLY.\n");
-                backgroundProcess.writeToFile(productList.get(proId), "EDIT");
-                clickEnter();
-                break;
+//                System.out.println("Debug: proId = " + proId + ", productList size = " + productList.size());
+//                System.out.print("ℹ️ Are you sure to update all elements of this product? [Y/N] : ");
+//                String ans = scanner.nextLine();
+//                if (!ans.equalsIgnoreCase("y")) {
+//                    System.out.println("❌ The process of editing was canceled.");
+//                    return;
+//                }
+//
+//                if (newName != null) {
+//                    productList.get(proId).setName(newName);
+//                }
+//                if (newPrice != 0) {
+//                    productList.get(proId).setUnitPrice(newPrice);
+//                }
+//                if (newQty != 0) {
+//                    productList.get(proId).setQty(newQty);
+//                }
+//
+//                System.out.println("✅ This product has been edited successfully.\n");
+//                backgroundProcess.writeToFile(productList.get(i)), "edit");
+//                clickEnter();
+//                break;
             }
         } catch (Exception e) {
-            System.out.println(red + "   ❌ INVALID INPUT" + reset);
+            System.out.println(" ❌ Invalid Input");
             System.out.println(e.getMessage());
             scanner.nextLine();
         }
@@ -368,7 +421,7 @@ public class ProductController implements BoxBorder {
                             productList.get(i).setName(newName);
                             productList.get(i).setUnitPrice(newPrice);
                             productList.get(i).setQty(newQty);
-                            backgroundProcess.writeToFile(productList.get(proId), "edit");
+                            backgroundProcess.writeToFile(productList.get(i), "edit");
                             System.out.println(" ✅ THIS PRODUCT HAS BEEN EDITED SUCCESSFULLY.");
                             clickEnter();
                             editSuccessful = true;
