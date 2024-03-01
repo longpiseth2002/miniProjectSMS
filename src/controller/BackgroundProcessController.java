@@ -5,6 +5,8 @@ import model.Product;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -22,21 +24,24 @@ public class BackgroundProcessController {
         product = new Product();
     }
 
-
     public void random() throws IOException {
         backgroundProcess.random(productslist,"src/allFile/dataFile.txt",scanner);
     }
     public void start() throws IOException {
         String op=null;
-        if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
-           op= backgroundProcess.commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","start",scanner);
+        if(Files.exists(Paths.get("src/allFile/TransectionFile.txt"))){
+            if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
+                op= backgroundProcess.commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","start",scanner);
+            }
         }
         if(op==null){
-            backgroundProcess.readFromFile(productslist,"src/allFile/dataFile.txt","start");
+            backgroundProcess.readFromFile(productslist,"src/allFile/dataFile.txt","startcommit");
         }
-        int lastId=productslist.get(productslist.size()-1).getId();
-        product.setLastAssignedId( lastId);
-        backgroundProcess.writeIdToFile(lastId,"src/allFile/lastId.txt");
+        if(!productslist.isEmpty()){
+            int lastId=productslist.get(productslist.size()-1).getId();
+            product.setLastAssignedId( lastId);
+            backgroundProcess.writeSizeToFile(lastId,"src/allFile/lastId.txt");
+        }
     }
     public void commit() throws IOException {
         if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
@@ -44,7 +49,6 @@ public class BackgroundProcessController {
         }else
             System.out.println("There are nothing to commit..!");
         }
-
     public void restore(){
         backgroundProcess.restore(productslist,"src/allFile/dataFile.txt",scanner);
     }

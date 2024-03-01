@@ -106,32 +106,37 @@ public class ProductController implements BoxBorder {
         }
     }
     public void read() {
-        boolean isValidInput = false;
-        while (!isValidInput) {
-            try {
-                System.out.print("ENTER PRODUCT ID: ");
-                int proId = Integer.parseInt(scanner.nextLine());
-                Product product = productDaoImpl.read(proId, productList);
-                if (product != null) {
-                    System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
-                    InterfaceViews.readDetail(product);
-                    isValidInput = true;
-                } else {
-                    System.out.println(red + "   ❌ PRODUCT NOT FOUND" + reset);
+        if(!productList.isEmpty()){
+            boolean isValidInput = false;
+            while (!isValidInput) {
+                try {
+                    System.out.print("ENTER PRODUCT ID: ");
+                    int proId = Integer.parseInt(scanner.nextLine());
+                    Product product = productDaoImpl.read(proId, productList);
+                    if (product != null) {
+                        System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
+                        InterfaceViews.readDetail(product);
+                        isValidInput = true;
+                    } else {
+                        System.out.println(red + "   ❌ PRODUCT NOT FOUND" + reset);
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(red + "   ❌ INVALID FORMAT" + reset);
                 }
-            } catch (NumberFormatException e) {
-                System.out.println(red + "   ❌ INVALID FORMAT" + reset);
-            }
 
-            if (!isValidInput) {
-                System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
-                String choice = scanner.nextLine().toLowerCase();
-                if (!choice.equalsIgnoreCase("Y")) {
-                    System.out.println(" 🏠 BACK TO APPLICATION MENU...");
-                    isValidInput = true;
+                if (!isValidInput) {
+                    System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
+                    String choice = scanner.nextLine().toLowerCase();
+                    if (!choice.equalsIgnoreCase("Y")) {
+                        System.out.println(" 🏠 BACK TO APPLICATION MENU...");
+                        isValidInput = true;
+                    }
                 }
             }
+        }else{
+            System.out.println("❌NO DATA TO READ..!");
         }
+
     }
     void clickEnter() {
         System.out.print("CLICK [ ENTER ] TO CONTINUE OPERATION ...");
@@ -416,130 +421,143 @@ public class ProductController implements BoxBorder {
     }
 
     public void editProduct() {
-        while (true) {
-            try {
-                System.out.print("ENTER PRODUCT ID: ");
-                proId = Integer.parseInt(scanner.nextLine());
-                Product product = productDaoImpl.read(proId, productList);
-                if (product != null) {
-                    System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
-                    InterfaceViews.readDetail(product);
-                    break;
-                } else {
-                    System.out.println(red + "❌ INVALID ID" + reset);
-                    clickEnter();
-                    System.out.println("[ EN ] . ENTER NEW ID");
-                    System.out.println("[ B ] . BACK \n");
-                    System.out.print("ENTER OPTION : ");
-                    String an = scanner.nextLine();
-                    if (an.equalsIgnoreCase("en")) {
-                        continue;
-                    } else if (an.equalsIgnoreCase("b")) {
-                        return;
-                    }
-                }
-            } catch (NumberFormatException e) {
-                System.out.println(red + "❌ INVALID ID, ENTER A VALID ID." + reset);
-            }
-        }
-
-        try {
-            String choice;
-            do {
-                System.out.println("\nWHICH OPERATION OF EDIT YOU WANT TO USE?");
-                System.out.println("[ SE ]. EDIT SINGLE ELEMENT");
-                System.out.println("[ ME ]. EDIT MULTIPLE ELEMENTS");
-                System.out.println("[ AE ]. EDIT ALL ELEMENTS");
-                System.out.println("[ B ]. BACK TO THE MENU\n");
-                System.out.print("⏩⏩ ENTER YOUR CHOICE : ");
-                choice = scanner.nextLine().toUpperCase();
-
-                switch (choice) {
-                    case "SE": {
-                        editSingleElement();
+        if(!productList.isEmpty()){
+            while (true) {
+                try {
+                    System.out.print("ENTER PRODUCT ID: ");
+                    proId = Integer.parseInt(scanner.nextLine());
+                    Product product = productDaoImpl.read(proId, productList);
+                    if (product != null) {
+                        System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
+                        InterfaceViews.readDetail(product);
                         break;
-                    }
-                    case "ME": {
-                        editMultiElement();
-                        break;
-                    }
-                    case "AE": {
-                        editAllElement();
-                        break;
-                    }
-                    case "B": {
-                        break;
-                    }
-                    default: {
-                        System.out.println(red + "❌ INVALID OPTION!!" + reset);
+                    } else {
+                        System.out.println(red + "❌ INVALID ID" + reset);
                         clickEnter();
+                        System.out.println("[ EN ] . ENTER NEW ID");
+                        System.out.println("[ B ] . BACK \n");
+                        System.out.print("ENTER OPTION : ");
+                        String an = scanner.nextLine();
+                        if (an.equalsIgnoreCase("en")) {
+                            continue;
+                        } else if (an.equalsIgnoreCase("b")) {
+                            return;
+                        }
                     }
+                } catch (NumberFormatException e) {
+                    System.out.println(red + "❌ INVALID ID, ENTER A VALID ID." + reset);
                 }
-            } while (!choice.equals("B"));
+            }
 
-        } catch (Exception e) {
-            System.out.println(red + "❌ INVALID INPUT" + reset);
-            System.out.println(red + "ENTER THE CORRECT FORMAT ..." + reset);
-            scanner.nextLine();
+            try {
+                String choice;
+                do {
+                    System.out.println("\nWHICH OPERATION OF EDIT YOU WANT TO USE?");
+                    System.out.println("[ SE ]. EDIT SINGLE ELEMENT");
+                    System.out.println("[ ME ]. EDIT MULTIPLE ELEMENTS");
+                    System.out.println("[ AE ]. EDIT ALL ELEMENTS");
+                    System.out.println("[ B ]. BACK TO THE MENU\n");
+                    System.out.print("⏩⏩ ENTER YOUR CHOICE : ");
+                    choice = scanner.nextLine().toUpperCase();
+
+                    switch (choice) {
+                        case "SE": {
+                            editSingleElement();
+                            break;
+                        }
+                        case "ME": {
+                            editMultiElement();
+                            break;
+                        }
+                        case "AE": {
+                            editAllElement();
+                            break;
+                        }
+                        case "B": {
+                            break;
+                        }
+                        default: {
+                            System.out.println(red + "❌ INVALID OPTION!!" + reset);
+                            clickEnter();
+                        }
+                    }
+                } while (!choice.equals("B"));
+
+            } catch (Exception e) {
+                System.out.println(red + "❌ INVALID INPUT" + reset);
+                System.out.println(red + "ENTER THE CORRECT FORMAT ..." + reset);
+                scanner.nextLine();
+            }
+        }else{
+            System.out.println("❌NO DATA TO EDIT..!");
         }
+
     }
     public void deleteById() {
-        while (true) {
-            try {
-                System.out.print("ENTER PRODUCT ID TO DELETE: ");
-                int proId = Integer.parseInt(scanner.nextLine());
+        if(!productList.isEmpty()){
+            while (true) {
+                try {
+                    System.out.print("ENTER PRODUCT ID TO DELETE: ");
+                    int proId = Integer.parseInt(scanner.nextLine());
 
-                boolean found = false;
-                for (int i = 0; i < productList.size(); i++) {
-                    if (productList.get(i).getId() == proId) {
-                        found = true;
-                        Product product = productDaoImpl.read(proId, productList);
-                        InterfaceViews.readDetail(product);
-                        System.out.print("ℹ️ ARE YOU SURE TO DELETE A PRODUCT? [Y/N] : ");
-                        String op = scanner.nextLine();
-                        if (op.equalsIgnoreCase("y")) {
-                            productDaoImpl.deleteById(proId, productList);
-                            System.out.println(" ✅ PRODUCT HAS BEEN DELETED SUCCESSFULLY");
-                        } else if (op.equalsIgnoreCase("n")) {
-                            System.out.println(" 🏠 BACK TO MENU...");
-                        } else {
-                            System.out.println(red + "   ❌ INVALID OPTION" + reset);
+                    boolean found = false;
+                    for (int i = 0; i < productList.size(); i++) {
+                        if (productList.get(i).getId() == proId) {
+                            found = true;
+                            Product product = productDaoImpl.read(proId, productList);
+                            InterfaceViews.readDetail(product);
+                            System.out.print("ℹ️ ARE YOU SURE TO DELETE A PRODUCT? [Y/N] : ");
+                            String op = scanner.nextLine();
+                            if (op.equalsIgnoreCase("y")) {
+                                productDaoImpl.deleteById(proId, productList);
+                                System.out.println(" ✅ PRODUCT HAS BEEN DELETED SUCCESSFULLY");
+                            } else if (op.equalsIgnoreCase("n")) {
+                                System.out.println(" 🏠 BACK TO MENU...");
+                            } else {
+                                System.out.println(red + "   ❌ INVALID OPTION" + reset);
+                            }
+                            break;
                         }
-                        break;
                     }
-                }
-
-                if (!found) {
-                    System.out.println(red + "   ❌ PRODUCT NOT FOUND" + reset);
+                    if (!found) {
+                        System.out.println(red + "   ❌ PRODUCT NOT FOUND" + reset);
+                        System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
+                        String choice = scanner.nextLine();
+                        if (!choice.equalsIgnoreCase("Y")) {
+                            System.out.println(" 🏠 BACK TO APPLICATION MENU...");
+                            break;
+                        }
+                    }
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println(red + "   ❌ INVALID FORMAT" + reset);
                     System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
                     String choice = scanner.nextLine();
-                    if (!choice.equalsIgnoreCase("Y")) {
+                    if (!choice.equalsIgnoreCase("y")) {
                         System.out.println(" 🏠 BACK TO APPLICATION MENU...");
                         break;
                     }
                 }
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println(red + "   ❌ INVALID FORMAT" + reset);
-                System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
-                String choice = scanner.nextLine();
-                if (!choice.equalsIgnoreCase("y")) {
-                    System.out.println(" 🏠 BACK TO APPLICATION MENU...");
-                    break;
-                }
             }
+        }else{
+            System.out.println("❌NO DATA..!");
         }
+
     }
     public void searchByName() {
-        Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND_HEADER_AND_COLUMNS);
-        System.out.print("ENTER PRODUCT NAME TO SEARCH: ");
-        String proName = scanner.nextLine().trim();
+        if(!productList.isEmpty()){
+            Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND_HEADER_AND_COLUMNS);
+            System.out.print("ENTER PRODUCT NAME TO SEARCH: ");
+            String proName = scanner.nextLine().trim();
 
-        List<Product> matchingProducts = productDaoImpl.searchByName(productList, proName);
-        if (!matchingProducts.isEmpty()) {
-            productDaoImpl.display(matchingProducts, setRow, scanner);
-        } else {
-            System.out.println("PRODUCT: " + proName + " NOT FOUND");
+            List<Product> matchingProducts = productDaoImpl.searchByName(productList, proName);
+            if (!matchingProducts.isEmpty()) {
+                productDaoImpl.display(matchingProducts, setRow, scanner);
+            } else {
+                System.out.println("PRODUCT: " + proName + " NOT FOUND");
+            }
+        }else{
+            System.out.println("❌NO DATA TO SEARCH..!");
         }
     }
     public void setNumberRow() {
@@ -579,22 +597,27 @@ public class ProductController implements BoxBorder {
         } while (true);
     }
     public void BackUpFile() throws IOException {
-        String source = "src/AllFile/dataFile.txt";
-        String target = "src/backupfiles";
-        isContinue = true;
-        while (isContinue) {
-            System.out.print("ℹ️ ARE YOU SURE TO BACK UP THE FILE ? [Y/N] : ");
-            String ans = scanner.nextLine();
-            if (ans.equalsIgnoreCase("Y")) {
-                backUpFileProcessImpl.performBackup(source, target);
-                isContinue = false;
-            } else if (ans.equalsIgnoreCase("N")) {
-                System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
-                isContinue = false;
-            } else {
-                System.out.println(red + "   ❌ INVALID OPTION" + reset);
+        if(!productList.isEmpty()){
+            String source = "src/AllFile/dataFile.txt";
+            String target = "src/backupfiles";
+            isContinue = true;
+            while (isContinue) {
+                System.out.print("ℹ️ ARE YOU SURE TO BACK UP THE FILE ? [Y/N] : ");
+                String ans = scanner.nextLine();
+                if (ans.equalsIgnoreCase("Y")) {
+                    backUpFileProcessImpl.performBackup(source, target);
+                    isContinue = false;
+                } else if (ans.equalsIgnoreCase("N")) {
+                    System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
+                    isContinue = false;
+                } else {
+                    System.out.println(red + "   ❌ INVALID OPTION" + reset);
+                }
             }
+        }else{
+            System.out.println("❌NO DATA..!");
         }
+
     }
     public void exitProgram() {
         isContinue = true;
