@@ -146,15 +146,16 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
         return result;
     }
 
-    private void writeTotalSize(int totalSize, String fileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(totalSize + "");
-            writer.flush();
-        } catch (Exception e) {
-
-        }
-    }
- public void writeIdToFile(int last, String fileName) {
+//    private void writeTotalSize(int totalSize, String fileName) {
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+//            writer.write(totalSize + "");
+//            writer.flush();
+//        } catch (Exception e) {
+//
+//        }
+//    }
+    @Override
+    public void writeSizeToFile(int last, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(last + "");
             writer.flush();
@@ -162,6 +163,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
 
         }
     }
+    @Override
     public int readFromFile(String fileName) throws FileNotFoundException {
         String lastLine = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -271,7 +273,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     writer.write(line);
                     currenSize.getAndIncrement();
                 }
-                obj.writeTotalSize(list.size(), "src/allFile/totalSize.txt");
+                obj.writeSizeToFile(list.size(), "src/allFile/totalSize.txt");
             } catch (IOException e) {
                 //e.printStackTrace();
             }
@@ -396,10 +398,10 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     System.out.println(reset + "\ntime = " + (end - start) / 1000000 + "ms\n");
                     if(apov) {
                         product.setLastAssignedId(id);
-                        writeIdToFile(id,"src/allFile/lastId.txt");
+                        writeSizeToFile(id,"src/allFile/lastId.txt");
                     }else{
                         product.setLastAssignedId(n);
-                        writeIdToFile(n,"src/allFile/lastId.txt");
+                        writeSizeToFile(n,"src/allFile/lastId.txt");
                     }
                 } else {
                     continue outloop;
@@ -501,6 +503,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                 System.out.println("SELECTED FILE PATH : " + filePath.toUpperCase());
                 // Thread 1
                 Thread thread1 = new Thread(() -> {
+                    String lastLine=null;
                     try (BufferedReader reader = new BufferedReader(new FileReader(filePath));
                          BufferedWriter writer = new BufferedWriter(new FileWriter(dataSource))) {
 
@@ -508,11 +511,13 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                         while ((line = reader.readLine()) != null) {
                             writer.write(line);
                             writer.newLine();
+                            lastLine=line;
                         }
 
                     } catch (IOException e) {
                         System.out.println("ERROR OCCURRED WHILE RESTORING FILE: " + e.getMessage().toUpperCase());
                     }
+
                 });
 
                 Thread thread2 = new Thread(() -> {

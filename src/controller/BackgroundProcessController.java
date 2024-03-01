@@ -36,7 +36,7 @@ public class BackgroundProcessController {
         }
         int lastId=productslist.get(productslist.size()-1).getId();
         product.setLastAssignedId( lastId);
-        backgroundProcess.writeIdToFile(lastId,"src/allFile/lastId.txt");
+        backgroundProcess.writeSizeToFile(lastId,"src/allFile/lastId.txt");
     }
     public void commit() throws IOException {
         if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){

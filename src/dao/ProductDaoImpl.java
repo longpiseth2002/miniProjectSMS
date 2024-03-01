@@ -289,7 +289,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         try {
             productList.add(product);
             process.writeToFile(product,status);
-            process.writeIdToFile(product.getId(),"src/allFile/lastId.txt");
+            process.writeSizeToFile(product.getId(),"src/allFile/lastId.txt");
         }catch (Exception e){
 
         }
