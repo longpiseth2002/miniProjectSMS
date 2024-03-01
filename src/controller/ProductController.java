@@ -22,10 +22,11 @@ public class ProductController implements BoxBorder {
     private Scanner scanner;
     private ProductDaoImpl productDaoImpl;
     private BackUpFileProcessImpl backUpFileProcessImpl;
-    private BackgroundProcessImpl backgroundProcess;
+    private BackgroundProcessImpl backgroundProcess = new BackgroundProcessImpl();
 
     private int setRow = 5;
     boolean isContinue = true;
+    int proId;
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
 
@@ -191,7 +192,7 @@ public class ProductController implements BoxBorder {
         return newQty;
     }
 
-    private void editSingleElement(int proId) {
+    private void editSingleElement() {
         String newName = null;
         double newPrice = 0;
         int newQty = 0;
@@ -207,7 +208,7 @@ public class ProductController implements BoxBorder {
                 op = scanner.nextLine().toUpperCase();
 
                 if (op.equals("B")) {
-                    break; // BREAK OUT OF THE WHILE LOOP IF 'B' IS CHOSEN
+                    break;
                 }
 
                 for (int i = 0; i < productList.size(); i++) {
@@ -266,7 +267,7 @@ public class ProductController implements BoxBorder {
         }
     }
 
-    private void editMultiElement(int proId) {
+    private void editMultiElement() {
         String newName = null;
         double newPrice = 0;
         int newQty = 0;
@@ -348,7 +349,7 @@ public class ProductController implements BoxBorder {
         }
     }
 
-    private void editAllElement(int proId) {
+    private void editAllElement() {
         String newName = null;
         double newPrice = 0;
         int newQty = 0;
@@ -367,7 +368,7 @@ public class ProductController implements BoxBorder {
                             productList.get(i).setName(newName);
                             productList.get(i).setUnitPrice(newPrice);
                             productList.get(i).setQty(newQty);
-                            backgroundProcess.writeToFile(productList.get(proId), "EDIT");
+                            backgroundProcess.writeToFile(productList.get(proId), "edit");
                             System.out.println(" ✅ THIS PRODUCT HAS BEEN EDITED SUCCESSFULLY.");
                             clickEnter();
                             editSuccessful = true;
@@ -390,7 +391,6 @@ public class ProductController implements BoxBorder {
     }
 
     public void editProduct() {
-        int proId;
         while (true){
             try {
                 System.out.print("ENTER PRODUCT ID: ");
@@ -421,15 +421,15 @@ public class ProductController implements BoxBorder {
 
                 switch (choice) {
                     case "SE": {
-                        editSingleElement(proId);
+                        editSingleElement();
                         break;
                     }
                     case "ME": {
-                        editMultiElement(proId);
+                        editMultiElement();
                         break;
                     }
                     case "AE": {
-                        editAllElement(proId);
+                        editAllElement();
                         break;
                     }
                     case "B": {
