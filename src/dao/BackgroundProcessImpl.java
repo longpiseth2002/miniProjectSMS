@@ -550,8 +550,5 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                 scanner.nextLine(); // Consume the invalid input
             }
         }
-
     }
-
-
 }

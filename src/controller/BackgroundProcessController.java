@@ -22,7 +22,6 @@ public class BackgroundProcessController {
         product = new Product();
     }
 
-
     public void random() throws IOException {
         backgroundProcess.random(productslist,"src/allFile/dataFile.txt",scanner);
     }

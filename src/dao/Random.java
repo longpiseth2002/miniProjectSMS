@@ -8,7 +8,6 @@ public class Random {
 
     }
 
-
     public static void main(String[] args) {
         Random obj=new Random();
         obj.random();

@@ -57,6 +57,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
                     table.setColumnWidth(4, 25, 30);
 
 
+
                     table.addCell(darkRed + "  CODE ", cellStyle);
                     table.addCell(darkRed + "  NAME ", cellStyle);
                     table.addCell(darkRed + "  UNIT PRICE ", cellStyle);

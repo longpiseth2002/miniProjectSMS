@@ -14,6 +14,7 @@ public interface BackgroundProcess {
     public void readFromFile(List<Product> list,String datFile,String status);
     public void writeToFile(Product product,String status);
     public void writeToFile(List<Product> list,String fileName);
+
     public int readFromFile(String fileName) throws  FileNotFoundException;
     public boolean commitCheck(String fileTransection,  Scanner input) throws IOException;
     public void loadingProgress(int totalSize,String fileName,String status) throws IOException;

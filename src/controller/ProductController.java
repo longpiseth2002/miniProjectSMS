@@ -508,7 +508,6 @@ public class ProductController implements BoxBorder {
                         break;
                     }
                 }
-
                 if (!found) {
                     System.out.println(red + "   ❌ PRODUCT NOT FOUND" + reset);
                     System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
