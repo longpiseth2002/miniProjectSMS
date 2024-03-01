@@ -29,22 +29,18 @@ public class ProductController implements BoxBorder {
     private int proId;
     static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static List<Product> productList = Collections.synchronizedList(new ArrayList<>());
-
     public static List<Product> products() {
         return productList;
     }
-
     public ProductController() {
         scanner = new Scanner(System.in);
         productDaoImpl = new ProductDaoImpl();
         backUpFileProcessImpl = new BackUpFileProcessImpl();
 
     }
-
     public void display() {
         productDaoImpl.display(productList, setRow, scanner);
     }
-
     public void write() {
         boolean isValidInput = false;
         while (!isValidInput) {
@@ -110,7 +106,6 @@ public class ProductController implements BoxBorder {
             }
         }
     }
-
     public void read() {
         boolean isValidInput = false;
         while (!isValidInput) {
@@ -139,12 +134,10 @@ public class ProductController implements BoxBorder {
             }
         }
     }
-
     void clickEnter() {
         System.out.print("CLICK [ ENTER ] TO CONTINUE OPERATION ...");
         scanner.nextLine();
     }
-
     private String getValidProductName() {
         String newName = null;
         do {
@@ -158,7 +151,6 @@ public class ProductController implements BoxBorder {
         } while (newName.matches(".*\\d.*") || !newName.matches("[a-zA-Z]+"));
         return newName;
     }
-
     private double getValidUnitPrice() {
         double newPrice = 0;
         while (true) {
@@ -172,7 +164,6 @@ public class ProductController implements BoxBorder {
         }
         return newPrice;
     }
-
     private int getValidQuantity() {
         String newName = null;
         int newQty = 0;
@@ -187,7 +178,6 @@ public class ProductController implements BoxBorder {
         }
         return newQty;
     }
-
     private void editSingleElement() {
         String newName = null;
         double newPrice = 0;
@@ -358,13 +348,15 @@ public class ProductController implements BoxBorder {
                                 break;
                             } else if (ans.equalsIgnoreCase("N")) {
                                 System.out.println(red + "❌ THE PROCESS OF EDITING WAS CANCELED." + reset);
+                                System.out.println();
                                 break;
                             } else {
+                                System.out.println();
                                 System.out.println(red + "❌ INVALID INPUT. PLEASE ENTER [ Y || N ]." + reset);
                             }
                         }
                         clickEnter();
-                        break; // Break out of the for loop after processing the current product
+                        return; // Break out of the for loop after processing the current product
                     }
                 }
                 if (editingSuccessful) {
@@ -423,7 +415,6 @@ public class ProductController implements BoxBorder {
             System.out.println(red + "❌ INVALID INPUT" + reset);
         }
     }
-
     public void editProduct() {
         while (true) {
             try {
@@ -492,7 +483,6 @@ public class ProductController implements BoxBorder {
             scanner.nextLine();
         }
     }
-
     public void deleteById() {
         while (true) {
             try {
@@ -540,7 +530,6 @@ public class ProductController implements BoxBorder {
             }
         }
     }
-
     public void searchByName() {
         Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND_HEADER_AND_COLUMNS);
         System.out.print("ENTER PRODUCT NAME TO SEARCH: ");
@@ -553,7 +542,6 @@ public class ProductController implements BoxBorder {
             System.out.println("PRODUCT: " + proName + " NOT FOUND");
         }
     }
-
     public void setNumberRow() {
         int inputRow;
         System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(100));
@@ -590,7 +578,6 @@ public class ProductController implements BoxBorder {
             }
         } while (true);
     }
-
     public void BackUpFile() throws IOException {
         String source = "src/AllFile/dataFile.txt";
         String target = "src/backupfiles";
@@ -609,7 +596,6 @@ public class ProductController implements BoxBorder {
             }
         }
     }
-
     public void exitProgram() {
         isContinue = true;
         while (isContinue) {
