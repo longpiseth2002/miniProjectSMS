@@ -286,10 +286,14 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
     @Override
     public void write(Product product,List<Product> productList,String status) {
-        productList.add(product);
-        process.writeToFile(product,status);
-    }
+        try {
+            productList.add(product);
+            process.writeToFile(product,status);
+            process.writeIdToFile(product.getId(),"src/allFile/lastId.txt");
+        }catch (Exception e){
 
+        }
+    }
 
     @Override
     public Product read(int proId, List<Product> productList) {

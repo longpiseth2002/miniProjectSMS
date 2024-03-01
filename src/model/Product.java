@@ -18,7 +18,6 @@ public class Product {
     }
 
     public Product() {
-        this.id = lastAssignedId++;
     }
 
 

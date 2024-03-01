@@ -24,6 +24,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
     private static AtomicInteger AtotalSize = new AtomicInteger(0);
     private static BackgroundProcessImpl instance;
     private static Map<String, LocalDate> dateMap = new HashMap<>();
+    private static Product product=new Product();
 
     public static LocalDate convertToDate(String dateString) {
         if (dateMap.containsKey(dateString)) {
@@ -82,7 +83,6 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     String[] parts = line.split(",");
                     String status=parts[5];
                     if(status.equalsIgnoreCase("write")){
-                        System.out.println(parts[0]);
                         productList.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), LocalDate.parse(parts[4])));
                     }
                     else if(status.equalsIgnoreCase("delete")){
@@ -154,7 +154,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
 
         }
     }
-    private void writeIdToFile(int last, String fileName) {
+ public void writeIdToFile(int last, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(last + "");
             writer.flush();
@@ -162,7 +162,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
 
         }
     }
-    private int readFromFile(String fileName) throws FileNotFoundException {
+    public int readFromFile(String fileName) throws FileNotFoundException {
         String lastLine = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -374,7 +374,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     long start = System.nanoTime();
                     Product obj;
                     obj = new Product("coca", 2.5, 12);
-                    int first = (op.equalsIgnoreCase("a"))?readFromFile("src/allFile/lastId.txt")+1:1;
+                    int first = (apov)?readFromFile("src/allFile/lastId.txt")+1:1;
                     String line = "," + obj.getName() + "," + obj.getUnitPrice() + "," + obj.getQty() + "," + obj.getImportAt() + "\n";
                     String date = String.valueOf(LocalDate.now());
                     int id=0;
@@ -391,10 +391,16 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     } catch (IOException e) {
                         System.out.println(e.getMessage());
                     }
-                    writeIdToFile(id,"src/allFile/lastId.txt");
                     long end = System.nanoTime();
                     System.out.println(blue + "\nData written to file successfully.");
                     System.out.println(reset + "\ntime = " + (end - start) / 1000000 + "ms\n");
+                    if(apov) {
+                        product.setLastAssignedId(id);
+                        writeIdToFile(id,"src/allFile/lastId.txt");
+                    }else{
+                        product.setLastAssignedId(n);
+                        writeIdToFile(n,"src/allFile/lastId.txt");
+                    }
                 } else {
                     continue outloop;
                 }
