@@ -405,7 +405,7 @@ public class ProductController implements BoxBorder {
             scanner.nextLine();
         }
     }
-    private void editAllElement(int proId) {
+    private void editAllElement() {
         String newName = null;
         double newPrice = 0;
         int newQty = 0;
