@@ -329,6 +329,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         Product p = null;
         if(product!=null){
             p = product.get();
+            process.writeToFile(p,"delete");
             products.removeIf(pro -> pro.getId() == id);
         }
         return p;

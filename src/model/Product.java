@@ -18,7 +18,7 @@ public class Product {
 
 
     public Product(String name, Double unitPrice, Integer qty) {
-        this.id = lastAssignedId;
+        this.id = lastAssignedId++;
         this.name = name;
         this.unitPrice = unitPrice;
         this.qty = qty;
