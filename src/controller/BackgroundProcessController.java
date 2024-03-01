@@ -34,6 +34,8 @@ public class BackgroundProcessController {
         if(op==null){
             backgroundProcess.readFromFile(productslist,"src/allFile/dataFile.txt","start");
         }
+        product.setLastAssignedId( productslist.get(productslist.size()-1).getId());
+        System.out.println(productslist.get(productslist.size()-1).getId());
     }
     public void commit() throws IOException {
         if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){

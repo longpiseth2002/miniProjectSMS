@@ -5,20 +5,25 @@ import java.time.format.DateTimeFormatter;
 
 public class Product {
 
-    private Integer id;
+    private int id;
     private String name;
-    private Double unitPrice;
-    private Integer qty;
+    private double unitPrice;
+    private int qty;
     private LocalDate importAt;
-    private static Integer lastAssignedId = 0;
+    private static int lastAssignedId = 0;
+
+
+    public void setLastAssignedId(int lastAssignedId) {
+        Product.lastAssignedId = lastAssignedId;
+    }
 
     public Product() {
         this.id = lastAssignedId++;
     }
 
 
-    public Product(String name, Double unitPrice, Integer qty) {
-        this.id = lastAssignedId++;
+    public Product(String name, double unitPrice, int qty) {
+        this.id = ++lastAssignedId;
         this.name = name;
         this.unitPrice = unitPrice;
         this.qty = qty;
@@ -26,7 +31,7 @@ public class Product {
     }
 
 
-    public Product(int id, String name, Double unitPrice, Integer qty, LocalDate date) {
+    public Product(int id, String name, double unitPrice, int qty, LocalDate date) {
         this.id=id;
         this.name=name;
         this.unitPrice=unitPrice;
@@ -35,11 +40,11 @@ public class Product {
     }
 
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -51,19 +56,19 @@ public class Product {
         this.name = name;
     }
 
-    public Double getUnitPrice() {
+    public double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(Double unitPrice) {
+    public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public Integer getQty() {
+    public int getQty() {
         return qty;
     }
 
-    public void setQty(Integer qty) {
+    public void setQty(int qty) {
         this.qty = qty;
     }
 

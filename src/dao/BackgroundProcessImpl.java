@@ -22,7 +22,6 @@ import static views.BoxBorder.reset;
 public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
     private static AtomicInteger currenSize = new AtomicInteger(0);
     private static AtomicInteger AtotalSize = new AtomicInteger(0);
-
     private static BackgroundProcessImpl instance;
     private static Map<String, LocalDate> dateMap = new HashMap<>();
 
@@ -193,6 +192,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                 e.printStackTrace();
             }
         });
+
         Thread thread2 = new Thread(() -> {
             try {
                 loadingProgress(list.size(), dataFile, status);

@@ -292,7 +292,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
 
     @Override
-    public Product read(Integer proId, List<Product> productList) {
+    public Product read(int proId, List<Product> productList) {
         Optional<Product> product = selectById(proId,productList);
         Product foundProduct = null;
         if(product!=null){
@@ -303,10 +303,10 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
 
 
     @Override
-    public Optional<Product> selectById(Integer id,List<Product> productList) {
+    public Optional<Product> selectById(int id,List<Product> productList) {
         try{
             for(Product product : productList){
-                if(product.getId().equals(id)){
+                if(product.getId()==(id)){
                     return Optional.of(product);
                 }
             }
@@ -324,7 +324,7 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
     }
 
     @Override
-    public Product deleteById(Integer id , List<Product> products ) {
+    public Product deleteById(int id , List<Product> products ) {
         Optional<Product> product = selectById(id,products);
         Product p = null;
         if(product!=null){
