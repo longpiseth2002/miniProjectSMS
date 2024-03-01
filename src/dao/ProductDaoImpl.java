@@ -20,8 +20,6 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         SORT=sort;
     }
 
-
-
     @Override
     public void display(List<Product> productList, int numberOfRow, Scanner input) {
         if(!productList.isEmpty()){
@@ -333,8 +331,6 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         return null;
     }
 
-
-
     @Override
     public Product updateById(Product product) {
         return null;
@@ -362,9 +358,6 @@ public class ProductDaoImpl implements ProductDao , BoxBorder {
         }
         return productList;
     }
-
-
-
 
     public void setUpRow(int inputRow, int setRow) {
 

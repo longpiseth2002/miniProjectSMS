@@ -1,6 +1,7 @@
 package controller;
 
 import dao.BackgroundProcessImpl;
+import dao.Random;
 import model.Product;
 
 import java.io.FileNotFoundException;
@@ -16,16 +17,17 @@ public class BackgroundProcessController {
     private BackgroundProcessImpl backgroundProcess;
     private List<Product> productslist;
     private Product product ;
+    private Random random;
 
     public BackgroundProcessController(){
         backgroundProcess = BackgroundProcessImpl.createObject();
         scanner = new Scanner(System.in);
         productslist = ProductController.products();
         product = new Product();
+        random=Random.createObject();
     }
-
     public void random() throws IOException {
-        backgroundProcess.random(productslist,"src/allFile/dataFile.txt",scanner);
+        random.random(productslist,"src/allFile/dataFile.txt",scanner);
     }
     public void start() throws IOException {
         String op=null;
