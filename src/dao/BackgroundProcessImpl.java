@@ -328,8 +328,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                 if (wrOption.equalsIgnoreCase("b")) {
                     System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
                     break outloop;
-                }
-
+                }g
                 if (wrOption.equalsIgnoreCase("w")) {
                     String lastId = null;
                     String op = null;
