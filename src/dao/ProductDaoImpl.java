@@ -14,12 +14,19 @@ import java.util.*;
 
 public class ProductDaoImpl implements ProductDao , BoxBorder {
     private static boolean  ORDER=true;
+    private static boolean SORT=false;
     private static BackgroundProcessImpl process = BackgroundProcessImpl.createObject();
-
+    public static void setSORT(boolean sort){
+        SORT=sort;
+    }
 
 
     @Override
-    public void display(List<Product> productList, int numberOfRow, Scanner input) {
+    public void  display(List<Product> productList, int numberOfRow, Scanner input) {
+        if(SORT){
+            Collections.sort(productList,Comparator.comparingInt(o -> o.getId()));
+            SORT=false;
+        }
         int numberOfAllData = productList.size();
         int remain = numberOfAllData % numberOfRow;
         int numberOfPage = remain == 0 ? numberOfAllData / numberOfRow : numberOfAllData / numberOfRow + 1;
