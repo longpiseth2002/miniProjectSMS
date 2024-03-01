@@ -145,15 +145,6 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
 
         return result;
     }
-
-//    private void writeTotalSize(int totalSize, String fileName) {
-//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-//            writer.write(totalSize + "");
-//            writer.flush();
-//        } catch (Exception e) {
-//
-//        }
-//    }
     @Override
     public void writeSizeToFile(int last, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
@@ -513,11 +504,13 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                             writer.newLine();
                             lastLine=line;
                         }
-
                     } catch (IOException e) {
                         System.out.println("ERROR OCCURRED WHILE RESTORING FILE: " + e.getMessage().toUpperCase());
                     }
-
+                    if(lastLine != null) {
+                        String[] lastLineArr = split(lastLine, ',');
+                        writeSizeToFile(Integer.parseInt(lastLineArr[0]), "src/allFile/lastId.txt");
+                    }
                 });
 
                 Thread thread2 = new Thread(() -> {
