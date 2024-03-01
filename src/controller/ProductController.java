@@ -226,35 +226,43 @@ public class ProductController implements BoxBorder {
                         System.out.print("ℹ️ Are you sure to update this product? [Y/N] : ");
                         String ans = scanner.nextLine();
 
-                        if (ans.equalsIgnoreCase("y")) {
-                            if (newName != null) {
-                                for (char j : newName.toCharArray()) {
-                                    if (Character.isDigit(j)) {
-                                        throw new RuntimeException("Invalid name, contains digits.");
+                        while (true){
+                            if (ans.equalsIgnoreCase("y")) {
+                                if (newName != null) {
+                                    for (char j : newName.toCharArray()) {
+                                        if (Character.isDigit(j)) {
+                                            throw new RuntimeException("Invalid name, contains digits.");
+                                        }
                                     }
+                                    productList.get(i).setName(newName);
+                                    System.out.println("✅ NAME of this product was edited successfully.");
                                 }
-                                productList.get(i).setName(newName);
-                                System.out.println("✅ NAME of this product was edited successfully.");
-                            }
 
-                            if (newPrice != 0) {
-                                productList.get(i).setUnitPrice(newPrice);
-                                System.out.println("✅ UNIT PRICE of this product was edited successfully.");
-                            }
+                                if (newPrice != 0) {
+                                    productList.get(i).setUnitPrice(newPrice);
+                                    System.out.println("✅ UNIT PRICE of this product was edited successfully.");
+                                }
 
-                            if (newQty != 0) {
-                                productList.get(i).setQty(newQty);
-                                System.out.println("✅ QUANTITY of this product was edited successfully.");
-                            }
+                                if (newQty != 0) {
+                                    productList.get(i).setQty(newQty);
+                                    System.out.println("✅ QUANTITY of this product was edited successfully.");
+                                }
 
-                            System.out.println();
-                            backgroundProcess.writeToFile(productList.get(proId), "edit");
-                        } else {
-                            System.out.println("❌ The process of editing was canceled.");
+                                System.out.println();
+                                backgroundProcess.writeToFile(productList.get(proId), "edit");
+                            }
+                            else if (ans.equalsIgnoreCase("n")){
+                                System.out.println("❌ The process of editing was canceled.");
+                            }
+                            else {
+                                System.out.println("Wrong Format !!!");
+                                System.out.println("### Please ENTER Again");
+                                continue;
+                            }
+                            clickEnter();
+                            break; // Break out of the for loop after the editing process
                         }
 
-                        clickEnter();
-                        break; // Break out of the for loop after the editing process
                     }
                 }
             }
@@ -370,7 +378,8 @@ public class ProductController implements BoxBorder {
                             clickEnter();
                             editSuccessful = true;
                             break;
-                        } else {
+                        }
+                        else if (ans.equalsIgnoreCase("n")){
                             System.out.println("❌ The process of editing was canceled.");
                             editSuccessful = true;
                             clickEnter();
