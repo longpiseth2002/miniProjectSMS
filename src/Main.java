@@ -1,26 +1,20 @@
 import controller.BackgroundProcessController;
 import controller.ProductController;
+import views.BoxBorder;
 import views.InterfaceViews;
 
 
+import java.io.IOException;
 import java.util.Scanner;
 
 
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         ProductController productController = new ProductController();
         BackgroundProcessController backgroundProcessController = new BackgroundProcessController();
-
-        System.out.println(
-                " ".repeat(25) + "██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗    ████████╗ ██████╗ \n" +
-                        " ".repeat(25) + "██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝    ╚══██╔══╝██╔═══██╗   \n" +
-                        " ".repeat(25) + "██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗         ██║   ██║   ██║   \n" +
-                        " ".repeat(25) + "██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝         ██║   ██║   ██║   \n" +
-                        " ".repeat(25) + "╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗       ██║   ╚██████╔╝   \n" +
-                        " ".repeat(25) + " ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝       ╚═╝    ╚═════╝ ");
         System.out.println(
                 " ".repeat(30) + "  ██████╗███████╗████████╗ █████╗ ██████╗     ███████╗███╗   ███╗███████╗ \n" +
                         " ".repeat(30) + " ██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗    ██╔════╝████╗ ████║██╔════╝ \n" +
@@ -29,7 +23,9 @@ public class Main {
                         " ".repeat(30) + " ╚██████╗███████║   ██║   ██║  ██║██████╔╝    ███████║██║ ╚═╝ ██║███████║ \n" +
                         " ".repeat(30) + "  ╚═════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝     ╚═╝╚══════╝ ");
         String op;
+
         InterfaceViews.interfaceCSTAD();
+        backgroundProcessController.start();
         do {
             InterfaceViews.applicationMenu();
             System.out.print("➡ SELECT OPTION MENU : ");
@@ -37,44 +33,50 @@ public class Main {
             System.out.println();
             switch (op) {
                 case "d" -> {
-                    productController.writeN();
+                    productController.display();
                 }
                 case "rd" -> {
-                    backgroundProcessController.randomWrite();
+                    backgroundProcessController.random();
                 }
+
                 case "w" -> {
                     productController.write();
                 }
                 case "r" -> {
-                    System.out.println("Read");
+                    productController.read();
                 }
                 case "e" -> {
-                    System.out.println("Edit");
+                    productController.editProduct();
                 }
                 case "dl" -> {
-                    System.out.println("Delete");
+                    productController.deleteById();
                 }
                 case "s" -> {
-                    System.out.println("Search");
+                    productController.searchByName();
                 }
                 case "sr" -> {
                     productController.setNumberRow();
                 }
                 case "c" -> {
-                    System.out.println("Commit");
+                    backgroundProcessController.commit();
                 }
                 case "bu" -> {
-                    System.out.println("back Up");
+                    productController.BackUpFile();
                 }
                 case "rs" -> {
-                    System.out.println("Restore");
+                    backgroundProcessController.restore();
                 }
                 case "h" -> {
                     InterfaceViews.displayHelp();
                 }
                 case "x" -> {
-                    System.exit(0);
+                    productController.exitProgram();
                 }
+                default -> {
+                    System.out.println(BoxBorder.red + " ❌ Invalid Option." +
+                            "" + BoxBorder.reset + "\n\t🏠 Back to Menu Application...");
+                }
+
             }
 
 
