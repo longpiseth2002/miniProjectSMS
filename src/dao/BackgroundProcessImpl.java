@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.DoubleToIntFunction;
 import java.util.stream.Stream;
 
 import model.Product;
@@ -19,7 +18,7 @@ import views.BoxBorder;
 
 import static views.BoxBorder.reset;
 
-public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
+public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     private static AtomicInteger currenSize = new AtomicInteger(0);
     private static AtomicInteger AtotalSize = new AtomicInteger(0);
     private static BackgroundProcessImpl instance;
