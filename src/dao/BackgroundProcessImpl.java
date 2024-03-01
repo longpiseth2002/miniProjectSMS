@@ -482,7 +482,6 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     storeFile.add(file.getPath());
                     last = i;
                     i++;
-
                 }
             }
         }
@@ -510,6 +509,7 @@ public class BackgroundProcessImpl implements BackgroundProcess, BoxBorder {
                     if(lastLine != null) {
                         String[] lastLineArr = split(lastLine, ',');
                         writeSizeToFile(Integer.parseInt(lastLineArr[0]), "src/allFile/lastId.txt");
+                        product.setLastAssignedId(Integer.parseInt(lastLineArr[0]));
                     }
                 });
 
