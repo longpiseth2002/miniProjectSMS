@@ -454,7 +454,17 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                         System.out.println(blue + "\uD83D\uDC49WRITE DATA FIRST OR " + red + "BACK" + reset);
                     }
                 }
-            } while (true);
+            }
+
+    @Override
+    public void setListSize(int listSize) {
+
+    }
+
+    @Override
+    public void restore(List<Product> products, String dataSource, Scanner scanner) {
+
+    } while (true);
         }catch (OutOfMemoryError e){
             System.out.println("⛔FULL MEMORY");
         }
