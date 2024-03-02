@@ -178,7 +178,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         long end = System.nanoTime();
         if (currenSize.get() != -1)
             System.out.println(blue + "\nDATA WRITTEN TO FILE SUCCESSFULLY.");
-        System.out.println(reset + "TIME = " + (end - start) / 1000000 + "MS\n");
+        System.out.println(reset + "TIME = " + (end - start) / 1000000 + "ms\n");
         currenSize.set(0);
     }
     @Override
