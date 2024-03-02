@@ -65,7 +65,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     public void loadingProgress(int totalSize, String fileName, String status) throws IOException {
         System.out.println("LOADING...");
         AtotalSize.set(totalSize);
-        int numberToRead = status.equalsIgnoreCase("START") ? (int) countLines(fileName) : AtotalSize.get();
+        int numberToRead = status.equalsIgnoreCase("startcommit") ? (int) countLines(fileName) : AtotalSize.get();
         String stDigit = Integer.toString(numberToRead);
         int digit = stDigit.length();
         int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
@@ -80,7 +80,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                 System.out.flush();
             }
         }
-        System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", currenSize.get(), numberToRead, "\u001B[35m\u2588".repeat(100), 100f);
+        System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]"+reset, currenSize.get(), numberToRead, "\u001B[35m\u2588".repeat(100), 100f);
     }
     @Override
     public  void readFromFile(List<Product> list, String dataFile, String status) {
@@ -98,26 +98,22 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                 System.out.println("❌NO DATA..!");
             }
         });
-
         Thread thread2 = new Thread(() -> {
             try {
-                if(!list.isEmpty())
                     loadingProgress(list.size(), dataFile, status);
             } catch (IOException e) {
                 System.out.println("\uD83D\uDCDBDATA FILE NOT FOUND");
             }
         });
-
         thread1.start();
-        if(!status.equalsIgnoreCase("startcommit"))  thread2.start();
+        if(Files.exists(Paths.get(dataFile)))  thread2.start();
         try {
             thread1.join();
-            if(!status.equalsIgnoreCase("startcommit"))
-                thread2.join();
+            thread2.join();
         } catch (InterruptedException e) {
         }
         if (currenSize.get() != -1)
-            if(!status.equalsIgnoreCase("startcommit"))
+            if(Files.exists(Paths.get(dataFile)))
                 System.out.println(blue + "\nCompleted." + reset);
         currenSize.set(0);
     }

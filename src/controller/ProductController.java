@@ -13,6 +13,8 @@ import dao.BackgroundProcessImpl;
 
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.InputMismatchException;
@@ -427,7 +429,7 @@ public class ProductController implements BoxBorder {
         }
     }
     public void editProduct() {
-        if(!productList.isEmpty()){
+        if(Files.exists(Paths.get("src/allFile/datFile.txt"))){
             while (true) {
                 try {
                     System.out.print("ENTER PRODUCT ID: ");
