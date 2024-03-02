@@ -19,4 +19,5 @@ public interface ProductDao {
     List<Product> searchByName(List<Product> products ,String name);
     void setUpRow(int numberOfRow,int setRow);
 
+
 }

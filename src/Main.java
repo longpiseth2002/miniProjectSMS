@@ -1,4 +1,5 @@
 import controller.BackgroundProcessController;
+import controller.MenuController;
 import controller.ProductController;
 import views.BoxBorder;
 import views.InterfaceViews;
@@ -10,10 +11,10 @@ import java.util.Scanner;
 
 public class Main {
 
-
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         ProductController productController = new ProductController();
+        MenuController menuController = new MenuController();
         BackgroundProcessController backgroundProcessController = new BackgroundProcessController();
         String op;
 
@@ -60,7 +61,7 @@ public class Main {
                     backgroundProcessController.restore();
                 }
                 case "h" -> {
-                    InterfaceViews.displayHelp();
+                    menuController.helpMenu();
                 }
                 case "x" -> {
                     productController.exitProgram();
