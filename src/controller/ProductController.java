@@ -428,8 +428,8 @@ public class ProductController implements BoxBorder {
             System.out.println(red + "❌ INVALID INPUT" + reset);
         }
     }
-    public void editProduct() {
-        if(Files.exists(Paths.get("src/allFile/datFile.txt"))){
+    public void editProduct() throws IOException {
+        if(Files.exists(Paths.get("src/allFile/dataFile.txt"))){
             while (true) {
                 try {
                     System.out.print("ENTER PRODUCT ID: ");

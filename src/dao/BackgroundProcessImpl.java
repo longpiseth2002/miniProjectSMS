@@ -66,21 +66,23 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         System.out.println("LOADING...");
         AtotalSize.set(totalSize);
         int numberToRead = status.equalsIgnoreCase("startcommit") ? (int) countLines(fileName) : AtotalSize.get();
-        String stDigit = Integer.toString(numberToRead);
-        int digit = stDigit.length();
-        int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
-        int remain = numberToRead % divi;
-        int repeatNumber = 0;
-        while (currenSize.get() != numberToRead) {
-            if (currenSize.get() % divi == remain) {
-                repeatNumber = (int) (currenSize.get() / (numberToRead / 100f));
-                System.out.printf(red + "\r[ %d/%d ]", currenSize.get(), numberToRead);
-                System.out.printf(" %s%s", "\u001B[31m\u2588".repeat(repeatNumber), "\u001B[37m\u2592".repeat(100 - repeatNumber));
-                System.out.printf(red + " [ %.2f%% ]", currenSize.get() / (numberToRead / 100f));
-                System.out.flush();
+        if(numberToRead>0){
+            String stDigit = Integer.toString(numberToRead);
+            int digit = stDigit.length();
+            int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
+            int remain = numberToRead % divi;
+            int repeatNumber = 0;
+            while (currenSize.get() != numberToRead) {
+                if (currenSize.get() % divi == remain) {
+                    repeatNumber = (int) (currenSize.get() / (numberToRead / 100f));
+                    System.out.printf(red + "\r[ %d/%d ]", currenSize.get(), numberToRead);
+                    System.out.printf(" %s%s", "\u001B[31m\u2588".repeat(repeatNumber), "\u001B[37m\u2592".repeat(100 - repeatNumber));
+                    System.out.printf(red + " [ %.2f%% ]", currenSize.get() / (numberToRead / 100f));
+                    System.out.flush();
+                }
             }
+            System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]"+reset, currenSize.get(), numberToRead, "\u001B[35m\u2588".repeat(100), 100f);
         }
-        System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]"+reset, currenSize.get(), numberToRead, "\u001B[35m\u2588".repeat(100), 100f);
     }
     @Override
     public  void readFromFile(List<Product> list, String dataFile, String status) {
@@ -113,7 +115,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         } catch (InterruptedException e) {
         }
         if (currenSize.get() != -1)
-            if(Files.exists(Paths.get(dataFile)))
+            if(Files.exists(Paths.get(dataFile))&& !list.isEmpty())
                 System.out.println(blue + "\nCompleted." + reset);
         currenSize.set(0);
     }
@@ -240,7 +242,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
 
         if(op.equalsIgnoreCase("y")||(op.equalsIgnoreCase("n")&&operation.equalsIgnoreCase("start"))){
             if(op.equalsIgnoreCase("y")) productList.clear();
-            readFromFile(productList,dataFile,"startcommit");
+            readFromFile(productList,dataFile,"commitYes");
             try(BufferedReader reader=new BufferedReader(new FileReader(tranSectionFile))){
                 String line;
                 while ((line = reader.readLine()) != null) {
