@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import model.Product;
 import views.BoxBorder;
+import dao.BackgroundProcess;
 
 public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     private static AtomicInteger currenSize = new AtomicInteger(0);
