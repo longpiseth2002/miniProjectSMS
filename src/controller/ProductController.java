@@ -429,7 +429,7 @@ public class ProductController implements BoxBorder {
         }
     }
     public void editProduct() throws IOException {
-        if(Files.exists(Paths.get("src/allFile/dataFile.txt"))){
+        if(Files.exists(Paths.get("src/allFile/dataFile.txt"))&&!productList.isEmpty()){
             while (true) {
                 try {
                     System.out.print("ENTER PRODUCT ID: ");
