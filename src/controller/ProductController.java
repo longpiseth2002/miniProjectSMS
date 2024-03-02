@@ -10,6 +10,8 @@ import org.nocrala.tools.texttablefmt.Table;
 import views.BoxBorder;
 import views.InterfaceViews;
 import dao.BackgroundProcessImpl;
+
+
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -190,10 +192,15 @@ public class ProductController implements BoxBorder {
         try {
             while (true) {
                 System.out.println("\nWHICH ELEMENT OF THE PRODUCT DO YOU WANT TO EDIT?");
-                System.out.println("\t [ N ]. EDIT NAME");
-                System.out.println("\t [ P ]. EDIT UNIT PRICE");
-                System.out.println("\t [ Q ]. EDIT QUANTITY");
-                System.out.println("\t [ B ]. BACK \n");
+
+                Table table = new Table(1, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
+                table.setColumnWidth(0,35,25);
+                table.addCell(brightBlue + "  [ N ]. EDIT NAME");
+                table.addCell(brightBlue + "  [ P ]. EDIT UNIT PRICE");
+                table.addCell(brightBlue + "  [ Q ]. EDIT QUANTITY");
+                table.addCell(brightBlue + "  [ B ]. BACK");
+                System.out.println(table.render());
+
                 System.out.print("⏩⏩ ENTER YOUR CHOICE : ");
                 op = scanner.nextLine().toUpperCase();
 
@@ -360,7 +367,7 @@ public class ProductController implements BoxBorder {
                             }
                         }
                         clickEnter();
-                        return;
+                        return; // Break out of the for loop after processing the current product
                     }
                 }
                 if (editingSuccessful) {
@@ -419,7 +426,6 @@ public class ProductController implements BoxBorder {
             System.out.println(red + "❌ INVALID INPUT" + reset);
         }
     }
-
     public void editProduct() {
         if(!productList.isEmpty()){
             while (true) {
@@ -448,17 +454,70 @@ public class ProductController implements BoxBorder {
                     System.out.println(red + "❌ INVALID ID, ENTER A VALID ID." + reset);
                 }
             }
-
+        while (true) {
             try {
-                String choice;
-                do {
-                    System.out.println("\nWHICH OPERATION OF EDIT YOU WANT TO USE?");
-                    System.out.println("[ SE ]. EDIT SINGLE ELEMENT");
-                    System.out.println("[ ME ]. EDIT MULTIPLE ELEMENTS");
-                    System.out.println("[ AE ]. EDIT ALL ELEMENTS");
-                    System.out.println("[ B ]. BACK TO THE MENU\n");
-                    System.out.print("⏩⏩ ENTER YOUR CHOICE : ");
-                    choice = scanner.nextLine().toUpperCase();
+                System.out.print("ENTER PRODUCT ID: ");
+                proId = Integer.parseInt(scanner.nextLine());
+                Product product = productDaoImpl.read(proId, productList);
+                if (product != null) {
+                    System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
+                    InterfaceViews.readDetail(product);
+                    break;
+                }
+                if (product == null) {
+                    System.out.println(red + "❌ INVALID ID, ENTER A VALID ID." + reset);
+                    System.out.println();
+                    clickEnter();
+
+                    Table table = new Table(1, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
+                    table.setColumnWidth(0,35,25);
+                    table.addCell(brightBlue + "   [ EN ] . ENTER NEW ID");
+                    table.addCell(brightBlue + "   [ B ] . BACK");
+                    System.out.println(table.render());
+
+                    String an;
+                    do {
+                        System.out.print("ENTER OPTION : ");
+                        an = scanner.nextLine();
+
+                        if (an.equalsIgnoreCase("en")) {
+                            break;
+                        }
+                        if (an.equalsIgnoreCase("b")) {
+                            System.out.println();
+                            return;
+                        }
+                        else {
+                            System.out.println(red + "❌ INVALID INPUT, PLEASE ENTER [ EN || B ] " + reset);
+                            System.out.println();
+                            continue;
+                        }
+
+                    } while (an.matches(".*\\d.*") || !an.matches("^(en|EN)[bB]$"));
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(red + "❌ ENTER NUMBER ONLY !!!." + reset);
+                System.out.println();
+                clickEnter();
+                System.out.println();
+                continue;
+            }
+        }
+
+        try {
+            String choice;
+            do {
+                System.out.println();
+                System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(25) + red + "  MENU of EDIT OPERATION  " + reset + HORIZONTAL_CONNECTOR_BORDER.repeat(25));
+                Table table = new Table(1, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
+                table.setColumnWidth(0,40,30);
+                table.addCell(cyan + "   [ SE ]. EDIT SINGLE ELEMENT ");
+                table.addCell(cyan + "   [ ME ]. EDIT MULTIPLE ELEMENTS ");
+                table.addCell(cyan + "   [ AE ]. EDIT ALL ELEMENTS ");
+                table.addCell(cyan + "   [ B ]. BACK TO THE MENU ");
+                System.out.println(table.render());
+                System.out.print("⏩⏩ ENTER YOUR CHOICE : ");
+                choice = scanner.nextLine().toUpperCase();
 
                     switch (choice) {
                         case "SE": {
@@ -560,7 +619,7 @@ public class ProductController implements BoxBorder {
             System.out.println("❌NO DATA TO SEARCH..!");
         }
     }
-    public void setNumberRow() {
+    public void setNumberRow() g{
         int inputRow;
         System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(100));
         do {
