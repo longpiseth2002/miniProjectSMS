@@ -67,8 +67,8 @@ public class Main {
                     productController.exitProgram();
                 }
                 default -> {
-                    System.out.println(BoxBorder.red + "   ❌ Invalid Option." +
-                            "" + BoxBorder.reset + "\n🏠 BACK TO APPLICATION MENU...");
+                    System.out.println(BoxBorder.red + "   ❌ INVALID OPTION ." +
+                            "" + BoxBorder.reset + "\n🏠 BACK TO APPLICATION MENU...\n\n");
                 }
 
             }
