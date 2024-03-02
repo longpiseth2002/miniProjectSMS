@@ -33,11 +33,13 @@ public class Random {
             table.addCell(cyan + "W.Write", cellStyle);
             table.addCell(cyan + "R.Read", cellStyle);
             table.addCell(cyan + "B.Back" + reset, cellStyle);
-
+            String checkRandomCommit=null;
             if ( backgroundProcess.commitCheck("src/allFile/TransectionFile.txt", input)) {
-                backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
+                checkRandomCommit= backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
             }
-
+            if(checkRandomCommit.equalsIgnoreCase("b")){
+                return;
+            }
             outloop:
             do {
                 String wrOption = null;
