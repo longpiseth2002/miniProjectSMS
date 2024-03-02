@@ -33,7 +33,7 @@ public class BackgroundProcessController {
         String op=null;
         if(Files.exists(Paths.get("src/allFile/TransectionFile.txt"))){
             if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
-                op= backgroundProcess.commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","start",scanner);
+                op= backgroundProcess.commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","startcommit",scanner);
             }
         }
         if(op==null){

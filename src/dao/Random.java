@@ -57,7 +57,7 @@ public class Random {
                     int n = 0;
                     do {
                         try {
-                            System.out.print("Enter number of file[1-30M]: ");
+                            System.out.print("Enter number of file[30M]: ");
                             n = input.nextInt();
                         } catch (Exception e) {
                             System.out.println("❌INVALID INPUT");
@@ -182,6 +182,7 @@ public class Random {
             } while (true);
         }catch (OutOfMemoryError e){
             System.out.println("⛔FULL OF MEMORY");
+            backgroundProcess.clearFile("src/allFile/dataFile.txt");
         }
     }
     public static Random createObject(){

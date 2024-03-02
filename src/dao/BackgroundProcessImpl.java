@@ -86,38 +86,51 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     }
     @Override
     public  void readFromFile(List<Product> list, String dataFile, String status) {
-        Thread thread1 = new Thread(() -> {
-            try (Stream<String> lines = Files.lines(Paths.get(dataFile))) {
-                lines.forEach(line -> {
-                    String[] parts = split(line, ',');
-                    list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
-                    currenSize.incrementAndGet();
-                });
-                if(list.isEmpty()){
+        try {
+            Thread thread1 = new Thread(() -> {
+                try (Stream<String> lines = Files.lines(Paths.get(dataFile))) {
+                    lines.forEach(line -> {
+                        String[] parts = split(line, ',');
+                        list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
+                        currenSize.incrementAndGet();
+                    });
+                    if(list.isEmpty()){
+                        System.out.println("❌NO DATA..!");
+                    }
+                } catch (IOException e) {
                     System.out.println("❌NO DATA..!");
                 }
-            } catch (IOException e) {
-                System.out.println("❌NO DATA..!");
+            });
+            Thread thread2 = new Thread(() -> {
+                try {
+                    loadingProgress((int)countLines(dataFile), dataFile, status);
+                } catch (IOException e) {
+                    System.out.println("\uD83D\uDCDBDATA FILE NOT FOUND");
+                }
+            });
+            thread1.start();
+            if(Files.exists(Paths.get(dataFile)) && !dataFile.isEmpty()){
+                if(!status.equalsIgnoreCase("commitYes")){
+                    thread2.start();
+                }
             }
-        });
-        Thread thread2 = new Thread(() -> {
             try {
-                    loadingProgress(list.size(), dataFile, status);
-            } catch (IOException e) {
-                System.out.println("\uD83D\uDCDBDATA FILE NOT FOUND");
+                thread1.join();
+                thread2.join();
+            } catch (InterruptedException e) {
             }
-        });
-        thread1.start();
-        if(Files.exists(Paths.get(dataFile)))  thread2.start();
-        try {
-            thread1.join();
-            thread2.join();
-        } catch (InterruptedException e) {
+            if (currenSize.get() != -1)
+                if(Files.exists(Paths.get(dataFile))&& !list.isEmpty()&&!status.equalsIgnoreCase("commitYes")){
+                    System.out.println(blue + "\nCompleted." + reset);
+                }else{
+                    System.out.println("\n"+reset);
+                }
+            currenSize.set(0);
+        }catch (OutOfMemoryError e){
+            System.out.println("OUT OF MEMORY");
+            clearFile(dataFile);
         }
-        if (currenSize.get() != -1)
-            if(Files.exists(Paths.get(dataFile))&& !list.isEmpty())
-                System.out.println(blue + "\nCompleted." + reset);
-        currenSize.set(0);
+
     }
     @Override
     public int readFromFile(String fileName) throws FileNotFoundException {
@@ -138,7 +151,6 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     }
     @Override
     public void writeToFile(Product product, String status) {
-        long start = System.nanoTime();
         Thread thread1 = new Thread(() -> {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/allFile/TransectionFile.txt",true))) {
                 StringBuilder batch = new StringBuilder();
@@ -176,9 +188,6 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         } catch (InterruptedException e) {
         }
         long end = System.nanoTime();
-        if (currenSize.get() != -1)
-            System.out.println(blue + "\nDATA WRITTEN TO FILE SUCCESSFULLY.");
-        System.out.println(reset + "\nTIME = " + (end - start) / 1000000 + "MS\n");
         currenSize.set(0);
     }
     @Override
@@ -226,23 +235,25 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     }
     @Override
     public String commit(List<Product> productList, String tranSectionFile, String dataFile, String operation, Scanner input) throws IOException {
-        String opera = operation.equalsIgnoreCase("random") ? "[y/c]" : "[y/c/n]";
-        System.out.println(blue + "Commit all change: y");
-        System.out.println(red + "Cancel all change: c");
+        String opera = operation.equalsIgnoreCase("random") ? "[y/c]" : "[y/n/c]";
+        System.out.println(blue + "Commit all change: y"+reset);
         if (!operation.equalsIgnoreCase("random"))
             System.out.println(darkYellow + "Commit later     : n" + reset);
-
+        System.out.println(red +"Cancel all change: c"+reset);
         String op = null;
         do {
             System.out.print("Are you sure to commit?" + opera + ": ");
             op = input.nextLine().trim();
-            System.out.println("\n");
             if (operation.equalsIgnoreCase("random") && !op.equalsIgnoreCase("n")) continue;
         } while (!(op.equalsIgnoreCase("y") || op.equalsIgnoreCase("c") || (op.equalsIgnoreCase("n") && !operation.equalsIgnoreCase("random"))));
 
-        if(op.equalsIgnoreCase("y")||(op.equalsIgnoreCase("n")&&operation.equalsIgnoreCase("start"))){
-            if(op.equalsIgnoreCase("y")) productList.clear();
-            readFromFile(productList,dataFile,"commitYes");
+        if(op.equalsIgnoreCase("y")||(op.equalsIgnoreCase("n")&&operation.equalsIgnoreCase("startCommit"))){
+            if(op.equalsIgnoreCase("y")) {
+                productList.clear();
+                readFromFile(productList,dataFile,"commitYes");
+            }else{
+                readFromFile(productList,dataFile,"commitNo");
+            }
             try(BufferedReader reader=new BufferedReader(new FileReader(tranSectionFile))){
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -278,6 +289,8 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             clearFile(tranSectionFile);
             productList.clear();
             readFromFile(productList,"src/allFile/dataFile.txt",operation);
+        }else{
+            System.out.println(darkYellow+"\uD83D\uDCE2COMMIT LATER"+reset);
         }
         return op;
     }

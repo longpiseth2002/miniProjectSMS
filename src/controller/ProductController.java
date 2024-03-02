@@ -91,7 +91,7 @@ public class ProductController implements BoxBorder {
                     String ans = scanner.nextLine();
                     if (ans.equalsIgnoreCase("Y")) {
                         productDaoImpl.write(new Product(proName, unitPrice, qty), productList, "write");
-                        System.out.println("✅ PRODUCT HAS BEEN CREATED SUCCESSFULLY");
+                        System.out.println("\n✅ PRODUCT HAS BEEN CREATED SUCCESSFULLY");
                         isContinue = false;
                     } else if (ans.equalsIgnoreCase("N")) {
                         System.out.println(" 🏠 BACK TO APPLICATION MENU ...");
