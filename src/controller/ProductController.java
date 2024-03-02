@@ -619,7 +619,7 @@ public class ProductController implements BoxBorder {
             System.out.println("❌NO DATA TO SEARCH..!");
         }
     }
-    public void setNumberRow() g{
+    public void setNumberRow(){
         int inputRow;
         System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(100));
         do {
