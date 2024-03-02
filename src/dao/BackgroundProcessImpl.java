@@ -13,6 +13,7 @@ import views.BoxBorder;
 import dao.BackgroundProcess;
 
 public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
+
     private static AtomicInteger currenSize = new AtomicInteger(0);
     private static AtomicInteger AtotalSize = new AtomicInteger(0);
     private static BackgroundProcessImpl instance;
