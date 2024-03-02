@@ -181,6 +181,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                 } while (true);
                             }
                             case "B" -> {
+                                System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
                                 return;
                             }
                             case "O" -> {
@@ -278,6 +279,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                 } while (true);
                             }
                             case "B" -> {
+                                System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
                                 return;
                             }
                             case "O" -> {

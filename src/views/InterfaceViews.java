@@ -55,19 +55,20 @@ public class InterfaceViews implements BoxBorder {
         table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
         table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
 
-        table.addCell(cyan + "  (D)Display");
-        table.addCell(cyan +"  (RD)Random");
-        table.addCell(cyan +"  (W)Write");
-        table.addCell(cyan +"  (R)ead");
-        table.addCell(cyan +"  (E)Edit");
-        table.addCell(cyan +"  (DL)Delete");
-        table.addCell(cyan +"  (S)Search");
-        table.addCell(cyan +"  (SR)Set row");
-        table.addCell(cyan +"  (C)Commit");
-        table.addCell(cyan +"  (BU)Back Up");
-        table.addCell(cyan +"  (RS)Restore");
-        table.addCell(cyan +"  (H)Help");
-        table.addCell(cyan +"  (X)Exit" + reset);
+        table.addCell(cyan + "  (D)DISPLAY");
+        table.addCell(cyan + "  (RD)RANDOM");
+        table.addCell(cyan + "  (W)WRITE");
+        table.addCell(cyan + "  (R)READ");
+        table.addCell(cyan + "  (E)EDIT");
+        table.addCell(cyan + "  (DL)DELETE");
+        table.addCell(cyan + "  (S)SEARCH");
+        table.addCell(cyan + "  (SR)SET ROW");
+        table.addCell(cyan + "  (C)COMMIT");
+        table.addCell(cyan + "  (BU)BACK UP");
+        table.addCell(cyan + "  (RS)RESTORE");
+        table.addCell(cyan + "  (H)HELP");
+        table.addCell(cyan + "  (X)EXIT" + reset);
+
 
 
 
