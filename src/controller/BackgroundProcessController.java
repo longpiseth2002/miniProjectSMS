@@ -49,7 +49,7 @@ public class BackgroundProcessController {
         if (backgroundProcess.commitCheck("src/allFile/TransectionFile.txt",scanner)){
             backgroundProcess.commit(productslist,"src/allFile/TransectionFile.txt","src/allFile/dataFile.txt","commit",scanner);
         }else
-            System.out.println("There are nothing to commit..!");
+            System.out.println("THERE ARE NOTHING TO COMMIT ....");
         }
     public void restore(){
         backgroundProcess.restore(productslist,"src/allFile/dataFile.txt",scanner);

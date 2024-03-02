@@ -83,14 +83,14 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                         }
 
                         System.out.println(table.render());
-                        System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
+                        System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(141));
                         String textBlock = darkMagenta + """
                             PAGE %d OF %d                                                                                                 TOTAL RECORD : %d
-                            PAGE NAVIGATION                (O):ORDER || (N):NEXT || (P):PREVIOUS || (G):GOTO || (L):LAST || (F):FIRST || (B):BACK TO APPLICATION MENU
+                            PAGE NAVIGATION                [ [O]:ORDER || [N]:NEXT || [P]:PREVIOUS || [G]:GOTO || [L]:LAST || [F]:FIRST || [B]:BACK TO APPLICATION MENU ]
                             """ + reset;
 
                         System.out.print(String.format(textBlock, numberOfCurrentPage, numberOfPage, numberOfAllData));
-                        System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
+                        System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(141));
                     }
 
                     System.out.print("⏩ NAVIGATION PAGE : ");
@@ -190,7 +190,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                 continue changeOrder;
                             }
                             default -> {
-                                System.out.println(yellow  + "  ⚠️INVALID INPUT !!!! PLEASE ENTER AGAIN .\n      YOU CAN SELECT THESE OPTIONS\n      N -> next\n      P -> Previous\n      G -> Goto\n      L -> last\n      F -> First\n      B -> BACK TO APPLICATION MENU \n" + reset);
+                                System.out.println(yellow + "  ⚠️INVALID INPUT !!!! PLEASE ENTER AGAIN .\n      YOU CAN SELECT THESE OPTIONS\n     [ N ] -> NEXT\n     [ P ] -> PREVIOUS\n     [ G ] -> GOTO\n     [ L ] -> LAST\n     [ F ] -> FIRST\n     [ B ] -> BACK TO APPLICATION MENU \n" + reset);
                                 stepCheck = false;
                             }
                         }
@@ -288,7 +288,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                 continue changeOrder;
                             }
                             default -> {
-                                System.out.println(yellow + "  ⚠️INVALID INPUT !!!! PLEASE ENTER AGAIN .\n      YOU CAN SELECT THESE OPTIONS\n      N -> next\n      P -> Previous\n      G -> Goto\n      L -> last\n      F -> First\n      B -> BACK TO APPLICATION MENU \n" + reset);
+                                System.out.println(yellow + "  ⚠️INVALID INPUT !!!! PLEASE ENTER AGAIN .\n      YOU CAN SELECT THESE OPTIONS\n     [ N ] -> NEXT\n     [ P ] -> PREVIOUS\n     [ G ] -> GOTO\n     [ L ] -> LAST\n     [ F ] -> FIRST\n     [ B ] -> BACK TO APPLICATION MENU \n" + reset);
                                 stepCheck = false;
                             }
                         }
