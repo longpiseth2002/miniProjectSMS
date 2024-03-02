@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static views.BoxBorder.blue;
+import static views.BoxBorder.reset;
 
 public class BackUpFileProcessImpl implements BackUpFileProcess{
     BackgroundProcessImpl backgroundProcess = BackgroundProcessImpl.createObject(); ;
@@ -52,7 +53,7 @@ public class BackUpFileProcessImpl implements BackUpFileProcess{
                 i++;
             }
             System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n,n, "\u001B[35m█".repeat(100), 100f);
-            System.out.println("\n\n✅ File backup completed successfully. \n\t➡️ Backup saved in: " + backupFileName);
+            System.out.println("\n\n✅ File backup completed successfully. \n\t➡️ Backup saved in: " + backupFileName + reset);
         } catch (IOException e) {
             e.printStackTrace();
         }

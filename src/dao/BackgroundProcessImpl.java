@@ -245,7 +245,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         System.out.println(red +"Cancel all change: c"+reset);
         String op = null;
         do {
-            System.out.print("Are you sure to commit?" + opera + ": ");
+            System.out.print("ARE YOU SUR TO COMMIT ? " + opera + " : ");
             op = input.nextLine().trim();
             if (operation.equalsIgnoreCase("random") && !op.equalsIgnoreCase("n")) continue;
         } while (!(op.equalsIgnoreCase("y") || op.equalsIgnoreCase("c") || (op.equalsIgnoreCase("n") && !operation.equalsIgnoreCase("random"))||(op.equalsIgnoreCase("b"))&&operation.equalsIgnoreCase("random")));
@@ -301,7 +301,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     public boolean commitCheck(String fileTransection, Scanner input) throws IOException {
         Path path = Paths.get(fileTransection);
         if(Files.exists(path)&&Files.size(path)!=0){
-            System.out.println("There are many record have change and not commit yet..!");
+            System.out.println("THERE ARE MANY RECORD HAVE CHANGE AND NOT COMMIT YET ...!!");
             return true;
         }else return false;
     }
@@ -331,7 +331,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             for (File file : files) {
                 if (file.isFile()) {
                     String relativePath = file.getPath().replaceFirst("^src/backupfiles", "");
-                    System.out.println(i + ". " + relativePath.toUpperCase());
+                    System.out.println(i + ". " + relativePath.toLowerCase()); // Convert ".TXT" to lowercase
                     storeFile.add(file.getPath());
                     last = i;
                     i++;
@@ -341,13 +341,15 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         if (storeFile.isEmpty()) {
             System.out.println(" NO FILES AVAILABLE FOR RESTORATION");
             System.out.println(" 🏠 BACK TO APPLICATION MENU...");
+            return;
         }
+
         while (true) {
             try {
                 System.out.print("CHOICE FILE TO RESTORE (OR 'B' TO LEAVE) : ");
                 String choice = scanner.nextLine().trim();
                 if (choice.equalsIgnoreCase("b")) {
-                    System.out.println("Leaving file restoration.");
+                    System.out.println(" 🏠 BACK TO APPLICATION MENU...");
                     return;
                 }
                 int option = Integer.parseInt(choice);
@@ -355,7 +357,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                     throw new IndexOutOfBoundsException();
                 }
                 String filePath = storeFile.get(option - 1);
-                System.out.println("SELECTED FILE PATH : " + filePath.toUpperCase());
+                System.out.println("SELECTED FILE PATH : " + filePath.toLowerCase()); // Convert ".TXT" to lowercase
                 // Thread 1
                 Thread thread1 = new Thread(() -> {
                     String lastLine=null;
@@ -369,7 +371,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                         }
 
                     } catch (IOException e) {
-                        System.out.println("ERROR OCCURRED WHILE RESTORING FILE: " + e.getMessage().toUpperCase());
+                        System.out.println("ERROR OCCURRED WHILE RESTORING FILE: " + e.getMessage().toLowerCase()); // Convert exception message to lowercase
                     }
                     if(lastLine != null) {
                         String[] lastLineArr = split(lastLine, ',');
@@ -380,7 +382,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
 
                 Thread thread2 = new Thread(() -> {
                     products.clear();
-                    readFromFile(products, filePath, "START");
+                    readFromFile(products, filePath, "start");
                     System.out.println("  SUCCESSFULLY");
                 });
                 thread1.start();
@@ -395,7 +397,6 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                 break;
             } catch (NumberFormatException | InputMismatchException e) {
                 System.out.println(red + "   ❌ INVALID INPUT. PLEASE ENTER A VALID NUMBER." + reset);
-                scanner.nextLine(); // Consume the invalid input
             } catch (IndexOutOfBoundsException e) {
                 System.out.println(red + "   ❌ CHOICE OUT OF BOUNDS. PLEASE ENTER A NUMBER WITHIN THE RANGE " + "[" + start + " TO " + last + "]" + reset);
             }

@@ -7,6 +7,8 @@ import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
+import java.util.Scanner;
+
 public class InterfaceViews implements BoxBorder {
     public static void interfaceCSTAD() {
         System.out.println("\n".repeat(5));
@@ -114,26 +116,32 @@ public class InterfaceViews implements BoxBorder {
 
         System.out.println(table.render());
     }
-    public static void displayHelp() {
-        System.out.println("# Help Instruction");
-        Table table = new Table(1, BorderStyle.UNICODE_BOX, ShownBorders.SURROUND);
-        table.addCell("1.      Press       D : Display product as table");
-        table.addCell("2.      Press       w : Create a new product");
-        table.addCell("3.      Press       R : View product details by code");
-        table.addCell("4       Press       E : Edit an existing product by code");
-        table.addCell("5.      Press       DL : Delete an existing product by code");
-        table.addCell("6.      Press       S : Search an existing product by name");
-        table.addCell("7.      Press       C : Commit transaction data");
-        table.addCell("8.      Press       BU : Backup data");
-        table.addCell("9.      Press       RS : Restore data");
-        table.addCell("10.     Press       L : Navigate pagination to the last page");
-        table.addCell("11.     Press       P : Navigate pagination to the previous page");
-        table.addCell("12.     Press       N : Navigate pagination to the next page");
-        table.addCell("13.     Press       F : Navigate pagination to the first page");
-        table.addCell("14.     Press       H : Help");
-        table.addCell("15.     Press       B : Step Back of the Application");
+    public  void displayHelp(Scanner scanner) {
+        System.out.println("\uD83D\uDE4B\u200D\uD83D\uDE4B\uD83C\uDFFB\u200D\uD83D\uDCE2️ HELP INSTRUCTION ");
+        Table table = new Table(1, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND);
+        table.setColumnWidth(0,75,90);
+        table.addCell(darkMagenta + "     1.      PRESS       D  : \uD83D\uDCBB DISPLAY PRODUCT AS TABLE ");
+        table.addCell(darkMagenta + "     2.      PRESS       W  : \uD83C\uDD95 CREATE A NEW PRODUCT ");
+        table.addCell(darkMagenta + "     3.      PRESS       R  : \uD83D\uDCD6 VIEW PRODUCT DETAILS BY CODE ");
+        table.addCell(darkMagenta + "     4.      PRESS       E  : \uD83D\uDCDD EDIT AN EXISTING PRODUCT BY CODE ");
+        table.addCell(darkMagenta + "     5.      PRESS       DL : \uD83D\uDEAE DELETE AN EXISTING PRODUCT BY CODE ");
+        table.addCell(darkMagenta + "     6.      PRESS       S  : \uD83D\uDD0D SEARCH AN EXISTING PRODUCT BY NAME ");
+        table.addCell(darkMagenta + "     7.      PRESS       C  : \uD83D\uDCE9 COMMIT TRANSACTION DATA ");
+        table.addCell(darkMagenta + "     8.      PRESS       BU : \uD83D\uDDC2 BACKUP DATA ");
+        table.addCell(darkMagenta + "     9.      PRESS       RS : \uD83D\uDDC3 RESTORE DATA ");
+        table.addCell(darkMagenta + "     10.     PRESS       L  : \uD83D\uDCC5 NAVIGATE PAGINATION TO THE LAST PAGE ");
+        table.addCell(darkMagenta + "     11.     PRESS       P  : \uD83D\uDC49 NAVIGATE PAGINATION TO THE PREVIOUS PAGE ");
+        table.addCell(darkMagenta + "     12.     PRESS       N  : \uD83D\uDC48 NAVIGATE PAGINATION TO THE NEXT PAGE ");
+        table.addCell(darkMagenta + "     13.     PRESS       F  : \uD83D\uDDD3 NAVIGATE PAGINATION TO THE FIRST PAGE ");
+        table.addCell(darkMagenta + "     14.     PRESS       H  : \uD83D\uDEA8 HELP ");
+        table.addCell(darkMagenta + "     15.     PRESS       B  : \uD83C\uDFE1 STEP BACK OF THE APPLICATION ");
 
         System.out.println(table.render());
+
+        System.out.print("CLICK [ ENTER ] TO CONTINUE OPERATION ...");
+        scanner.nextLine();
+        System.out.println("\n");
+
     }
 
 
