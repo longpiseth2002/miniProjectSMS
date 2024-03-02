@@ -487,24 +487,24 @@ public class ProductController implements BoxBorder {
                 System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(25) + red + "  MENU of EDIT OPERATION  " + reset + HORIZONTAL_CONNECTOR_BORDER.repeat(25));
                 Table table = new Table(1, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
                 table.setColumnWidth(0,40,30);
-                table.addCell(cyan + "   [ SE ]. EDIT SINGLE ELEMENT ");
-                table.addCell(cyan + "   [ ME ]. EDIT MULTIPLE ELEMENTS ");
-                table.addCell(cyan + "   [ AE ]. EDIT ALL ELEMENTS ");
+                table.addCell(cyan + "   [ A ]. ALL ELEMENTS ");
+                table.addCell(cyan + "   [ S ]. SINGLE ELEMENT ");
+                table.addCell(cyan + "   [ M ]. MULTIPLE ELEMENTS ");
                 table.addCell(cyan + "   [ B ]. BACK TO THE MENU ");
                 System.out.println(table.render());
                 System.out.print("⏩⏩ ENTER YOUR CHOICE : ");
                 choice = scanner.nextLine().toUpperCase();
 
                     switch (choice) {
-                        case "SE": {
+                        case "S": {
                             editSingleElement();
                             break;
                         }
-                        case "ME": {
+                        case "M": {
                             editMultiElement();
                             break;
                         }
-                        case "AE": {
+                        case "A": {
                             editAllElement();
                             break;
                         }
