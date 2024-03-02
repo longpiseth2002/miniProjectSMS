@@ -430,7 +430,6 @@ public class ProductController implements BoxBorder {
     }
     public void editProduct() throws IOException {
         if(Files.exists(Paths.get("src/allFile/dataFile.txt"))&&!productList.isEmpty()){
-            while (true) {
                 try {
                     System.out.print("ENTER PRODUCT ID: ");
                     proId = Integer.parseInt(scanner.nextLine());
@@ -438,7 +437,6 @@ public class ProductController implements BoxBorder {
                     if (product != null) {
                         System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
                         InterfaceViews.readDetail(product);
-                        break;
                     } else {
                         System.out.println(red + "❌ INVALID ID" + reset);
                         clickEnter();
@@ -447,7 +445,6 @@ public class ProductController implements BoxBorder {
                         System.out.print("ENTER OPTION : ");
                         String an = scanner.nextLine();
                         if (an.equalsIgnoreCase("en")) {
-                            continue;
                         } else if (an.equalsIgnoreCase("b")) {
                             return;
                         }
@@ -455,7 +452,6 @@ public class ProductController implements BoxBorder {
                 } catch (NumberFormatException e) {
                     System.out.println(red + "❌ INVALID ID, ENTER A VALID ID." + reset);
                 }
-            }
         while (true) {
             try {
                 System.out.print("ENTER PRODUCT ID: ");
