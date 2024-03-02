@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static views.BoxBorder.blue;
+import static views.BoxBorder.reset;
 
 public class BackUpFileProcessImpl implements BackUpFileProcess{
     BackgroundProcessImpl backgroundProcess = BackgroundProcessImpl.createObject(); ;
