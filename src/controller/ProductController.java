@@ -430,28 +430,6 @@ public class ProductController implements BoxBorder {
     }
     public void editProduct() throws IOException {
         if(Files.exists(Paths.get("src/allFile/dataFile.txt"))&&!productList.isEmpty()){
-                try {
-                    System.out.print("ENTER PRODUCT ID: ");
-                    proId = Integer.parseInt(scanner.nextLine());
-                    Product product = productDaoImpl.read(proId, productList);
-                    if (product != null) {
-                        System.out.println("PRODUCT DETAIL OF CODE[" + product.getId() + "]");
-                        InterfaceViews.readDetail(product);
-                    } else {
-                        System.out.println(red + "❌ INVALID ID" + reset);
-                        clickEnter();
-                        System.out.println("[ EN ] . ENTER NEW ID");
-                        System.out.println("[ B ] . BACK \n");
-                        System.out.print("ENTER OPTION : ");
-                        String an = scanner.nextLine();
-                        if (an.equalsIgnoreCase("en")) {
-                        } else if (an.equalsIgnoreCase("b")) {
-                            return;
-                        }
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println(red + "❌ INVALID ID, ENTER A VALID ID." + reset);
-                }
         while (true) {
             try {
                 System.out.print("ENTER PRODUCT ID: ");
