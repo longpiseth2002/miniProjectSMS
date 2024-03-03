@@ -205,7 +205,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         long end = System.nanoTime();
         currenSize.set(0);
     }
-    //write one list of object(Product) to file
+    //write one list of object(Product ) to file
     @Override
     public void writeToFile(List<Product> list,String fileName){
         BackgroundProcessImpl obj =  BackgroundProcessImpl.createObject();
