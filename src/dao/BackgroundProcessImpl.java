@@ -259,7 +259,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         if (operation.equalsIgnoreCase("random")){
             System.out.println("BACK TO MENU         [ B ]");
         }else{
-            System.out.println(darkYellow + "COMMIT LATER         [ N ]" + reset);
+            System.out.println(darkYellow + "COMMIT LATER         [ L ]" + reset);
         }
         System.out.println(red +"CANCEL ALL CHANGE    [ C ]"+reset);
         String op = null;
