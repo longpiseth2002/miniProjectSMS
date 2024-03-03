@@ -5,7 +5,6 @@ import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,9 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-
 import static dao.BackgroundProcessImpl.*;
-import static views.BoxBorder.*;
 
 public class Random {
     private static Random random;
@@ -33,17 +30,19 @@ public class Random {
             table.addCell(cyan + "W.Write", cellStyle);
             table.addCell(cyan + "R.Read", cellStyle);
             table.addCell(cyan + "B.Back" + reset, cellStyle);
-
+            String checkRdCommit="";
             if ( backgroundProcess.commitCheck("src/allFile/TransectionFile.txt", input)) {
-                backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
+                checkRdCommit= backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
             }
-
+            if(checkRdCommit.equalsIgnoreCase("b")){
+                return;
+            }
             outloop:
             do {
-                String wrOption = null;
+                String wrOption = "";
                 do {
                     System.out.println(table.render());
-                    System.out.print("Choose option: ");
+                    System.out.print("CHOOSE OPTION : ");
                     wrOption = input.nextLine();
                 } while (!(wrOption.equalsIgnoreCase("w") || wrOption.equalsIgnoreCase("r") || wrOption.equalsIgnoreCase("b")));
 
@@ -52,16 +51,15 @@ public class Random {
                     break outloop;
                 }
                 if (wrOption.equalsIgnoreCase("w")) {
-                    String lastId = null;
-                    String op = null;
+                    String lastId = "";
+                    String op = "";
                     int n = 0;
                     do {
                         try {
-                            System.out.print("Enter number of file[1-30M]: ");
-                            n = input.nextInt();
+                            System.out.print("ENTER NUMBERS OF FILE[ 1-30M ] : ");
+                            n = Integer.parseInt(input.nextLine());
                         } catch (Exception e) {
-                            System.out.println("❌INVALID INPUT");
-                            input.next();
+                            System.out.println(red + "   ❌INVALID INPUT" + reset);
                         }
                     } while (n < 1 || n > 30000000);
                     boolean apov = false;
@@ -70,23 +68,27 @@ public class Random {
                     int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
                     int remain = n % divi;
                     int repeatNumber;
-                    input.nextLine();
                     do {
-                        System.out.println("(A):Append  ||  (O): Override");
-                        System.out.print("Enter option: ");
+                        System.out.println(cyan + "(A):APPEND  ||  (O): OVERRIDE " + reset);
+                        System.out.print("ENTER OPTION : ");
                         op = input.nextLine();
                         if(op==null) input.nextLine();
                         apov = op.equalsIgnoreCase("a");
                     } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
-                    String wrirteCheck = null;
-                    Table table1 = new Table(1, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
+                    if(!apov){
+                        productslist.clear();
+                    }
+                    String wrirteCheck = "";
+                    Table table1 = new Table(2, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
+                    CellStyle centerStyle = new CellStyle(CellStyle.HorizontalAlign.center);
                     table1.setColumnWidth(0, 30, 35);
-                    table1.addCell(cyan + "  S.Start writing");
-                    table1.addCell(cyan + "  B.Back" + reset);
+                    table1.setColumnWidth(1, 30, 35);
+                    table1.addCell(cyan + "  S.Start writing",centerStyle);
+                    table1.addCell(cyan + "  B.Back" + reset,cellStyle);
 
                     do {
                         System.out.println(table1.render());
-                        System.out.print("Choose option: ");
+                        System.out.print("⏩ CHOOSE OPTION : ");
                         wrirteCheck = input.nextLine();
                         if(wrirteCheck==null) input.nextLine();
                     } while (!(wrirteCheck.equalsIgnoreCase("s") || wrirteCheck.equalsIgnoreCase("b")));
@@ -112,8 +114,8 @@ public class Random {
                             System.out.println(e.getMessage());
                         }
                         long end = System.nanoTime();
-                        System.out.println(blue + "\nData written to file successfully.");
-                        System.out.println(reset + "\uD83D\uDD52TIME = " + (end - start) / 1000000 + "ms\n");
+                        System.out.println(blue + "\nDATA WRITTEN TO FILE SUCCESSFULLY .");
+                        System.out.printf(reset + "\uD83D\uDD52 TIME = %.0fms  = %.3fs\n" , (double) (end - start) / 1000000 ,(((double) (end - start) / 1000000000) ) );
                         if (apov) {
                             product().setLastAssignedId(id);
                             backgroundProcess.writeSizeToFile(id, "src/allFile/lastId.txt");
@@ -134,15 +136,17 @@ public class Random {
                             int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
                             int remain = n % divi;
                             AtomicInteger repeatNumber = new AtomicInteger();
-                            Table table1 = new Table(1, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
+                            Table table1 = new Table(2, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
+                            CellStyle cellStyle1 = new CellStyle(CellStyle.HorizontalAlign.center);
                             table1.setColumnWidth(0, 30, 35);
-                            table1.addCell(cyan + "  S.Start reading");
-                            table1.addCell(cyan + "  B.Back" + reset);
+                            table1.setColumnWidth(1, 30, 35);
+                            table1.addCell(cyan + "  S.Start reading" , cellStyle1);
+                            table1.addCell(cyan + "  B.Back" + reset,cellStyle1);
 
-                            String startAndBack = null;
+                            String startAndBack = "";
                             do {
                                 System.out.println(table1.render());
-                                System.out.print("⏩Choose option: ");
+                                System.out.print("⏩ CHOOSE OPTION : ");
                                 wrOption = input.nextLine();
                             } while (!(wrOption.equalsIgnoreCase("s") || wrOption.equalsIgnoreCase("b")));
                             if (wrOption.equalsIgnoreCase("s")) {
@@ -166,22 +170,22 @@ public class Random {
                                 }
                                 long end = System.nanoTime();
                                 System.out.println(blue + "COMPLETE.");
-                                System.out.println("\uD83D\uDD52TIME = " + (end - start) / 1000000 + "ms\n" + reset);
+                                System.out.printf(reset + "\uD83D\uDD52 TIME = %.0fms  = %.3fs\n" , (double) (end - start) / 1000000 ,(((double) (end - start) / 1000000000) ) );
                                 ProductDaoImpl.setSORT(true);
                             } else {
                                 continue outloop;
                             }
                         }else{
-                            System.out.println("❌NO DATA TO READ..!");
+                            System.out.println(red + "   ❌ NO DATA TO READ..!");
                         }
                     } else {
-                        System.out.println(yellow + "⚠️NO DATA FILE");
-                        System.out.println(blue + "\uD83D\uDC49WRITE DATA FIRST OR " + red + "BACK" + reset);
+                        System.out.println(yellow + "   ⚠️NO DATA FILE");
+                        System.out.println(blue + "\uD83D\uDC49 WRITE DATA FIRST OR " + red + "BACK" + reset);
                     }
                 }
             } while (true);
         }catch (OutOfMemoryError e){
-            System.out.println("⛔FULL OF MEMORY");
+            System.out.println(yellow + "   ⛔ FULL OF MEMORY" + reset);
         }
     }
     public static Random createObject(){

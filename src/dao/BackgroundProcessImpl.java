@@ -10,8 +10,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import model.Product;
 import views.BoxBorder;
+import dao.BackgroundProcess;
 
 public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
+
     private static AtomicInteger currenSize = new AtomicInteger(0);
     private static AtomicInteger AtotalSize = new AtomicInteger(0);
     private static BackgroundProcessImpl instance;
@@ -65,61 +67,73 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     public void loadingProgress(int totalSize, String fileName, String status) throws IOException {
         System.out.println("LOADING...");
         AtotalSize.set(totalSize);
-        int numberToRead = status.equalsIgnoreCase("START") ? (int) countLines(fileName) : AtotalSize.get();
-        String stDigit = Integer.toString(numberToRead);
-        int digit = stDigit.length();
-        int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
-        int remain = numberToRead % divi;
-        int repeatNumber = 0;
-        while (currenSize.get() != numberToRead) {
-            if (currenSize.get() % divi == remain) {
-                repeatNumber = (int) (currenSize.get() / (numberToRead / 100f));
-                System.out.printf(red + "\r[ %d/%d ]", currenSize.get(), numberToRead);
-                System.out.printf(" %s%s", "\u001B[31m\u2588".repeat(repeatNumber), "\u001B[37m\u2592".repeat(100 - repeatNumber));
-                System.out.printf(red + " [ %.2f%% ]", currenSize.get() / (numberToRead / 100f));
-                System.out.flush();
+        int numberToRead = status.equalsIgnoreCase("startcommit") ? (int) countLines(fileName) : AtotalSize.get();
+        //progress only have data in list or file
+        if(numberToRead>0){
+            String stDigit = Integer.toString(numberToRead);
+            int digit = stDigit.length();
+            int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
+            int remain = numberToRead % divi;
+            int repeatNumber = 0;
+            while (currenSize.get() != numberToRead) {
+                if (currenSize.get() % divi == remain) {
+                    repeatNumber = (int) (currenSize.get() / (numberToRead / 100f));
+                    System.out.printf(red + "\r[ %d/%d ]", currenSize.get(), numberToRead);
+                    System.out.printf(" %s%s", "\u001B[31m\u2588".repeat(repeatNumber), "\u001B[37m\u2592".repeat(100 - repeatNumber));
+                    System.out.printf(red + " [ %.2f%% ]", currenSize.get() / (numberToRead / 100f));
+                    System.out.flush();
+                }
             }
+            System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]"+reset, currenSize.get(), numberToRead, "\u001B[35m\u2588".repeat(100), 100f);
         }
-        System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", currenSize.get(), numberToRead, "\u001B[35m\u2588".repeat(100), 100f);
     }
     @Override
     public  void readFromFile(List<Product> list, String dataFile, String status) {
-        Thread thread1 = new Thread(() -> {
-            try (Stream<String> lines = Files.lines(Paths.get(dataFile))) {
-                lines.forEach(line -> {
-                    String[] parts = split(line, ',');
-                    list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
-                    currenSize.incrementAndGet();
-                });
-                if(list.isEmpty()){
+        try {
+            Thread thread1 = new Thread(() -> {
+                try (Stream<String> lines = Files.lines(Paths.get(dataFile))) {
+                    lines.forEach(line -> {
+                        String[] parts = split(line, ',');
+                        list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
+                        currenSize.incrementAndGet();
+                    });
+                    if(list.isEmpty()){
+                        System.out.println("❌NO DATA..!");
+                    }
+                } catch (IOException e) {
                     System.out.println("❌NO DATA..!");
                 }
-            } catch (IOException e) {
-                System.out.println("❌NO DATA..!");
+            });
+            Thread thread2 = new Thread(() -> {
+                try {
+                    loadingProgress((int)countLines(dataFile), dataFile, status);
+                } catch (IOException e) {
+                    System.out.println("\uD83D\uDCDBDATA FILE NOT FOUND");
+                }
+            });
+            thread1.start();
+            if(Files.exists(Paths.get(dataFile)) && !dataFile.isEmpty()){
+                if(!status.equalsIgnoreCase("commitYes")){
+                    thread2.start();
+                }
             }
-        });
-
-        Thread thread2 = new Thread(() -> {
             try {
-                if(!list.isEmpty())
-                    loadingProgress(list.size(), dataFile, status);
-            } catch (IOException e) {
-                System.out.println("\uD83D\uDCDBDATA FILE NOT FOUND");
-            }
-        });
-
-        thread1.start();
-        if(!status.equalsIgnoreCase("startcommit"))  thread2.start();
-        try {
-            thread1.join();
-            if(!status.equalsIgnoreCase("startcommit"))
+                thread1.join();
                 thread2.join();
-        } catch (InterruptedException e) {
+            } catch (InterruptedException e) {
+            }
+            if (currenSize.get() != -1)
+                if(Files.exists(Paths.get(dataFile))&& !list.isEmpty()&&!status.equalsIgnoreCase("commitYes")){
+                    System.out.println(blue + "\nCompleted." + reset);
+                }else{
+                    System.out.println("\n"+reset);
+                }
+            currenSize.set(0);
+        }catch (OutOfMemoryError e){
+            System.out.println("OUT OF MEMORY");
+            clearFile(dataFile);
         }
-        if (currenSize.get() != -1)
-            if(!status.equalsIgnoreCase("startcommit"))
-                System.out.println(blue + "\nCompleted." + reset);
-        currenSize.set(0);
+
     }
     @Override
     public int readFromFile(String fileName) throws FileNotFoundException {
@@ -140,7 +154,6 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     }
     @Override
     public void writeToFile(Product product, String status) {
-        long start = System.nanoTime();
         Thread thread1 = new Thread(() -> {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/allFile/TransectionFile.txt",true))) {
                 StringBuilder batch = new StringBuilder();
@@ -178,9 +191,6 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         } catch (InterruptedException e) {
         }
         long end = System.nanoTime();
-        if (currenSize.get() != -1)
-            System.out.println(blue + "\nDATA WRITTEN TO FILE SUCCESSFULLY.");
-        System.out.println(reset + "\nTIME = " + (end - start) / 1000000 + "MS\n");
         currenSize.set(0);
     }
     @Override
@@ -228,23 +238,28 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     }
     @Override
     public String commit(List<Product> productList, String tranSectionFile, String dataFile, String operation, Scanner input) throws IOException {
-        String opera = operation.equalsIgnoreCase("random") ? "[y/c]" : "[y/c/n]";
-        System.out.println(blue + "Commit all change: y");
-        System.out.println(red + "Cancel all change: c");
-        if (!operation.equalsIgnoreCase("random"))
-            System.out.println(darkYellow + "Commit later     : n" + reset);
-
+        String opera = operation.equalsIgnoreCase("random") ? "[Y/B/C]" : "[Y/N/C]";
+        System.out.println(blue + "COMMIT ALL TO CHANGE [ Y ] "+reset);
+        if (operation.equalsIgnoreCase("random")){
+            System.out.println("BACK TO MENU         [ B ]");
+        }else{
+            System.out.println(darkYellow + "COMMIT LATER         [ N ]" + reset);
+        }
+        System.out.println(red +"CANCEL ALL CHANGE    [ C ]"+reset);
         String op = null;
         do {
-            System.out.print("Are you sure to commit?" + opera + ": ");
+            System.out.print("ARE YOU SURE TO COMMIT ? " + opera + " : ");
             op = input.nextLine().trim();
-            System.out.println("\n");
             if (operation.equalsIgnoreCase("random") && !op.equalsIgnoreCase("n")) continue;
-        } while (!(op.equalsIgnoreCase("y") || op.equalsIgnoreCase("c") || (op.equalsIgnoreCase("n") && !operation.equalsIgnoreCase("random"))));
+        } while (!(op.equalsIgnoreCase("y") || op.equalsIgnoreCase("c") || (op.equalsIgnoreCase("n") && !operation.equalsIgnoreCase("random"))||(op.equalsIgnoreCase("b"))&&operation.equalsIgnoreCase("random")));
 
-        if(op.equalsIgnoreCase("y")||(op.equalsIgnoreCase("n")&&operation.equalsIgnoreCase("start"))){
-            if(op.equalsIgnoreCase("y")) productList.clear();
-            readFromFile(productList,dataFile,"startcommit");
+        if(op.equalsIgnoreCase("y")||(op.equalsIgnoreCase("n")&&operation.equalsIgnoreCase("startCommit"))){
+            if(op.equalsIgnoreCase("y")) {
+                productList.clear();
+                readFromFile(productList,dataFile,"commitYes");
+            }else{
+                readFromFile(productList,dataFile,"commitNo");
+            }
             try(BufferedReader reader=new BufferedReader(new FileReader(tranSectionFile))){
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -280,6 +295,13 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             clearFile(tranSectionFile);
             productList.clear();
             readFromFile(productList,"src/allFile/dataFile.txt",operation);
+            if(!productList.isEmpty()){
+                int lastId=productList.get(productList.size()-1).getId();
+                product.setLastAssignedId( lastId);
+                writeSizeToFile(lastId,"src/allFile/lastId.txt");
+            }
+        }else{
+            System.out.println(darkYellow+"\uD83D\uDCE2COMMIT LATER"+reset);
         }
         return op;
     }
@@ -287,7 +309,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     public boolean commitCheck(String fileTransection, Scanner input) throws IOException {
         Path path = Paths.get(fileTransection);
         if(Files.exists(path)&&Files.size(path)!=0){
-            System.out.println("There are many record have change and not commit yet..!");
+            System.out.println(darkYellow+"\uD83D\uDCE2THERE ARE MANY RECORD HAVE CHANGE AND NOT COMMIT YET ...!!!! ");
             return true;
         }else return false;
     }
@@ -317,7 +339,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             for (File file : files) {
                 if (file.isFile()) {
                     String relativePath = file.getPath().replaceFirst("^src/backupfiles", "");
-                    System.out.println(i + ". " + relativePath.toUpperCase());
+                    System.out.println(i + ". " + relativePath);
                     storeFile.add(file.getPath());
                     last = i;
                     i++;
@@ -327,13 +349,15 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         if (storeFile.isEmpty()) {
             System.out.println(" NO FILES AVAILABLE FOR RESTORATION");
             System.out.println(" 🏠 BACK TO APPLICATION MENU...");
+            return;
         }
+
         while (true) {
             try {
                 System.out.print("CHOICE FILE TO RESTORE (OR 'B' TO LEAVE) : ");
                 String choice = scanner.nextLine().trim();
                 if (choice.equalsIgnoreCase("b")) {
-                    System.out.println("Leaving file restoration.");
+                    System.out.println(" 🏠 BACK TO APPLICATION MENU...");
                     return;
                 }
                 int option = Integer.parseInt(choice);
@@ -341,7 +365,13 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                     throw new IndexOutOfBoundsException();
                 }
                 String filePath = storeFile.get(option - 1);
-                System.out.println("SELECTED FILE PATH : " + filePath.toUpperCase());
+                System.out.println("FILE PATH : " + filePath.toUpperCase());
+                System.out.print("ARE YOU SURE TO RESTORE FILE [Y/N] : ");
+                String confirm = scanner.nextLine().toUpperCase();
+                if (!confirm.equals("Y")) {
+                    System.out.println( red + "   ❌ FILE RESTORATION CANCELED.\n\n" + reset);
+                    return;
+                }
                 // Thread 1
                 Thread thread1 = new Thread(() -> {
                     String lastLine=null;
@@ -352,10 +382,11 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                         while ((line = reader.readLine()) != null) {
                             writer.write(line);
                             writer.newLine();
+                            lastLine = line;
                         }
 
                     } catch (IOException e) {
-                        System.out.println("ERROR OCCURRED WHILE RESTORING FILE: " + e.getMessage().toUpperCase());
+                        System.out.println(red + "   ❌ ERROR OCCURRED WHILE RESTORING FILE: " + e.getMessage().toUpperCase() + reset);
                     }
                     if(lastLine != null) {
                         String[] lastLineArr = split(lastLine, ',');
@@ -367,7 +398,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                 Thread thread2 = new Thread(() -> {
                     products.clear();
                     readFromFile(products, filePath, "START");
-                    System.out.println("  SUCCESSFULLY");
+                    System.out.println(blue + "RESTORE THE FILE SUCCESSFULLY\n\n" + reset);
                 });
                 thread1.start();
                 thread2.start();

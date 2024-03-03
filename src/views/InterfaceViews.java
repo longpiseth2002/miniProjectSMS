@@ -7,6 +7,8 @@ import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
+import java.util.Scanner;
+
 public class InterfaceViews implements BoxBorder {
     public static void interfaceCSTAD() {
         System.out.println("\n".repeat(5));
@@ -18,6 +20,7 @@ public class InterfaceViews implements BoxBorder {
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + "██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗    ██╔════╝████╗ ████║██╔════╝" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + "██║     ███████╗   ██║   ███████║██║  ██║    ███████╗██╔████╔██║███████╗" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + "██║     ╚════██║   ██║   ██╔══██║██║  ██║    ╚════██║██║╚██╔╝██║╚════██║" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
+
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + "╚██████╗███████║   ██║   ██║  ██║██████╔╝    ███████║██║ ╚═╝ ██║███████║" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + " ╚═════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝     ╚═╝╚══════╝" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta +HORIZONTAL_CONNECTOR_BORDER.repeat(72) + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
@@ -27,6 +30,7 @@ public class InterfaceViews implements BoxBorder {
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + BOTTOM_LEFT_CONNECTOR_CORNER + HORIZONTAL_CONNECTOR_BORDER.repeat(116) + BOTTOM_RIGHT_CONNECTOR_CORNER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +BOTTOM_LEFT_CONNECTOR_CORNER + HORIZONTAL_CONNECTOR_BORDER.repeat(120) + BOTTOM_RIGHT_CONNECTOR_CORNER);
         System.out.print(reset);
+
         System.out.println("\n\n");
     }
     public static void applicationMenu (){
@@ -55,26 +59,27 @@ public class InterfaceViews implements BoxBorder {
         table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
         table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
 
-        table.addCell(cyan + "  (D)Display");
-        table.addCell(cyan +"  (RD)Random");
-        table.addCell(cyan +"  (W)Write");
-        table.addCell(cyan +"  (R)ead");
-        table.addCell(cyan +"  (E)Edit");
-        table.addCell(cyan +"  (DL)Delete");
-        table.addCell(cyan +"  (S)Search");
-        table.addCell(cyan +"  (SR)Set row");
-        table.addCell(cyan +"  (C)Commit");
-        table.addCell(cyan +"  (BU)Back Up");
-        table.addCell(cyan +"  (RS)Restore");
-        table.addCell(cyan +"  (H)Help");
-        table.addCell(cyan +"  (X)Exit" + reset);
+        table.addCell(cyan + "  (D)DISPLAY");
+        table.addCell(cyan + "  (RD)RANDOM");
+        table.addCell(cyan + "  (W)WRITE");
+        table.addCell(cyan + "  (R)READ");
+        table.addCell(cyan + "  (E)EDIT");
+        table.addCell(cyan + "  (DL)DELETE");
+        table.addCell(cyan + "  (S)SEARCH");
+        table.addCell(cyan + "  (SR)SET ROW");
+        table.addCell(cyan + "  (C)COMMIT");
+        table.addCell(cyan + "  (BU)BACK UP");
+        table.addCell(cyan + "  (RS)RESTORE");
+        table.addCell(cyan + "  (H)HELP");
+        table.addCell(cyan + "  (X)EXIT" + reset);
+
 
 
 
         System.out.println(table.render());
     }
 
-    public static void readDetail(Product product){
+    public static void readDetail(Product product , Scanner scanner){
         Table table = new Table(2, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
         CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
         table.setColumnWidth(0,30,35);
@@ -94,7 +99,8 @@ public class InterfaceViews implements BoxBorder {
 
 
         System.out.println(table.render());
-
+        System.out.print("⌨️CLICK ANY KEY TO CONTINUE : ");
+        scanner.nextLine();
     }
     public static void informUpdate (){
         Table table = new Table(5, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
@@ -112,28 +118,35 @@ public class InterfaceViews implements BoxBorder {
         table.addCell("  4. QTY");
         table.addCell("  5. BACK TO MENU");
 
-        System.out.println(table.render());
-    }
-    public static void displayHelp() {
-        System.out.println("# Help Instruction");
-        Table table = new Table(1, BorderStyle.UNICODE_BOX, ShownBorders.SURROUND);
-        table.addCell("1.      Press       D : Display product as table");
-        table.addCell("2.      Press       w : Create a new product");
-        table.addCell("3.      Press       R : View product details by code");
-        table.addCell("4       Press       E : Edit an existing product by code");
-        table.addCell("5.      Press       DL : Delete an existing product by code");
-        table.addCell("6.      Press       S : Search an existing product by name");
-        table.addCell("7.      Press       C : Commit transaction data");
-        table.addCell("8.      Press       BU : Backup data");
-        table.addCell("9.      Press       RS : Restore data");
-        table.addCell("10.     Press       L : Navigate pagination to the last page");
-        table.addCell("11.     Press       P : Navigate pagination to the previous page");
-        table.addCell("12.     Press       N : Navigate pagination to the next page");
-        table.addCell("13.     Press       F : Navigate pagination to the first page");
-        table.addCell("14.     Press       H : Help");
-        table.addCell("15.     Press       B : Step Back of the Application");
 
         System.out.println(table.render());
+    }
+    public  void displayHelp(Scanner scanner) {
+        System.out.println("\uD83D\uDE4B\u200D\uD83D\uDE4B\uD83C\uDFFB\u200D\uD83D\uDCE2️ HELP INSTRUCTION ");
+        Table table = new Table(1, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND);
+        table.setColumnWidth(0,75,90);
+        table.addCell(darkMagenta + "     1.      PRESS       D  : \uD83D\uDCBB DISPLAY PRODUCT AS TABLE ");
+        table.addCell(darkMagenta + "     2.      PRESS       W  : \uD83C\uDD95 CREATE A NEW PRODUCT ");
+        table.addCell(darkMagenta + "     3.      PRESS       R  : \uD83D\uDCD6 VIEW PRODUCT DETAILS BY CODE ");
+        table.addCell(darkMagenta + "     4.      PRESS       E  : \uD83D\uDCDD EDIT AN EXISTING PRODUCT BY CODE ");
+        table.addCell(darkMagenta + "     5.      PRESS       DL : \uD83D\uDEAE DELETE AN EXISTING PRODUCT BY CODE ");
+        table.addCell(darkMagenta + "     6.      PRESS       S  : \uD83D\uDD0D SEARCH AN EXISTING PRODUCT BY NAME ");
+        table.addCell(darkMagenta + "     7.      PRESS       C  : \uD83D\uDCE9 COMMIT TRANSACTION DATA ");
+        table.addCell(darkMagenta + "     8.      PRESS       BU : \uD83D\uDDC2 BACKUP DATA ");
+        table.addCell(darkMagenta + "     9.      PRESS       RS : \uD83D\uDDC3 RESTORE DATA ");
+        table.addCell(darkMagenta + "     10.     PRESS       L  : \uD83D\uDCC5 NAVIGATE PAGINATION TO THE LAST PAGE ");
+        table.addCell(darkMagenta + "     11.     PRESS       P  : \uD83D\uDC49 NAVIGATE PAGINATION TO THE PREVIOUS PAGE ");
+        table.addCell(darkMagenta + "     12.     PRESS       N  : \uD83D\uDC48 NAVIGATE PAGINATION TO THE NEXT PAGE ");
+        table.addCell(darkMagenta + "     13.     PRESS       F  : \uD83D\uDDD3 NAVIGATE PAGINATION TO THE FIRST PAGE ");
+        table.addCell(darkMagenta + "     14.     PRESS       H  : \uD83D\uDEA8 HELP ");
+        table.addCell(darkMagenta + "     15.     PRESS       B  : \uD83C\uDFE1 STEP BACK OF THE APPLICATION ");
+
+        System.out.println(table.render());
+
+        System.out.print("CLICK [ ENTER ] TO CONTINUE OPERATION ...");
+        scanner.nextLine();
+        System.out.println("\n");
+
     }
 
 
