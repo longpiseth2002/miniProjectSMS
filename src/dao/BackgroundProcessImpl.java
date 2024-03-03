@@ -346,7 +346,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         }
         while (true) {
             try {
-                System.out.print("CHOICE FILE TO RESTORE (OR 'B' TO LEAVE) : ");
+                System.out.print(blue + "CHOICE FILE TO RESTORE [" + start + " TO " + last + "] (OR 'B' BACK TO MENU) : " + reset);
                 String choice = scanner.nextLine().trim();
                 if (choice.equalsIgnoreCase("b")) {
                     System.out.println("LEAVING FILE RESTORATION.");
@@ -404,7 +404,6 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                 break;
             } catch (NumberFormatException | InputMismatchException e) {
                 System.out.println(red + "   ❌ INVALID INPUT. PLEASE ENTER A VALID NUMBER." + reset);
-                scanner.nextLine(); // Consume the invalid input
             } catch (IndexOutOfBoundsException e) {
                 System.out.println(red + "   ❌ CHOICE OUT OF BOUNDS. PLEASE ENTER A NUMBER WITHIN THE RANGE " + "[" + start + " TO " + last + "]" + reset);
             }
