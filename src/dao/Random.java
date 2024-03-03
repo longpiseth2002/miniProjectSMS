@@ -37,6 +37,7 @@ public class Random {
             if(checkRdCommit.equalsIgnoreCase("b")){
                 return;
             }
+            //loop for hold write, read operation
             outloop:
             do {
                 String wrOption = "";
@@ -50,10 +51,12 @@ public class Random {
                     System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
                     break outloop;
                 }
+                //if user choose write option
                 if (wrOption.equalsIgnoreCase("w")) {
                     String lastId = "";
                     String op = "";
                     int n = 0;
+                    //loop for validate number of record to write
                     do {
                         try {
                             System.out.print("ENTER NUMBERS OF FILE[ 1-30M ] : ");
@@ -68,6 +71,7 @@ public class Random {
                     int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
                     int remain = n % divi;
                     int repeatNumber;
+                    //check use choose to append or override
                     do {
                         System.out.println(cyan + "(A):APPEND  ||  (O): OVERRIDE " + reset);
                         System.out.print("ENTER OPTION : ");
@@ -85,13 +89,14 @@ public class Random {
                     table1.setColumnWidth(1, 30, 35);
                     table1.addCell(cyan + "  S.Start writing",centerStyle);
                     table1.addCell(cyan + "  B.Back" + reset,cellStyle);
-
+                        //back or start write
                     do {
                         System.out.println(table1.render());
                         System.out.print("⏩ CHOOSE OPTION : ");
                         wrirteCheck = input.nextLine();
                         if(wrirteCheck==null) input.nextLine();
                     } while (!(wrirteCheck.equalsIgnoreCase("s") || wrirteCheck.equalsIgnoreCase("b")));
+                    //start random write
                     if (wrirteCheck.equalsIgnoreCase("s")) {
                         long start = System.nanoTime();
                         Product obj;
@@ -128,6 +133,7 @@ public class Random {
                     }
 
                 } else {
+                    //read operation
                     if (Files.exists(Paths.get(filename))) {
                         int n = (int) countLines(filename);
                         if(n>0){
@@ -149,10 +155,12 @@ public class Random {
                                 System.out.print("⏩ CHOOSE OPTION : ");
                                 wrOption = input.nextLine();
                             } while (!(wrOption.equalsIgnoreCase("s") || wrOption.equalsIgnoreCase("b")));
+                            //start read operation
                             if (wrOption.equalsIgnoreCase("s")) {
                                 long start = System.nanoTime();
                                 productslist.clear();
                                 AtomicInteger i = new AtomicInteger();
+                                //read file using stream
                                 try (Stream<String> lines = Files.lines(Paths.get(filename))) {
                                     lines.parallel().forEach(line -> {
                                         String[] parts = split(line, ',');

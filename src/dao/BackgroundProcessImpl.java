@@ -23,17 +23,20 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         return product;
     }
     public BackgroundProcessImpl(){};
+    //make sure have only instance
     public static BackgroundProcessImpl createObject(){
         if(instance==null){
             return new BackgroundProcessImpl();
         }
         return instance;
     }
+    //count record in file
     public static long countLines(String filename) throws IOException {
         try (Stream<String> lines = Files.lines(Paths.get(filename))) {
             return lines.count();
         }
     }
+    //convert string to date
     public static LocalDate convertToDate(String dateString) {
         if (dateMap.containsKey(dateString)) {
             return dateMap.get(dateString);
@@ -43,6 +46,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             return localDate;
         }
     }
+    //special method for split string to array
     public static String[] split(final String line, final char delimiter) {
         CharSequence[] temp = new CharSequence[(line.length() / 2) + 1];
         int wordCount = 0;
@@ -62,7 +66,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
 
         return result;
     }
-
+    //method for show loading
     @Override
     public void loadingProgress(int totalSize, String fileName, String status) throws IOException {
         System.out.println("LOADING...");
@@ -76,6 +80,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             int remain = numberToRead % divi;
             int repeatNumber = 0;
             while (currenSize.get() != numberToRead) {
+                //make sure it does not display all time of loop
                 if (currenSize.get() % divi == remain) {
                     repeatNumber = (int) (currenSize.get() / (numberToRead / 100f));
                     System.out.printf(red + "\r[ %d/%d ]", currenSize.get(), numberToRead);
@@ -87,14 +92,17 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]"+reset, currenSize.get(), numberToRead, "\u001B[35m\u2588".repeat(100), 100f);
         }
     }
+    //read data from file to list with special status for each operation
     @Override
     public  void readFromFile(List<Product> list, String dataFile, String status) {
         try {
+            //thread 1 for read data from file
             Thread thread1 = new Thread(() -> {
                 try (Stream<String> lines = Files.lines(Paths.get(dataFile))) {
                     lines.forEach(line -> {
                         String[] parts = split(line, ',');
                         list.add(new Product(Integer.parseInt(parts[0]), parts[1], Double.parseDouble(parts[2]), Integer.parseInt(parts[3]), convertToDate(parts[4])));
+                        //increase current size for loading progress in thread2
                         currenSize.incrementAndGet();
                     });
                     if(list.isEmpty()){
@@ -104,6 +112,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                     System.out.println("❌NO DATA..!");
                 }
             });
+            //thread2 for loading progress while thread is running
             Thread thread2 = new Thread(() -> {
                 try {
                     loadingProgress((int)countLines(dataFile), dataFile, status);
@@ -112,6 +121,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                 }
             });
             thread1.start();
+            //thread2 start in special condition
             if(Files.exists(Paths.get(dataFile)) && !dataFile.isEmpty()){
                 if(!status.equalsIgnoreCase("commitYes")){
                     thread2.start();
@@ -135,6 +145,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         }
 
     }
+    //get number that store in file
     @Override
     public int readFromFile(String fileName) throws FileNotFoundException {
         String lastLine = null;
@@ -152,6 +163,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             throw new IllegalStateException("File is empty");
         }
     }
+    //write one object to file
     @Override
     public void writeToFile(Product product, String status) {
         Thread thread1 = new Thread(() -> {
@@ -193,6 +205,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         long end = System.nanoTime();
         currenSize.set(0);
     }
+    //write one list of object(Product) to file
     @Override
     public void writeToFile(List<Product> list,String fileName){
         BackgroundProcessImpl obj =  BackgroundProcessImpl.createObject();
@@ -205,7 +218,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                 }
                 obj.writeSizeToFile(list.size(), "src/allFile/totalSize.txt");
             } catch (IOException e) {
-                //e.printStackTrace();
+                System.out.println("CAN NOT WRITE TO FILE");
             }
         });
         Thread thread2 = new Thread(() -> {
@@ -227,6 +240,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             System.out.println(blue+"\nCompleted." + reset);
         currenSize.set(0);
     }
+    //write size to file(int)
     @Override
     public void writeSizeToFile(int last, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
@@ -236,8 +250,10 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
 
         }
     }
+    //method for commit
     @Override
     public String commit(List<Product> productList, String tranSectionFile, String dataFile, String operation, Scanner input) throws IOException {
+        //show message in difference condition
         String opera = operation.equalsIgnoreCase("random") ? "[Y/B/C]" : "[Y/N/C]";
         System.out.println(blue + "COMMIT ALL TO CHANGE [ Y ] "+reset);
         if (operation.equalsIgnoreCase("random")){
@@ -252,7 +268,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             op = input.nextLine().trim();
             if (operation.equalsIgnoreCase("random") && !op.equalsIgnoreCase("n")) continue;
         } while (!(op.equalsIgnoreCase("y") || op.equalsIgnoreCase("c") || (op.equalsIgnoreCase("n") && !operation.equalsIgnoreCase("random"))||(op.equalsIgnoreCase("b"))&&operation.equalsIgnoreCase("random")));
-
+        //for yes and no
         if(op.equalsIgnoreCase("y")||(op.equalsIgnoreCase("n")&&operation.equalsIgnoreCase("startCommit"))){
             if(op.equalsIgnoreCase("y")) {
                 productList.clear();
@@ -291,6 +307,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                 clearFile(tranSectionFile);
                 writeToFile(productList, "src/allFile/dataFile.txt");
             }
+            //for cancel option
         }else if(op.equalsIgnoreCase("c")){
             clearFile(tranSectionFile);
             productList.clear();
@@ -305,6 +322,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         }
         return op;
     }
+    //method for check that have any action to commit or not
     @Override
     public boolean commitCheck(String fileTransection, Scanner input) throws IOException {
         Path path = Paths.get(fileTransection);
@@ -313,10 +331,12 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             return true;
         }else return false;
     }
+    //set size of total record
     @Override
     public void setListSize(int listSize) {
         AtotalSize.set(listSize);
     }
+    //method using for clear data in file
     @Override
     public Boolean clearFile(String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
@@ -326,6 +346,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         }
         return true;
     }
+    //restore backup data
     @Override
     public void restore(List<Product> products, String dataSource, Scanner scanner) {
         List<String> storeFile = new ArrayList<>();
@@ -372,6 +393,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                     System.out.println( red + "   ❌ FILE RESTORATION CANCELED.\n\n" + reset);
                     return;
                 }
+                //clearFile("src/allFile/TransectionFile.txt");
                 // Thread 1
                 Thread thread1 = new Thread(() -> {
                     String lastLine=null;
