@@ -131,7 +131,7 @@ public class ProductController implements BoxBorder {
                 }
 
                 if (!isValidInput) {
-                    System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN,\n OR PRESS ANY KEY TO BACK TO APPLICATION MENU : ");
+                    System.out.print(yellow + "ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN,\n OR PRESS ANY KEY TO BACK TO APPLICATION MENU : " + reset);
                     String choice = scanner.nextLine().toLowerCase();
                     if (!choice.equalsIgnoreCase("Y")) {
                         System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
@@ -568,7 +568,7 @@ public class ProductController implements BoxBorder {
                     }
                     if (!found) {
                         System.out.println(red + "   ❌ PRODUCT NOT FOUND" + reset);
-                        System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN,\n OR PRESS ANY KEY TO BACK TO APPLICATION MENU : ");
+                        System.out.print(yellow + "ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN,\n OR PRESS ANY KEY TO BACK TO APPLICATION MENU : " + reset);
                         String choice = scanner.nextLine();
                         if (!choice.equalsIgnoreCase("Y")) {
                             System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
@@ -578,7 +578,7 @@ public class ProductController implements BoxBorder {
                     break;
                 } catch (NumberFormatException e) {
                     System.out.println(red + "   ❌ INVALID FORMAT" + reset);
-                    System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN,\n OR PRESS ANY KEY TO BACK TO APPLICATION MENU : ");
+                    System.out.print(yellow + "ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN,\n OR PRESS ANY KEY TO BACK TO APPLICATION MENU : " + reset);
                     String choice = scanner.nextLine();
                     if (!choice.equalsIgnoreCase("y")) {
                         System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
