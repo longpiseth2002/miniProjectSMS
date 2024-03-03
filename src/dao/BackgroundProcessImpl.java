@@ -295,6 +295,11 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             clearFile(tranSectionFile);
             productList.clear();
             readFromFile(productList,"src/allFile/dataFile.txt",operation);
+            if(!productList.isEmpty()){
+                int lastId=productList.get(productList.size()-1).getId();
+                product.setLastAssignedId( lastId);
+                writeSizeToFile(lastId,"src/allFile/lastId.txt");
+            }
         }else{
             System.out.println(darkYellow+"\uD83D\uDCE2COMMIT LATER"+reset);
         }
