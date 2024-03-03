@@ -259,7 +259,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         if (operation.equalsIgnoreCase("random")){
             System.out.println("BACK TO MENU         [ B ]");
         }else{
-            System.out.println(darkYellow + "COMMIT LATER         [ N ]" + reset);
+            System.out.println(darkYellow + "COMMIT LATER         [ L ]" + reset);
         }
         System.out.println(red +"CANCEL ALL CHANGE    [ C ]"+reset);
         String op = null;
@@ -393,7 +393,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                     System.out.println( red + "   ❌ FILE RESTORATION CANCELED.\n\n" + reset);
                     return;
                 }
-                //clearFile("src/allFile/TransectionFile.txt");
+                clearFile("src/allFile/TransectionFile.txt");
                 // Thread 1
                 Thread thread1 = new Thread(() -> {
                     String lastLine=null;
