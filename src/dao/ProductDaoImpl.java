@@ -72,25 +72,25 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                 table.addCell(darkBlue + productList.get(i).getImportAt() + "", cellStyle);
                             }
                         } else {
-                            // Display from index end to 0
+
                             for (int i = numberOfRowStart; i >= numberOfRowEnd; i--) {
-                                table.addCell(String.valueOf(productList.get(i).getId()), cellStyle);
-                                table.addCell(productList.get(i).getName(), cellStyle);
-                                table.addCell(String.valueOf(productList.get(i).getUnitPrice()), cellStyle);
-                                table.addCell(String.valueOf(productList.get(i).getQty()), cellStyle);
-                                table.addCell(String.valueOf(productList.get(i).getImportAt()), cellStyle);
+                                table.addCell(darkBlue + "CSTAD-" + productList.get(i).getId() + "", cellStyle);
+                                table.addCell(darkBlue + productList.get(i).getName(), cellStyle);
+                                table.addCell(darkBlue + productList.get(i).getUnitPrice() + "", cellStyle);
+                                table.addCell(darkBlue + productList.get(i).getQty() + "", cellStyle);
+                                table.addCell(darkBlue + productList.get(i).getImportAt() + "", cellStyle);
                             }
                         }
 
                         System.out.println(table.render());
-                        System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
+                        System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(141));
                         String textBlock = darkMagenta + """
                             PAGE %d OF %d                                                                                                 TOTAL RECORD : %d
-                            PAGE NAVIGATION                (O):ORDER || (N):NEXT || (P):PREVIOUS || (G):GOTO || (L):LAST || (F):FIRST || (B):BACK TO APPLICATION MENU
+                            PAGE NAVIGATION                [ [O]:ORDER || [N]:NEXT || [P]:PREVIOUS || [G]:GOTO || [L]:LAST || [F]:FIRST || [B]:BACK TO APPLICATION MENU ]
                             """ + reset;
 
                         System.out.print(String.format(textBlock, numberOfCurrentPage, numberOfPage, numberOfAllData));
-                        System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(140));
+                        System.out.println(HORIZONTAL_CONNECTOR_BORDER.repeat(141));
                     }
 
                     System.out.print("⏩ NAVIGATION PAGE : ");
@@ -181,6 +181,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                 } while (true);
                             }
                             case "B" -> {
+                                System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
                                 return;
                             }
                             case "O" -> {
@@ -189,12 +190,11 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                 continue changeOrder;
                             }
                             default -> {
-                                System.out.println(yellow  + " ⚠️ INVALID INPUT! PLEASE ENTER AGAIN." + reset);
+                                System.out.println(yellow + "  ⚠️INVALID INPUT !!!! PLEASE ENTER AGAIN .\n      YOU CAN SELECT THESE OPTIONS\n     [ N ] -> NEXT\n     [ P ] -> PREVIOUS\n     [ G ] -> GOTO\n     [ L ] -> LAST\n     [ F ] -> FIRST\n     [ B ] -> BACK TO APPLICATION MENU \n" + reset);
                                 stepCheck = false;
                             }
                         }
                     } else {
-                        // Display from index end to 0
                         switch (op) {
                             case "N" -> {
                                 if (numberOfRowEnd > 0) {
@@ -279,6 +279,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                 } while (true);
                             }
                             case "B" -> {
+                                System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
                                 return;
                             }
                             case "O" -> {
@@ -287,7 +288,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                 continue changeOrder;
                             }
                             default -> {
-                                System.out.println(yellow + "⚠️ INVALID INPUT! PLEASE ENTER AGAIN." + reset);
+                                System.out.println(yellow + "  ⚠️INVALID INPUT !!!! PLEASE ENTER AGAIN .\n      YOU CAN SELECT THESE OPTIONS\n     [ N ] -> NEXT\n     [ P ] -> PREVIOUS\n     [ G ] -> GOTO\n     [ L ] -> LAST\n     [ F ] -> FIRST\n     [ B ] -> BACK TO APPLICATION MENU \n" + reset);
                                 stepCheck = false;
                             }
                         }

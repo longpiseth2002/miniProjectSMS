@@ -11,7 +11,6 @@ public class MenuController {
         scanner = new Scanner(System.in);
         interfaceViews = new InterfaceViews();
     }
-
     public void helpMenu(){
         interfaceViews.displayHelp(scanner);
     }

@@ -53,7 +53,7 @@ public class BackUpFileProcessImpl implements BackUpFileProcess{
                 i++;
             }
             System.out.printf(blue + "\r[ %d/%d ] %s\u001B[34m [%.2f%% ]", n,n, "\u001B[35m█".repeat(100), 100f);
-            System.out.println("\n\n✅ File backup completed successfully. \n\t➡️ Backup saved in: " + backupFileName + reset);
+            System.out.println("\n\n✅ FILE BACKUP COMPLETED SUCCESSFULLY .  \n➡️ BACKUP SAVE IN : " + backupFileName + reset);
         } catch (IOException e) {
             e.printStackTrace();
         }

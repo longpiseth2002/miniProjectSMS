@@ -20,6 +20,7 @@ public class InterfaceViews implements BoxBorder {
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + "██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗    ██╔════╝████╗ ████║██╔════╝" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + "██║     ███████╗   ██║   ███████║██║  ██║    ███████╗██╔████╔██║███████╗" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + "██║     ╚════██║   ██║   ██╔══██║██║  ██║    ╚════██║██║╚██╔╝██║╚════██║" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
+
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + "╚██████╗███████║   ██║   ██║  ██║██████╔╝    ███████║██║ ╚═╝ ██║███████║" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta + " ╚═════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═════╝     ╚══════╝╚═╝     ╚═╝╚══════╝" + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(10) + magenta +HORIZONTAL_CONNECTOR_BORDER.repeat(72) + cyan + SPACE.repeat(10) + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + VERTICAL_CONNECTOR_BORDER + SPACE.repeat(6) + VERTICAL_CONNECTOR_BORDER + SPACE + VERTICAL_CONNECTOR_BORDER);
@@ -29,6 +30,7 @@ public class InterfaceViews implements BoxBorder {
         System.out.println(SPACE.repeat(10) +VERTICAL_CONNECTOR_BORDER + SPACE + BOTTOM_LEFT_CONNECTOR_CORNER + HORIZONTAL_CONNECTOR_BORDER.repeat(116) + BOTTOM_RIGHT_CONNECTOR_CORNER + SPACE + VERTICAL_CONNECTOR_BORDER);
         System.out.println(SPACE.repeat(10) +BOTTOM_LEFT_CONNECTOR_CORNER + HORIZONTAL_CONNECTOR_BORDER.repeat(120) + BOTTOM_RIGHT_CONNECTOR_CORNER);
         System.out.print(reset);
+
         System.out.println("\n\n");
     }
     public static void applicationMenu (){
@@ -57,26 +59,27 @@ public class InterfaceViews implements BoxBorder {
         table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
         table.addCell(HORIZONTAL_CONNECTOR_BORDER.repeat(20));
 
-        table.addCell(cyan + "  (D)Display");
-        table.addCell(cyan +"  (RD)Random");
-        table.addCell(cyan +"  (W)Write");
-        table.addCell(cyan +"  (R)ead");
-        table.addCell(cyan +"  (E)Edit");
-        table.addCell(cyan +"  (DL)Delete");
-        table.addCell(cyan +"  (S)Search");
-        table.addCell(cyan +"  (SR)Set row");
-        table.addCell(cyan +"  (C)Commit");
-        table.addCell(cyan +"  (BU)Back Up");
-        table.addCell(cyan +"  (RS)Restore");
-        table.addCell(cyan +"  (H)Help");
-        table.addCell(cyan +"  (X)Exit" + reset);
+        table.addCell(cyan + "  (D)DISPLAY");
+        table.addCell(cyan + "  (RD)RANDOM");
+        table.addCell(cyan + "  (W)WRITE");
+        table.addCell(cyan + "  (R)READ");
+        table.addCell(cyan + "  (E)EDIT");
+        table.addCell(cyan + "  (DL)DELETE");
+        table.addCell(cyan + "  (S)SEARCH");
+        table.addCell(cyan + "  (SR)SET ROW");
+        table.addCell(cyan + "  (C)COMMIT");
+        table.addCell(cyan + "  (BU)BACK UP");
+        table.addCell(cyan + "  (RS)RESTORE");
+        table.addCell(cyan + "  (H)HELP");
+        table.addCell(cyan + "  (X)EXIT" + reset);
+
 
 
 
         System.out.println(table.render());
     }
 
-    public static void readDetail(Product product){
+    public static void readDetail(Product product , Scanner scanner){
         Table table = new Table(2, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
         CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
         table.setColumnWidth(0,30,35);
@@ -96,7 +99,8 @@ public class InterfaceViews implements BoxBorder {
 
 
         System.out.println(table.render());
-
+        System.out.print("⌨️CLICK ANY KEY TO CONTINUE : ");
+        scanner.nextLine();
     }
     public static void informUpdate (){
         Table table = new Table(5, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
@@ -113,6 +117,7 @@ public class InterfaceViews implements BoxBorder {
         table.addCell("  3. UNIT PRICE");
         table.addCell("  4. QTY");
         table.addCell("  5. BACK TO MENU");
+
 
         System.out.println(table.render());
     }
