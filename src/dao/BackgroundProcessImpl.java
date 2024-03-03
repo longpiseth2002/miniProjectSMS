@@ -68,6 +68,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         System.out.println("LOADING...");
         AtotalSize.set(totalSize);
         int numberToRead = status.equalsIgnoreCase("startcommit") ? (int) countLines(fileName) : AtotalSize.get();
+        //progress only have data in list or file
         if(numberToRead>0){
             String stDigit = Integer.toString(numberToRead);
             int digit = stDigit.length();
