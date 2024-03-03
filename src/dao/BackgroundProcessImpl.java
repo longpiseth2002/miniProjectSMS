@@ -238,22 +238,21 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     }
     @Override
     public String commit(List<Product> productList, String tranSectionFile, String dataFile, String operation, Scanner input) throws IOException {
-        String opera = operation.equalsIgnoreCase("random") ? "[Y/B/C]" : "[Y/N/C]";
+        String opera = operation.equalsIgnoreCase("random") ? "[Y/B/C]" : "[Y/L/C]";
         System.out.println(blue + "COMMIT ALL TO CHANGE [ Y ] "+reset);
         if (operation.equalsIgnoreCase("random")){
             System.out.println("BACK TO MENU         [ B ]");
         }else{
-            System.out.println(darkYellow + "COMMIT LATER         [ N ]" + reset);
+            System.out.println(darkYellow + "COMMIT LATER         [ L ]" + reset);
         }
         System.out.println(red +"CANCEL ALL CHANGE    [ C ]"+reset);
         String op = null;
         do {
             System.out.print("ARE YOU SURE TO COMMIT ? " + opera + " : ");
             op = input.nextLine().trim();
-            if (operation.equalsIgnoreCase("random") && !op.equalsIgnoreCase("n")) continue;
-        } while (!(op.equalsIgnoreCase("y") || op.equalsIgnoreCase("c") || (op.equalsIgnoreCase("n") && !operation.equalsIgnoreCase("random"))||(op.equalsIgnoreCase("b"))&&operation.equalsIgnoreCase("random")));
-
-        if(op.equalsIgnoreCase("y")||(op.equalsIgnoreCase("n")&&operation.equalsIgnoreCase("startCommit"))){
+            if (operation.equalsIgnoreCase("random") && !op.equalsIgnoreCase("l")) continue;
+        } while (!(op.equalsIgnoreCase("y") || op.equalsIgnoreCase("c") || (op.equalsIgnoreCase("l") && !operation.equalsIgnoreCase("random"))||(op.equalsIgnoreCase("b"))&&operation.equalsIgnoreCase("random")));
+        if(op.equalsIgnoreCase("y")||(op.equalsIgnoreCase("l")&&operation.equalsIgnoreCase("startCommit"))){
             if(op.equalsIgnoreCase("y")) {
                 productList.clear();
                 readFromFile(productList,dataFile,"commitYes");
