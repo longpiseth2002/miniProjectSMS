@@ -393,7 +393,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                     System.out.println( red + "   ❌ FILE RESTORATION CANCELED.\n\n" + reset);
                     return;
                 }
-                //clearFile("src/allFile/TransectionFile.txt");
+                clearFile("src/allFile/TransectionFile.txt");
                 // Thread 1
                 Thread thread1 = new Thread(() -> {
                     String lastLine=null;
