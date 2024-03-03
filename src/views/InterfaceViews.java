@@ -79,7 +79,7 @@ public class InterfaceViews implements BoxBorder {
         System.out.println(table.render());
     }
 
-    public static void readDetail(Product product){
+    public static void readDetail(Product product , Scanner scanner){
         Table table = new Table(2, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
         CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
         table.setColumnWidth(0,30,35);
@@ -99,7 +99,8 @@ public class InterfaceViews implements BoxBorder {
 
 
         System.out.println(table.render());
-
+        System.out.print("⌨️CLICK ANY KEY TO CONTINUE : ");
+        scanner.nextLine();
     }
     public static void informUpdate (){
         Table table = new Table(5, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
