@@ -114,7 +114,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                     stepCheck = true;
                                 } else {
                                     stepCheck = false;
-                                    System.out.println(yellow + " ⚠️ ALREADY ON LAST PAGE. PLEASE ENTER ANOTHER OPTION." + reset);
+                                    System.out.println(yellow + " ⚠️ ALREADY ON LAST PAGE.\n PLEASE ENTER ANOTHER OPTION [ [F]:FIRST || [P]:PREVIOUS ]." + reset);
                                 }
                             }
                             case "P" -> {
@@ -133,7 +133,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                     stepCheck = true;
                                 } else {
                                     stepCheck = false;
-                                    System.out.println(yellow + " ⚠️ ALREADY ON FIRST PAGE. PLEASE ENTER ANOTHER OPTION." + reset);
+                                    System.out.println(yellow + " ⚠️ ALREADY ON FIRST PAGE.\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ [F]:FIRST || [P]:PREVIOUS ]." + reset);
                                 }
                             }
                             case "F" -> {
@@ -144,7 +144,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                     stepCheck = true;
                                 } else {
                                     stepCheck = false;
-                                    System.out.println(yellow + " ⚠️ ALREADY ON FIRST PAGE. PLEASE ENTER ANOTHER OPTION." + reset);
+                                    System.out.println(yellow + " ⚠️ ALREADY ON FIRST PAGE.\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ [F]:FIRST || [P]:PREVIOUS ]." + reset);
                                 }
                             }
                             case "L" -> {
@@ -155,11 +155,11 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                     stepCheck = true;
                                 } else {
                                     stepCheck = false;
-                                    System.out.println(yellow + " ⚠️ ALREADY ON LAST PAGE. PLEASE ENTER ANOTHER OPTION." + reset);
+                                    System.out.println(yellow + " ⚠️ ALREADY ON LAST PAGE.\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ [N]:NEXT || [L]:LAST ]." + reset);
                                 }
                             }
                             case "G" -> {
-                                System.out.print("⏩⏩ ENTER PAGE NUMBERS (1 TO " + numberOfPage + "): ");
+                                System.out.print("⏩⏩ ENTER PAGE NUMBERS [1 TO " + numberOfPage + "] : ");
                                 do {
                                     try {
                                         int pageNumber = input.nextInt();
@@ -170,12 +170,18 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                             stepCheck = true;
                                         } else {
                                             stepCheck = false;
-                                            System.out.println(yellow + " ⚠️ INVALID PAGE NUMBER. PLEASE ENTER A VALID PAGE NUMBER." + reset);
+                                            if(pageNumber == numberOfPage){
+                                                System.out.println(yellow + " ⚠️ ALREADY ON PAGE " + pageNumber + ".\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ PAGE " + numberOfPage + " ]." + reset);
+
+                                            }
+                                            if(pageNumber == 1){
+                                                System.out.println(yellow + " ⚠️ ALREADY ON PAGE " + pageNumber + ".\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ PAGE " + pageNumber + " ]." + reset);
+                                            }
                                         }
                                         break;
                                     } catch (Exception e) {
                                         System.out.println(yellow + " ⚠️ INCORRECT INPUT. PLEASE ENTER A VALID NUMBER." + reset);
-                                        System.out.print("ENTER PAGE NUMBER (1 TO " + numberOfPage + "): ");
+                                        System.out.print("ENTER PAGE NUMBER [1 TO " + numberOfPage + "] : ");
                                     }
                                     input.nextLine();
                                 } while (true);
@@ -211,7 +217,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                     stepCheck = true;
                                 } else {
                                     stepCheck = false;
-                                    System.out.println(yellow + " ⚠️ ALREADY ON LAST PAGE. PLEASE ENTER ANOTHER OPTION."+ reset);
+                                    System.out.println(yellow + " ⚠️ ALREADY ON LAST PAGE.\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ [N]:NEXT || [L]:LAST ]."+ reset);
                                 }
                             }
                             case "P" -> {
@@ -230,7 +236,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                     stepCheck = true;
                                 } else {
                                     stepCheck = false;
-                                    System.out.println(yellow + " ⚠️ ALREADY ON FIRST PAGE. PLEASE ENTER ANOTHER OPTION."+ reset);
+                                    System.out.println(yellow + " ⚠️ ALREADY ON FIRST PAGE.\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ [F]:FIRST || [P]:PREVIOUS ]."+ reset);
                                 }
                             }
                             case "F" -> {
@@ -241,7 +247,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                     stepCheck = true;
                                 } else {
                                     stepCheck = false;
-                                    System.out.println(yellow + " ⚠️ ALREADY ON FIRST PAGE. PLEASE ENTER ANOTHER OPTION." + reset);
+                                    System.out.println(yellow + " ⚠️ ALREADY ON FIRST PAGE. \n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ [F]:FIRST || [P]:PREVIOUS ]." + reset);
                                 }
                             }
                             case "L" -> {
@@ -252,11 +258,11 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                     stepCheck = true;
                                 } else {
                                     stepCheck = false;
-                                    System.out.println(yellow + " ⚠️ ALREADY ON LAST PAGE. PLEASE ENTER ANOTHER OPTION." + reset);
+                                    System.out.println(yellow + " ⚠️ ALREADY ON LAST PAGE.\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ [N]:NEXT || [L]:LAST ]." + reset);
                                 }
                             }
                             case "G" -> {
-                                System.out.print("⏩⏩ ENTER PAGE NUMBER (1 TO " + numberOfPage + "): ");
+                                System.out.print("⏩⏩ ENTER PAGE NUMBER [1 TO " + numberOfPage + "] : ");
                                 do {
                                     try {
                                         int pageNumber = input.nextInt();
@@ -267,8 +273,13 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
                                             stepCheck = true;
                                         } else {
                                             stepCheck = false;
-                                            System.out.println(yellow + " ⚠️ INVALID PAGE NUMBER. PLEASE ENTER A VALID PAGE NUMBER." + reset
-                                            );
+                                            if(pageNumber == numberOfPage){
+                                                System.out.println(yellow + " ⚠️ ALREADY ON PAGE " + pageNumber + ".\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ PAGE " + numberOfPage + " ]." + reset);
+
+                                            }
+                                            if(pageNumber == 1){
+                                                System.out.println(yellow + " ⚠️ ALREADY ON PAGE " + pageNumber + ".\n PLEASE ENTER ANOTHER OPTION DIFFERENCE [ PAGE " + pageNumber + " ]." + reset);
+                                            }
                                         }
                                         break;
                                     } catch (Exception e) {
@@ -337,10 +348,6 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
         return null;
     }
 
-    @Override
-    public Product updateById(Product product) {
-        return null;
-    }
 
     @Override
     public Product deleteById(int id, List<Product> products) {

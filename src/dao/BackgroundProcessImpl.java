@@ -123,7 +123,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
             }
             if (currenSize.get() != -1)
                 if(Files.exists(Paths.get(dataFile))&& !list.isEmpty()&&!status.equalsIgnoreCase("commitYes")){
-                    System.out.println(blue + "\nCompleted." + reset);
+                    System.out.println(blue + "\nCOMPLETED." + reset);
                 }else{
                     System.out.println("\n"+reset);
                 }
@@ -240,7 +240,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         String opera = operation.equalsIgnoreCase("random") ? "[Y/N/C]" : "[Y/N/C]";
         System.out.println(blue + "COMMIT ALL TO CHANGE [ Y ] "+reset);
         if (operation.equalsIgnoreCase("random")){
-            System.out.println("Back to menu     : b");
+            System.out.println("BACK TO MENU         [ B ]");
         }else{
             System.out.println(darkYellow + "COMMIT LATER         [ N ]" + reset);
         }
@@ -357,7 +357,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
                     throw new IndexOutOfBoundsException();
                 }
                 String filePath = storeFile.get(option - 1);
-                System.out.println("FILE PATH : " + filePath.toUpperCase());
+                System.out.println("FILE PATH : " + filePath);
                 System.out.print("ARE YOU SURE TO RESTORE FILE [Y/N] : ");
                 String confirm = scanner.nextLine().toUpperCase();
                 if (!confirm.equals("Y")) {

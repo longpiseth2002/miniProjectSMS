@@ -44,7 +44,7 @@ public class Random {
                 String wrOption = null;
                 do {
                     System.out.println(table.render());
-                    System.out.print("CHOOSE OPTION : ");
+                    System.out.print("➡️CHOOSE OPTION : ");
                     wrOption = input.nextLine();
                 } while (!(wrOption.equalsIgnoreCase("w") || wrOption.equalsIgnoreCase("r") || wrOption.equalsIgnoreCase("b")));
 
@@ -58,7 +58,7 @@ public class Random {
                     int n = 0;
                     do {
                         try {
-                            System.out.print("ENTER NUMBERS OF FILE[ 1-30M ] : ");
+                            System.out.print("⏩  ENTER NUMBERS OF RECORD [ 1-30M ] : ");
                             n = input.nextInt();
                         } catch (Exception e) {
                             System.out.println(red + "   ❌INVALID INPUT" + reset);
@@ -73,8 +73,8 @@ public class Random {
                     int repeatNumber;
                     input.nextLine();
                     do {
-                        System.out.println(cyan + "(A):APPEND  ||  (O): OVERRIDE " + reset);
-                        System.out.print("ENTER OPTION : ");
+                        System.out.println(cyan + "[A] : APPEND  ||  [O] : OVERRIDE " + reset);
+                        System.out.print("➡️ENTER OPTION : ");
                         op = input.nextLine();
                         if(op==null) input.nextLine();
                         apov = op.equalsIgnoreCase("a");
@@ -117,6 +117,7 @@ public class Random {
                         long end = System.nanoTime();
                         System.out.println(blue + "\nDATA WRITTEN TO FILE SUCCESSFULLY .");
                         System.out.println(reset + "\uD83D\uDD52 TIME = " +(double) (end - start) / 1000000 + "ms" + " = " + (((double) (end - start) / 1000000000) ) + "s\n");
+                        productslist .clear();
                         if (apov) {
                             product().setLastAssignedId(id);
                             backgroundProcess.writeSizeToFile(id, "src/allFile/lastId.txt");

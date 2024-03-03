@@ -131,7 +131,7 @@ public class ProductController implements BoxBorder {
                 }
 
                 if (!isValidInput) {
-                    System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
+                    System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN,\n OR PRESS ANY KEY TO BACK TO APPLICATION MENU : ");
                     String choice = scanner.nextLine().toLowerCase();
                     if (!choice.equalsIgnoreCase("Y")) {
                         System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
@@ -568,7 +568,7 @@ public class ProductController implements BoxBorder {
                     }
                     if (!found) {
                         System.out.println(red + "   ❌ PRODUCT NOT FOUND" + reset);
-                        System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
+                        System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN,\n OR PRESS ANY KEY TO BACK TO APPLICATION MENU : ");
                         String choice = scanner.nextLine();
                         if (!choice.equalsIgnoreCase("Y")) {
                             System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
@@ -578,7 +578,7 @@ public class ProductController implements BoxBorder {
                     break;
                 } catch (NumberFormatException e) {
                     System.out.println(red + "   ❌ INVALID FORMAT" + reset);
-                    System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN, OR PRESS ANY KEY TO BACK TO APPLICATION MENU: ");
+                    System.out.print("ℹ️ ENTER 'Y' TO ENTER PRODUCT ID AGAIN,\n OR PRESS ANY KEY TO BACK TO APPLICATION MENU : ");
                     String choice = scanner.nextLine();
                     if (!choice.equalsIgnoreCase("y")) {
                         System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
@@ -593,17 +593,9 @@ public class ProductController implements BoxBorder {
     }
     public void searchByName() {
         if (!productList.isEmpty()) {
-            Table table = new Table(5, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND_HEADER_AND_COLUMNS);
-
             while (true) {
-                System.out.print("ENTER PRODUCT NAME TO SEARCH (Enter 'B' TO BACK MENU): ");
+                System.out.print("ENTER PRODUCT NAME TO SEARCH : ");
                 String proName = scanner.nextLine().trim();
-
-                // Check if the user wants to go back to the application menu
-                if (proName.toUpperCase().equalsIgnoreCase("B")) {
-                    System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
-                    return;
-                }
 
                 // Check if the input is empty (only Enter key pressed)
                 if (proName.isEmpty()) {
@@ -614,10 +606,18 @@ public class ProductController implements BoxBorder {
                 List<Product> matchingProducts = productDaoImpl.searchByName(productList, proName);
                 if (!matchingProducts.isEmpty()) {
                     productDaoImpl.display(matchingProducts, setRow, scanner);
-                    return; // Exit the loop if products are found
+                    return;
                 } else {
                     System.out.print(red + "   ❌ PRODUCT: " + proName + " NOT FOUND . ");
                     System.out.println("PLEASE TRY AGAIN ." +reset);
+
+                    // Ask user if they want to search again
+                    System.out.print(" DO YOU WANT TO SEARCH AGAIN ? [Y/N] : ");
+                    String searchAgain = scanner.nextLine().trim().toLowerCase();
+                    if (searchAgain.equals("n")) {
+                        System.out.println(" 🏠 BACK TO APPLICATION MENU...\n\n");
+                        return; // Exit the method if user chooses not to search again
+                    }
                 }
             }
         } else {
