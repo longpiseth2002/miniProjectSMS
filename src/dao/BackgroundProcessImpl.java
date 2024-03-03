@@ -238,10 +238,10 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     }
     @Override
     public String commit(List<Product> productList, String tranSectionFile, String dataFile, String operation, Scanner input) throws IOException {
-        String opera = operation.equalsIgnoreCase("random") ? "[Y/N/C]" : "[Y/N/C]";
+        String opera = operation.equalsIgnoreCase("random") ? "[Y/B/C]" : "[Y/N/C]";
         System.out.println(blue + "COMMIT ALL TO CHANGE [ Y ] "+reset);
         if (operation.equalsIgnoreCase("random")){
-            System.out.println("Back to menu     : b");
+            System.out.println("BACK TO MENU         [ B ]");
         }else{
             System.out.println(darkYellow + "COMMIT LATER         [ N ]" + reset);
         }
@@ -304,7 +304,7 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
     public boolean commitCheck(String fileTransection, Scanner input) throws IOException {
         Path path = Paths.get(fileTransection);
         if(Files.exists(path)&&Files.size(path)!=0){
-            System.out.println("THERE ARE MANY RECORD HAVE CHANGE AND NOT COMMIT YET ...!!!! ");
+            System.out.println(darkYellow+"\uD83D\uDCE2THERE ARE MANY RECORD HAVE CHANGE AND NOT COMMIT YET ...!!!! ");
             return true;
         }else return false;
     }

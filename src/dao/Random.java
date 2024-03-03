@@ -34,14 +34,16 @@ public class Random {
             table.addCell(cyan + "W.Write", cellStyle);
             table.addCell(cyan + "R.Read", cellStyle);
             table.addCell(cyan + "B.Back" + reset, cellStyle);
-
+            String checkRdCommit="";
             if ( backgroundProcess.commitCheck("src/allFile/TransectionFile.txt", input)) {
-                backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
+                checkRdCommit= backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
             }
-
+            if(checkRdCommit.equalsIgnoreCase("b")){
+                return;
+            }
             outloop:
             do {
-                String wrOption = null;
+                String wrOption = "";
                 do {
                     System.out.println(table.render());
                     System.out.print("CHOOSE OPTION : ");
@@ -53,16 +55,15 @@ public class Random {
                     break outloop;
                 }
                 if (wrOption.equalsIgnoreCase("w")) {
-                    String lastId = null;
-                    String op = null;
+                    String lastId = "";
+                    String op = "";
                     int n = 0;
                     do {
                         try {
                             System.out.print("ENTER NUMBERS OF FILE[ 1-30M ] : ");
-                            n = input.nextInt();
+                            n = Integer.parseInt(input.nextLine());
                         } catch (Exception e) {
                             System.out.println(red + "   ❌INVALID INPUT" + reset);
-                            input.next();
                         }
                     } while (n < 1 || n > 30000000);
                     boolean apov = false;
@@ -71,7 +72,6 @@ public class Random {
                     int divi = (digit > 3) ? (int) Math.pow(10, digit - 3) : 1;
                     int remain = n % divi;
                     int repeatNumber;
-                    input.nextLine();
                     do {
                         System.out.println(cyan + "(A):APPEND  ||  (O): OVERRIDE " + reset);
                         System.out.print("ENTER OPTION : ");
@@ -79,7 +79,10 @@ public class Random {
                         if(op==null) input.nextLine();
                         apov = op.equalsIgnoreCase("a");
                     } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
-                    String wrirteCheck = null;
+                    if(!apov){
+                        productslist.clear();
+                    }
+                    String wrirteCheck = "";
                     Table table1 = new Table(2, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
                     CellStyle centerStyle = new CellStyle(CellStyle.HorizontalAlign.center);
                     table1.setColumnWidth(0, 30, 35);
@@ -116,7 +119,7 @@ public class Random {
                         }
                         long end = System.nanoTime();
                         System.out.println(blue + "\nDATA WRITTEN TO FILE SUCCESSFULLY .");
-                        System.out.println(reset + "\uD83D\uDD52 TIME = " +(double) (end - start) / 1000000 + "ms" + " = " + (((double) (end - start) / 1000000000) ) + "s\n");
+                        System.out.printf(reset + "\uD83D\uDD52 TIME = %.0fms  = %.3fs\n" , (double) (end - start) / 1000000 ,(((double) (end - start) / 1000000000) ) );
                         if (apov) {
                             product().setLastAssignedId(id);
                             backgroundProcess.writeSizeToFile(id, "src/allFile/lastId.txt");
@@ -144,7 +147,7 @@ public class Random {
                             table1.addCell(cyan + "  S.Start reading" , cellStyle1);
                             table1.addCell(cyan + "  B.Back" + reset,cellStyle1);
 
-                            String startAndBack = null;
+                            String startAndBack = "";
                             do {
                                 System.out.println(table1.render());
                                 System.out.print("⏩ CHOOSE OPTION : ");
@@ -171,7 +174,7 @@ public class Random {
                                 }
                                 long end = System.nanoTime();
                                 System.out.println(blue + "COMPLETE.");
-                                System.out.println(reset + "\uD83D\uDD52 TIME = " +(double) (end - start) / 1000000 + "ms" + " = " + (((double) (end - start) / 1000000000) ) + "s\n");
+                                System.out.printf(reset + "\uD83D\uDD52 TIME = %.0fms  = %.3fs\n" , (double) (end - start) / 1000000 ,(((double) (end - start) / 1000000000) ) );
                                 ProductDaoImpl.setSORT(true);
                             } else {
                                 continue outloop;
