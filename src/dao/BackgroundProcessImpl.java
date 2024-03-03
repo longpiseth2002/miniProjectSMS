@@ -323,7 +323,6 @@ public class BackgroundProcessImpl implements BackgroundProcess , BoxBorder {
         return op;
     }
     //method for check that have any action to commit or not
-    g
     @Override
     public boolean commitCheck(String fileTransection, Scanner input) throws IOException {
         Path path = Paths.get(fileTransection);
