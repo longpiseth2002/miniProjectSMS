@@ -9,12 +9,10 @@
 .vscode/
 
 src/allFile/*
-#src/backupfiles/*
+src/backupfiles/*
 src/AllFile/*
 
 src/allFile/
-#src/backupfiles/
-#
-#
-#src/backupfiles/
+src/backupfiles/
+src/backupfiles/
 src/AllFile/
