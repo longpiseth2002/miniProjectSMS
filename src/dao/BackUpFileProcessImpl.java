@@ -16,7 +16,7 @@ public class BackUpFileProcessImpl implements BackUpFileProcess{
 
     }
 
-
+    //Performs a backup from the specified source path to the target folder.
     @Override
     public void performBackup(String sourcePath, String targetFolder) throws IOException {
         Path source = Paths.get(sourcePath);
@@ -58,14 +58,15 @@ public class BackUpFileProcessImpl implements BackUpFileProcess{
             e.printStackTrace();
         }
     }
-
+    // Custom filename filter for selecting backup files based on pattern like _vX_YYYY-MM-dd_HH-mm-ss.txt.
     static class BackupFilenameFilter implements FilenameFilter {
+        // Match filenames using a regular expression
         @Override
         public boolean accept(File dir, String name) {
             return name.matches(".*_v\\d+_\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2}\\.txt");
         }
     }
-
+    //Retrieves the latest backup version from an array of backup files
     private static int getLatestBackupVersion(File[] backupFiles) {
         int latestVersion = 0;
         for (File file : backupFiles) {

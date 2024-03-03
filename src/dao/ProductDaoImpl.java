@@ -19,7 +19,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
     public static void setSORT(boolean sort) {
         SORT = sort;
     }
-
+    //a feature to display all product and include the navigation page feature
     @Override
     public void display(List<Product> productList, int numberOfRow, Scanner input) {
         if (!productList.isEmpty()) {
@@ -301,6 +301,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
         }
     }
 
+    //write new product feature
     @Override
     public void write(Product product, List<Product> productList, String status) {
         try {
@@ -312,6 +313,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
         }
     }
 
+    //read a single product by id
     @Override
     public Product read(int proId, List<Product> productList) {
         Optional<Product> product = selectById(proId, productList);
@@ -322,7 +324,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
         return foundProduct;
     }
 
-
+    //compare product id if the id is exist in the productlist
     @Override
     public Optional<Product> selectById(int id, List<Product> productList) {
         try {
@@ -342,6 +344,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
         return null;
     }
 
+    //delete product by id
     @Override
     public Product deleteById(int id, List<Product> products) {
         Optional<Product> product = selectById(id, products);
@@ -353,7 +356,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
         }
         return p;
     }
-
+    //search product by product name
     @Override
     public List<Product> searchByName(List<Product> products, String name) {
         List<Product> productList = new ArrayList<>();
@@ -364,7 +367,7 @@ public class ProductDaoImpl implements ProductDao, BoxBorder {
         }
         return productList;
     }
-
+    //set number of row to display product in DISPLAY feature
     public void setUpRow(int inputRow, int setRow) {
 
         if (inputRow >= 1) {
