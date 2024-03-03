@@ -11,8 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public interface BackgroundProcess {
 
-
-
     public void loadingProgress(int totalSize,String fileName,String status) throws IOException;
     public void readFromFile(List<Product> list,String datFile,String status);
     public int readFromFile(String fileName) throws  FileNotFoundException;
