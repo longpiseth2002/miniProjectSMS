@@ -145,7 +145,7 @@ public class ProductController implements BoxBorder {
 
     }
     void clickEnter() {
-        System.out.print("\ng⌨️CLICK ANY KEY TO CONTINUE : ");
+        System.out.print("\n⌨️CLICK ANY KEY TO CONTINUE : ");
         scanner.nextLine();
     }
     private String getValidProductName() {
