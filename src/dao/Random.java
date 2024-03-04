@@ -5,6 +5,8 @@ import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
+import views.BoxBorder;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +17,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+
 import static dao.BackgroundProcessImpl.*;
+import static views.BoxBorder.*;
 
 public class Random {
     private static Random random;
@@ -32,7 +36,7 @@ public class Random {
             table.addCell(cyan + "B.Back" + reset, cellStyle);
             String checkRdCommit="";
             if ( backgroundProcess.commitCheck("src/allFile/TransectionFile.txt", input)) {
-                checkRdCommit= backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
+                backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
             }
             if(checkRdCommit.equalsIgnoreCase("b")){
                 return;
@@ -43,7 +47,7 @@ public class Random {
                 String wrOption = "";
                 do {
                     System.out.println(table.render());
-                    System.out.print("CHOOSE OPTION : ");
+                    System.out.print("➡️CHOOSE OPTION : ");
                     wrOption = input.nextLine();
                 } while (!(wrOption.equalsIgnoreCase("w") || wrOption.equalsIgnoreCase("r") || wrOption.equalsIgnoreCase("b")));
 
@@ -53,14 +57,14 @@ public class Random {
                 }
                 //if user choose write option
                 if (wrOption.equalsIgnoreCase("w")) {
-                    String lastId = "";
-                    String op = "";
+                    String lastId = null;
+                    String op = null;
                     int n = 0;
                     //loop for validate number of record to write
                     do {
                         try {
-                            System.out.print("ENTER NUMBERS OF FILE[ 1-30M ] : ");
-                            n = Integer.parseInt(input.nextLine());
+                            System.out.print("⏩  ENTER NUMBERS OF RECORD [ 1-30M ] : ");
+                            n = input.nextInt();
                         } catch (Exception e) {
                             System.out.println(red + "   ❌INVALID INPUT" + reset);
                         }
@@ -72,9 +76,10 @@ public class Random {
                     int remain = n % divi;
                     int repeatNumber;
                     //check use choose to append or override
+                    input.nextLine();
                     do {
-                        System.out.println(cyan + "(A):APPEND  ||  (O): OVERRIDE " + reset);
-                        System.out.print("ENTER OPTION : ");
+                        System.out.println(cyan + "[A] : APPEND  ||  [O] : OVERRIDE " + reset);
+                        System.out.print("➡️ENTER OPTION : ");
                         op = input.nextLine();
                         if(op==null) input.nextLine();
                         apov = op.equalsIgnoreCase("a");
@@ -149,7 +154,7 @@ public class Random {
                             table1.addCell(cyan + "  S.Start reading" , cellStyle1);
                             table1.addCell(cyan + "  B.Back" + reset,cellStyle1);
 
-                            String startAndBack = "";
+                            String startAndBack = null;
                             do {
                                 System.out.println(table1.render());
                                 System.out.print("⏩ CHOOSE OPTION : ");
