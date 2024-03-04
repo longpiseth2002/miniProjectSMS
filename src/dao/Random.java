@@ -84,9 +84,6 @@ public class Random {
                         if(op==null) input.nextLine();
                         apov = op.equalsIgnoreCase("a");
                     } while (!(op.equalsIgnoreCase("a") || op.equalsIgnoreCase("o")));
-                    if(!apov){
-                        productslist.clear();
-                    }
                     String wrirteCheck = "";
                     Table table1 = new Table(2, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.SURROUND);
                     CellStyle centerStyle = new CellStyle(CellStyle.HorizontalAlign.center);
@@ -126,6 +123,7 @@ public class Random {
                         long end = System.nanoTime();
                         System.out.println(blue + "\nDATA WRITTEN TO FILE SUCCESSFULLY .");
                         System.out.printf(reset + "\uD83D\uDD52 TIME = %.0fms  = %.3fs\n" , (double) (end - start) / 1000000 ,(((double) (end - start) / 1000000000) ) );
+                        productslist.clear();
                         if (apov) {
                             product().setLastAssignedId(id);
                             backgroundProcess.writeSizeToFile(id, "src/allFile/lastId.txt");
