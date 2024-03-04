@@ -64,7 +64,7 @@ public class Random {
                     do {
                         try {
                             System.out.print("⏩  ENTER NUMBERS OF RECORD [ 1-30M ] : ");
-                            n = input.nextInt();
+                            n = Integer.parseInt(input.nextLine());
                         } catch (Exception e) {
                             System.out.println(red + "   ❌INVALID INPUT" + reset);
                         }
@@ -76,7 +76,6 @@ public class Random {
                     int remain = n % divi;
                     int repeatNumber;
                     //check use choose to append or override
-                    input.nextLine();
                     do {
                         System.out.println(cyan + "[A] : APPEND  ||  [O] : OVERRIDE " + reset);
                         System.out.print("➡️ENTER OPTION : ");
