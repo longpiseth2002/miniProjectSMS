@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -24,6 +26,16 @@ import static views.BoxBorder.*;
 public class Random {
     private static Random random;
     private static BackgroundProcess backgroundProcess=BackgroundProcessImpl.createObject();
+    private static Map<LocalDate, String> dateMap = new HashMap<>();
+    private static String getImportAt(LocalDate date){
+        if (dateMap.containsKey(date)) {
+            return dateMap.get(date);
+        } else {
+            dateMap.put(date,date.toString());
+            return date.toString();
+        }
+
+    }
     public void random(List<Product> productslist, String filename, Scanner input) throws IOException {
         try {
             Table table = new Table(3, BorderStyle.UNICODE_DOUBLE_BOX, ShownBorders.SURROUND);
@@ -36,7 +48,7 @@ public class Random {
             table.addCell(cyan + "B.Back" + reset, cellStyle);
             String checkRdCommit="";
             if ( backgroundProcess.commitCheck("src/allFile/TransectionFile.txt", input)) {
-                checkRdCommit= backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
+                backgroundProcess.commit(productslist, "src/allFile/TransectionFile.txt", "src/allFile/dataFile.txt", "random", input);
             }
             if(checkRdCommit.equalsIgnoreCase("b")){
                 return;
@@ -47,7 +59,7 @@ public class Random {
                 String wrOption = "";
                 do {
                     System.out.println(table.render());
-                    System.out.print("CHOOSE OPTION : ");
+                    System.out.print("➡️CHOOSE OPTION : ");
                     wrOption = input.nextLine();
                 } while (!(wrOption.equalsIgnoreCase("w") || wrOption.equalsIgnoreCase("r") || wrOption.equalsIgnoreCase("b")));
 
@@ -57,13 +69,13 @@ public class Random {
                 }
                 //if user choose write option
                 if (wrOption.equalsIgnoreCase("w")) {
-                    String lastId = "";
-                    String op = "";
+                    String lastId = null;
+                    String op = null;
                     int n = 0;
                     //loop for validate number of record to write
                     do {
                         try {
-                            System.out.print("ENTER NUMBERS OF FILE[ 1-30M ] : ");
+                            System.out.print("⏩  ENTER NUMBERS OF RECORD [ 1-30M ] : ");
                             n = Integer.parseInt(input.nextLine());
                         } catch (Exception e) {
                             System.out.println(red + "   ❌INVALID INPUT" + reset);
@@ -90,7 +102,7 @@ public class Random {
                     table1.setColumnWidth(1, 30, 35);
                     table1.addCell(cyan + "  S.Start writing",centerStyle);
                     table1.addCell(cyan + "  B.Back" + reset,cellStyle);
-                        //back or start write
+                    //back or start write
                     do {
                         System.out.println(table1.render());
                         System.out.print("⏩ CHOOSE OPTION : ");
@@ -103,13 +115,12 @@ public class Random {
                         Product obj;
                         obj = new Product("coca", 2.5, 12);
                         int first = (apov) ? backgroundProcess.readFromFile("src/allFile/lastId.txt") + 1 : 1;
-                        String line = "," + obj.getName() + "," + obj.getUnitPrice() + "," + obj.getQty() + "," + obj.getImportAt() + "\n";
-                        String date = String.valueOf(LocalDate.now());
-                        int id = 0;
+                        int id = first;
+                        String line ="";
                         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, apov))) {
                             for (int i = 0; i < n; i++) {
-                                id = first + i;
-                                writer.write(id + line);
+                                line = "," + obj.getName() + "," + obj.getUnitPrice() + "," + obj.getQty() + "," + getImportAt(obj.getImportAt()) + "\n";
+                                writer.write((id+i) + line);
                                 if (i % divi == remain) {
                                     repeatNumber = (int) (i / (n / 100f));
                                     System.out.printf("\r\u001B[31m[ %d/%d ] %s%s[ %.2f%% ]", i, n, "█".repeat(repeatNumber), "\u001B[37m▒".repeat(100 - repeatNumber), i / (n / 100f));
