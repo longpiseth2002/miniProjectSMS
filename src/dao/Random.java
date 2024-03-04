@@ -5,6 +5,8 @@ import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
+import views.BoxBorder;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +17,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+
 import static dao.BackgroundProcessImpl.*;
+import static views.BoxBorder.*;
 
 public class Random {
     private static Random random;
@@ -73,8 +77,8 @@ public class Random {
                     int repeatNumber;
                     //check use choose to append or override
                     do {
-                        System.out.println(cyan + "(A):APPEND  ||  (O): OVERRIDE " + reset);
-                        System.out.print("ENTER OPTION : ");
+                        System.out.println(cyan + "[A] : APPEND  ||  [O] : OVERRIDE " + reset);
+                        System.out.print("➡️ENTER OPTION : ");
                         op = input.nextLine();
                         if(op==null) input.nextLine();
                         apov = op.equalsIgnoreCase("a");
@@ -120,7 +124,8 @@ public class Random {
                         }
                         long end = System.nanoTime();
                         System.out.println(blue + "\nDATA WRITTEN TO FILE SUCCESSFULLY .");
-                        System.out.printf(reset + "\uD83D\uDD52 TIME = %.0fms  = %.3fs\n" , (double) (end - start) / 1000000 ,(((double) (end - start) / 1000000000) ) );
+                        System.out.println(reset + "\uD83D\uDD52 TIME = " +(double) (end - start) / 1000000 + "ms" + " = " + (((double) (end - start) / 1000000000) ) + "s\n");
+                        productslist .clear();
                         if (apov) {
                             product().setLastAssignedId(id);
                             backgroundProcess.writeSizeToFile(id, "src/allFile/lastId.txt");
@@ -149,7 +154,7 @@ public class Random {
                             table1.addCell(cyan + "  S.Start reading" , cellStyle1);
                             table1.addCell(cyan + "  B.Back" + reset,cellStyle1);
 
-                            String startAndBack = "";
+                            String startAndBack = null;
                             do {
                                 System.out.println(table1.render());
                                 System.out.print("⏩ CHOOSE OPTION : ");
